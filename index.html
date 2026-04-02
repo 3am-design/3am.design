@@ -172,8 +172,8 @@
 
     <div id="custom-cursor"><span>Discover</span></div>
 
-    <!-- 🚨 終極防彈 Header：使用 safe-area-inset 配合獨立 top 屬性，無視 Browser URL Bar 縮放跳動 -->
-    <header class="fixed left-0 w-full px-[30px] md:px-[5.26vw] z-[60] flex justify-between items-end pointer-events-none transition-transform duration-300" style="top: max(30px, env(safe-area-inset-top)); transform: translateZ(0);">
+    <!-- 🚨 Header 修復：簡化為最原始嘅 fixed + top-0，配合 z-[999] 防止任何覆蓋或彈跳 -->
+    <header class="fixed top-0 left-0 w-full px-[30px] pt-[30px] md:px-[5.26vw] md:pt-[35px] z-[999] flex justify-between items-end pointer-events-none">
         
         <!-- Sticky 小 Logo -->
         <div id="sticky-logo" class="h-[20px] md:h-[26px] opacity-0 pointer-events-auto cursor-pointer flex items-end">
@@ -225,15 +225,18 @@
     <!-- 倒數 UI -->
     <div id="launch-ui-wrapper" class="pointer-events-none">
         <div id="launch-ui" class="flex flex-col items-center transition-opacity duration-300">
-            <p class="text-[#999999] text-[10px] md:text-[12px] font-medium tracking-[0.08em] leading-none uppercase m-0">Scroll to launch</p>
+            <!-- 🚨 修復: 同步 Font Size 為 11px / Desktop 12px -->
+            <p class="text-[#999999] text-[11px] md:text-[12px] font-medium tracking-[0.08em] leading-none uppercase m-0">Scroll to launch</p>
             <div class="h-[8px]"></div>
-            <p class="text-white text-[12px] md:text-[12px] font-medium tracking-[0.08em] leading-none uppercase m-0">Absolutions</p>
+            <p class="text-white text-[11px] md:text-[12px] font-medium tracking-[0.08em] leading-none uppercase m-0">Absolutions</p>
             <div class="h-[12px]"></div>
             
+            <!-- 🚨 修復: 圓圈放入白線 div 內，底部對齊，確保一齊向下連動 -->
             <div class="flex flex-col items-center w-[7px]">
-                <div id="launch-circle" class="w-[7px] h-[7px] rounded-full border-[1.5px] border-white bg-transparent relative z-10"></div>
-                <div class="w-[1px] h-[80px] md:h-[104px] bg-[#999999] relative opacity-60 -mt-[1px]">
-                    <div id="launch-line-active" class="w-full bg-white absolute top-0 left-0 h-0"></div>
+                <div class="w-[1px] h-[80px] md:h-[104px] bg-[#999999] relative opacity-60">
+                    <div id="launch-line-active" class="w-full bg-white absolute top-0 left-0 h-0">
+                        <div id="launch-circle" class="w-[7px] h-[7px] rounded-full border-[1.5px] border-white bg-[#000] absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-[50%] z-10"></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -317,10 +320,11 @@
             document.getElementById('custom-cursor').style.display = 'none';
         }
 
-        // --- Scroll to Launch UI 圓圈閃爍動畫 ---
+        // --- 🚨 修復: Scroll to Launch UI 白邊透明度閃爍動畫 ---
+        // 只係變透明，配合純黑背景等同消失再重現，無咗灰線嘅感覺
         let pulseTween = gsap.fromTo("#launch-circle", 
-            { borderColor: "#ffffff", scale: 1 }, 
-            { borderColor: "#999999", scale: 1.2, repeat: -1, yoyo: true, duration: 0.8, ease: "power1.inOut" }
+            { opacity: 1 }, 
+            { opacity: 0, repeat: -1, yoyo: true, duration: 0.6, ease: "power1.inOut" }
         );
 
         let isScrolled = false;
@@ -328,7 +332,7 @@
             if (window.scrollY > 10 && !isScrolled) {
                 isScrolled = true;
                 pulseTween.pause();
-                gsap.to("#launch-circle", { borderColor: "#ffffff", scale: 1, duration: 0.2 });
+                gsap.to("#launch-circle", { opacity: 1, duration: 0.2 });
             } else if (window.scrollY <= 10 && isScrolled) {
                 isScrolled = false;
                 pulseTween.play();
@@ -365,9 +369,8 @@
                 gsap.set("#rocket-wrapper", { right: "10%", left: "auto", xPercent: 50, bottom: "0%" });
                 gsap.set("#launch-ui-wrapper", { right: "10%", left: "auto", xPercent: 50, top: "50%", bottom: "auto", yPercent: -50 });
             } else {
-                // 🚨 Mobile 修復: 完美置中 3am 字眼並適當裁切左右
-                gsap.set("#logo-wrapper", { top: "30%", left: "50%", width: "160vw", yPercent: -50, scale: 1, xPercent: -50 });
-                // 🚨 Mobile 修復: 火箭微微升起
+                // 🚨 Mobile 修復: 收細 3am 至 135vw，無咁衝
+                gsap.set("#logo-wrapper", { top: "30%", left: "50%", width: "135vw", yPercent: -50, scale: 1, xPercent: -50 });
                 gsap.set("#rocket-wrapper", { left: "50%", right: "auto", xPercent: -50, bottom: "5%" });
                 gsap.set("#launch-ui-wrapper", { left: "50%", right: "auto", xPercent: -50, top: "60%", bottom: "auto", yPercent: -50 });
             }
@@ -398,16 +401,15 @@
             }, 42);
 
             masterTl.to("#sticky-logo", { opacity: 1, duration: 5, ease: "power2.inOut" }, 55);
-            masterTl.to("#rocket-wrapper", { bottom: "120%", ease: "none", duration: 15 }, 75);
+            
+            // 🚨 修復: 延遲火箭退場時間 (由 75 推遲到 82)，配合粒子動畫
+            masterTl.to("#rocket-wrapper", { bottom: "120%", ease: "none", duration: 15 }, 82);
 
-            // 🚨 神級修復: 動態粒子尾跡錯位問題
             const colors = ['#EF4444', '#10B981', '#3B82F6', '#F59E0B', '#FFFFFF'];
             const numBubbles = 100;
             let rocketCenterPos = isMobile ? { left: "50%", xPercent: -50 } : { right: "15%", xPercent: 50 };
             
-            // 必須與上面 rocketTargetBottom 一致！
             let rocketFinalBottomNumber = isMobile ? 15 : 50; 
-            // 決定粒子由引擎噴出嘅高度（避免疊加喺火箭主體上）
             let particleOffset = isMobile ? 40 : 20;
 
             for (let i = 0; i < numBubbles; i++) {
@@ -423,7 +425,6 @@
                 let rBottomVal = spawnTime < 25 ? ((spawnTime - 10) / 15) * rocketFinalBottomNumber : (spawnTime > 75 ? rocketFinalBottomNumber + ((spawnTime - 75) / 15) * 70 : rocketFinalBottomNumber);
                 let initialOffsetX = (Math.random() - 0.5) * 40; 
                 
-                // 應用計算好的 offsetY 確保粒子喺火箭底下誕生
                 masterTl.set(circle, { bottom: `calc(${rBottomVal}% - ${particleOffset}px)`, y: 0, x: initialOffsetX, width: 0, height: 0, opacity: 0, ...rocketCenterPos }, spawnTime);
 
                 let lifeDuration = 15 + Math.random() * 15; 
