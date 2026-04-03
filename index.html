@@ -70,6 +70,8 @@
             fill: #ffffff;
             stroke: #ffffff;
             stroke-width: 0;
+            /* 🚨 鎖定描邊粗度，放大時唔會變粗！ */
+            vector-effect: non-scaling-stroke; 
             will-change: fill-opacity, stroke-opacity, stroke-width;
         }
 
@@ -172,7 +174,7 @@
 
     <div id="custom-cursor"><span>Discover</span></div>
 
-    <!-- 🚨 Header 修復：簡化為最原始嘅 fixed + top-0，配合 z-[999] 防止任何覆蓋或彈跳 -->
+    <!-- Header -->
     <header class="fixed top-0 left-0 w-full px-[30px] pt-[30px] md:px-[5.26vw] md:pt-[35px] z-[999] flex justify-between items-end pointer-events-none">
         
         <!-- Sticky 小 Logo -->
@@ -223,13 +225,11 @@
     <!-- 倒數 UI -->
     <div id="launch-ui-wrapper" class="pointer-events-none">
         <div id="launch-ui" class="flex flex-col items-center transition-opacity duration-300">
-            <!-- 🚨 修復: 同步 Font Size 為 11px / Desktop 12px -->
             <p class="text-[#999999] text-[11px] md:text-[12px] font-medium tracking-[0.08em] leading-none uppercase m-0">Scroll to launch</p>
             <div class="h-[8px]"></div>
             <p class="text-white text-[11px] md:text-[12px] font-medium tracking-[0.08em] leading-none uppercase m-0">Absolutions</p>
             <div class="h-[12px]"></div>
             
-            <!-- 🚨 修復: 圓圈放入白線 div 內，底部對齊，確保一齊向下連動 -->
             <div class="flex flex-col items-center w-[7px]">
                 <div class="w-[1px] h-[80px] md:h-[104px] bg-[#999999] relative opacity-60">
                     <div id="launch-line-active" class="w-full bg-white absolute top-0 left-0 h-0">
@@ -318,8 +318,7 @@
             document.getElementById('custom-cursor').style.display = 'none';
         }
 
-        // --- 🚨 修復: Scroll to Launch UI 白邊透明度閃爍動畫 ---
-        // 只係變透明，配合純黑背景等同消失再重現，無咗灰線嘅感覺
+        // --- Scroll to Launch UI 白邊透明度閃爍動畫 ---
         let pulseTween = gsap.fromTo("#launch-circle", 
             { opacity: 1 }, 
             { opacity: 0, repeat: -1, yoyo: true, duration: 0.6, ease: "power1.inOut" }
@@ -357,7 +356,7 @@
             gsap.set("#logo-wrapper path", { fillOpacity: 1, strokeOpacity: 0, strokeWidth: 0 });
             gsap.set("#sticky-logo", { opacity: 0 });
 
-            // 🚨 修復: Resize 走位問題，將 % 改為 dvh，確保高度唔受 URL bar 影響
+            // Resize 走位問題，將 % 改為 dvh
             if (isDesktop) {
                 gsap.set("#logo-wrapper", { top: "50dvh", left: "-4vw", width: "70vw", yPercent: -50, scale: 1, xPercent: 0 });
                 gsap.set("#rocket-wrapper", { right: "15%", left: "auto", xPercent: 50, bottom: "0%" });
@@ -368,14 +367,13 @@
                 gsap.set("#launch-ui-wrapper", { right: "10%", left: "auto", xPercent: 50, top: "50dvh", bottom: "auto", yPercent: -50 });
             } else {
                 gsap.set("#logo-wrapper", { top: "30dvh", left: "50%", width: "135vw", yPercent: -50, scale: 1, xPercent: -50 });
-                gsap.set("#rocket-wrapper", { left: "50%", right: "auto", xPercent: -50, bottom: "5%" });
+                gsap.set("#rocket-wrapper", { left: "50%", right: "auto", xPercent: -50, bottom: "0%" }); 
                 gsap.set("#launch-ui-wrapper", { left: "50%", right: "auto", xPercent: -50, top: "60dvh", bottom: "auto", yPercent: -50 });
             }
 
-            // 🚨 全新火箭飛行路徑設定
-            let rocketStartBottomNum = isMobile ? 5 : 0;
+            let rocketStartBottomNum = 0; 
             let rocketMidBottomNum = isMobile ? 15 : 50;
-            let rocketHighBottomNum = isMobile ? 35 : 70; // 飛越 Logo 後嘅高度
+            let rocketHighBottomNum = isMobile ? 35 : 70;
 
             // 火箭初段進入
             masterTl.to("#rocket-wrapper", { bottom: `${rocketMidBottomNum}%`, ease: "none", duration: 15 }, 10);
@@ -398,12 +396,12 @@
                 duration: 7, ease: "power1.inOut"
             }, 35);
 
-            // 🚨 全新超越動畫 (Overtake Effect): Logo 向下沉退後，火箭加速向上
+            // 🚨 全新超越動畫 (Overtake Effect): Logo 變線後，少少放大 + 實線向下飛出血（出界）
             masterTl.to("#logo-wrapper", {
-                y: "100vh",       // 向下移出畫面
-                scale: 0.8,       // 縮細產生遠離感
-                opacity: 0, 
-                filter: "blur(8px)", 
+                y: "150vh",       // 向下移出畫面 (飛出界)
+                scale: 1.1,       // 少少放大
+                opacity: 1,       // 保留實體不透明 (唔淡出)
+                // 移除了 filter: blur() 確保線條實色清晰
                 duration: 12, 
                 ease: "power2.in"
             }, 40);
@@ -420,11 +418,20 @@
 
             const colors = ['#EF4444', '#10B981', '#3B82F6', '#F59E0B', '#FFFFFF'];
             const numBubbles = 100;
-            let rocketCenterPos = isMobile ? { left: "50%", xPercent: -50 } : { right: "15%", xPercent: 50 };
+            
+            // 🚨 修正：精確判斷 xPercent 同 right/left 位置，完美對齊 Tablet 視角！
+            let rocketCenterPos;
+            if (isDesktop) {
+                rocketCenterPos = { right: "15%", left: "auto", xPercent: 50 };
+            } else if (isTablet) {
+                rocketCenterPos = { right: "10%", left: "auto", xPercent: 50 };
+            } else {
+                rocketCenterPos = { left: "50%", right: "auto", xPercent: -50 };
+            }
             
             let particleOffset = isMobile ? 40 : 20;
 
-            // 🚨 防彈數學公式：追蹤火箭每一個時間點嘅精確高度，確保粒子唔會甩位
+            // 防彈數學公式：追蹤火箭每一個時間點嘅精確高度，確保粒子唔會甩位
             let getRocketBottom = (t) => {
                 if (t <= 10) return rocketStartBottomNum;
                 if (t <= 25) return rocketStartBottomNum + ((t - 10) / 15) * (rocketMidBottomNum - rocketStartBottomNum);
