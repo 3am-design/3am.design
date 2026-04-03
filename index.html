@@ -61,7 +61,7 @@
         #logo-wrapper {
             position: fixed;
             z-index: 40; 
-            transform-origin: left top; 
+            transform-origin: center center; 
             will-change: transform, opacity, filter;
             pointer-events: none; 
         }
@@ -106,7 +106,7 @@
             top: 0;
             left: 0;
             width: 100%;
-            height: 100vh;
+            height: 100dvh;
             pointer-events: none;
             z-index: 10;
         }
@@ -359,24 +359,28 @@
             gsap.set("#logo-wrapper path", { fillOpacity: 1, strokeOpacity: 0, strokeWidth: 0 });
             gsap.set("#sticky-logo", { opacity: 0 });
 
-            // 完美還原 XD Mobile / Desktop Layout
+            // 🚨 修復: Resize 走位問題，將 % 改為 dvh，確保高度唔受 URL bar 影響
             if (isDesktop) {
-                gsap.set("#logo-wrapper", { top: "50%", left: "-4vw", width: "70vw", yPercent: -50, scale: 1, xPercent: 0 });
+                gsap.set("#logo-wrapper", { top: "50dvh", left: "-4vw", width: "70vw", yPercent: -50, scale: 1, xPercent: 0 });
                 gsap.set("#rocket-wrapper", { right: "15%", left: "auto", xPercent: 50, bottom: "0%" });
-                gsap.set("#launch-ui-wrapper", { right: "15%", left: "auto", xPercent: 50, top: "50%", bottom: "auto", yPercent: -50 });
+                gsap.set("#launch-ui-wrapper", { right: "15%", left: "auto", xPercent: 50, top: "50dvh", bottom: "auto", yPercent: -50 });
             } else if (isTablet) {
-                gsap.set("#logo-wrapper", { top: "50%", left: "-6vw", width: "85vw", yPercent: -50, scale: 1, xPercent: 0 });
+                gsap.set("#logo-wrapper", { top: "50dvh", left: "-6vw", width: "85vw", yPercent: -50, scale: 1, xPercent: 0 });
                 gsap.set("#rocket-wrapper", { right: "10%", left: "auto", xPercent: 50, bottom: "0%" });
-                gsap.set("#launch-ui-wrapper", { right: "10%", left: "auto", xPercent: 50, top: "50%", bottom: "auto", yPercent: -50 });
+                gsap.set("#launch-ui-wrapper", { right: "10%", left: "auto", xPercent: 50, top: "50dvh", bottom: "auto", yPercent: -50 });
             } else {
-                // 🚨 Mobile 修復: 收細 3am 至 135vw，無咁衝
-                gsap.set("#logo-wrapper", { top: "30%", left: "50%", width: "135vw", yPercent: -50, scale: 1, xPercent: -50 });
+                gsap.set("#logo-wrapper", { top: "30dvh", left: "50%", width: "135vw", yPercent: -50, scale: 1, xPercent: -50 });
                 gsap.set("#rocket-wrapper", { left: "50%", right: "auto", xPercent: -50, bottom: "5%" });
-                gsap.set("#launch-ui-wrapper", { left: "50%", right: "auto", xPercent: -50, top: "60%", bottom: "auto", yPercent: -50 });
+                gsap.set("#launch-ui-wrapper", { left: "50%", right: "auto", xPercent: -50, top: "60dvh", bottom: "auto", yPercent: -50 });
             }
 
-            let rocketTargetBottom = isMobile ? "15%" : "50%";
-            masterTl.to("#rocket-wrapper", { bottom: rocketTargetBottom, ease: "none", duration: 15 }, 10);
+            // 🚨 全新火箭飛行路徑設定
+            let rocketStartBottomNum = isMobile ? 5 : 0;
+            let rocketMidBottomNum = isMobile ? 15 : 50;
+            let rocketHighBottomNum = isMobile ? 35 : 70; // 飛越 Logo 後嘅高度
+
+            // 火箭初段進入
+            masterTl.to("#rocket-wrapper", { bottom: `${rocketMidBottomNum}%`, ease: "none", duration: 15 }, 10);
 
             masterTl.to("#launch-line-active", { height: "100%", duration: 10, ease: "none" }, 0);
             masterTl.to("#launch-ui-wrapper", { autoAlpha: 0, duration: 5, ease: "power2.in" }, 10);
@@ -396,21 +400,42 @@
                 duration: 7, ease: "power1.inOut"
             }, 35);
 
+            // 🚨 全新超越動畫 (Overtake Effect): Logo 向下沉退後，火箭加速向上
             masterTl.to("#logo-wrapper", {
-                scale: 1.25, opacity: 0, filter: "blur(12px)", yPercent: -60, duration: 10, ease: "power2.in"
-            }, 42);
+                y: "100vh",       // 向下移出畫面
+                scale: 0.8,       // 縮細產生遠離感
+                opacity: 0, 
+                filter: "blur(8px)", 
+                duration: 12, 
+                ease: "power2.in"
+            }, 40);
+
+            masterTl.to("#rocket-wrapper", { 
+                bottom: `${rocketHighBottomNum}%`, 
+                duration: 12, 
+                ease: "power2.inOut" 
+            }, 40);
 
             masterTl.to("#sticky-logo", { opacity: 1, duration: 5, ease: "power2.inOut" }, 55);
             
-            // 🚨 修復: 延遲火箭退場時間 (由 75 推遲到 82)，配合粒子動畫
             masterTl.to("#rocket-wrapper", { bottom: "120%", ease: "none", duration: 15 }, 82);
 
             const colors = ['#EF4444', '#10B981', '#3B82F6', '#F59E0B', '#FFFFFF'];
             const numBubbles = 100;
             let rocketCenterPos = isMobile ? { left: "50%", xPercent: -50 } : { right: "15%", xPercent: 50 };
             
-            let rocketFinalBottomNumber = isMobile ? 15 : 50; 
             let particleOffset = isMobile ? 40 : 20;
+
+            // 🚨 防彈數學公式：追蹤火箭每一個時間點嘅精確高度，確保粒子唔會甩位
+            let getRocketBottom = (t) => {
+                if (t <= 10) return rocketStartBottomNum;
+                if (t <= 25) return rocketStartBottomNum + ((t - 10) / 15) * (rocketMidBottomNum - rocketStartBottomNum);
+                if (t <= 40) return rocketMidBottomNum;
+                if (t <= 52) return rocketMidBottomNum + ((t - 40) / 12) * (rocketHighBottomNum - rocketMidBottomNum);
+                if (t <= 82) return rocketHighBottomNum;
+                if (t <= 97) return rocketHighBottomNum + ((t - 82) / 15) * (120 - rocketHighBottomNum);
+                return 120;
+            };
 
             for (let i = 0; i < numBubbles; i++) {
                 let circle = document.createElement('div');
@@ -421,8 +446,8 @@
                 circle.style.borderColor = colors[Math.floor(Math.random() * colors.length)];
                 trailContainer.appendChild(circle);
 
-                let spawnTime = 10 + (i / numBubbles) * 80; 
-                let rBottomVal = spawnTime < 25 ? ((spawnTime - 10) / 15) * rocketFinalBottomNumber : (spawnTime > 75 ? rocketFinalBottomNumber + ((spawnTime - 75) / 15) * 70 : rocketFinalBottomNumber);
+                let spawnTime = 10 + (i / numBubbles) * 85; 
+                let rBottomVal = getRocketBottom(spawnTime); // 應用數學公式
                 let initialOffsetX = (Math.random() - 0.5) * 40; 
                 
                 masterTl.set(circle, { bottom: `calc(${rBottomVal}% - ${particleOffset}px)`, y: 0, x: initialOffsetX, width: 0, height: 0, opacity: 0, ...rocketCenterPos }, spawnTime);
