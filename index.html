@@ -70,7 +70,7 @@
             fill: #ffffff;
             stroke: #ffffff;
             stroke-width: 0;
-            /* 🚨 鎖定描邊粗度，放大時唔會變粗！ */
+            /* 鎖定描邊粗度，放大時唔會變粗！ */
             vector-effect: non-scaling-stroke; 
             will-change: fill-opacity, stroke-opacity, stroke-width;
         }
@@ -268,9 +268,22 @@
         <!-- Portfolio 佈局區塊 -->
         <div id="portfolio-section" class="absolute w-full top-[5500px] z-30 pb-64">
             <div class="w-full mx-auto px-[30px] md:px-[5.26vw] grid grid-cols-4 md:grid-cols-6 gap-[15px] md:gap-[2.08vw]">
-                <div class="portfolio-item relative z-30 col-span-4 md:col-span-4 bg-[#d1d1d1] aspect-[16/10] w-full cursor-pointer rounded-sm"></div>
-                <div class="portfolio-item relative z-30 col-span-2 md:col-span-2 bg-[#d1d1d1] aspect-[3/4] w-full mt-10 md:mt-[8vw] cursor-pointer rounded-sm"></div>
-                <div class="portfolio-item relative z-30 col-span-2 md:col-start-2 md:col-span-2 bg-[#d1d1d1] aspect-square w-full mt-4 md:mt-[4vw] cursor-pointer rounded-sm"></div>
+                
+                <!-- 第一個 Project (橫向) : Home_01.webp -->
+                <div class="portfolio-item group relative z-30 col-span-4 md:col-span-4 bg-zinc-800 aspect-[16/10] w-full cursor-pointer rounded-sm overflow-hidden">
+                    <img src="assets/home/Home_01.webp" alt="Project 1" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" onerror="this.style.opacity='0'">
+                </div>
+
+                <!-- 第二個 Project (直向) : Home_02.mp4 影片 -->
+                <div class="portfolio-item group relative z-30 col-span-2 md:col-span-2 bg-zinc-800 aspect-[3/4] w-full mt-10 md:mt-[8vw] cursor-pointer rounded-sm overflow-hidden">
+                    <video src="assets/home/Home_02.mp4" autoplay loop muted playsinline class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"></video>
+                </div>
+
+                <!-- 第三個 Project (正方形) : Home_03.jpg -->
+                <div class="portfolio-item group relative z-30 col-span-2 md:col-start-2 md:col-span-2 bg-zinc-800 aspect-square w-full mt-4 md:mt-[4vw] cursor-pointer rounded-sm overflow-hidden">
+                    <img src="assets/home/Home_03.jpg" alt="Project 3" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" onerror="this.style.opacity='0'">
+                </div>
+
             </div>
         </div>
     </div>
@@ -396,12 +409,11 @@
                 duration: 7, ease: "power1.inOut"
             }, 35);
 
-            // 🚨 全新超越動畫 (Overtake Effect): Logo 變線後，少少放大 + 實線向下飛出血（出界）
+            // 全新超越動畫 (Overtake Effect)
             masterTl.to("#logo-wrapper", {
-                y: "150vh",       // 向下移出畫面 (飛出界)
-                scale: 1.1,       // 少少放大
-                opacity: 1,       // 保留實體不透明 (唔淡出)
-                // 移除了 filter: blur() 確保線條實色清晰
+                y: "150vh",       
+                scale: 1.1,       
+                opacity: 1,       
                 duration: 12, 
                 ease: "power2.in"
             }, 40);
@@ -419,7 +431,6 @@
             const colors = ['#EF4444', '#10B981', '#3B82F6', '#F59E0B', '#FFFFFF'];
             const numBubbles = 100;
             
-            // 🚨 修正：精確判斷 xPercent 同 right/left 位置，完美對齊 Tablet 視角！
             let rocketCenterPos;
             if (isDesktop) {
                 rocketCenterPos = { right: "15%", left: "auto", xPercent: 50 };
@@ -431,7 +442,7 @@
             
             let particleOffset = isMobile ? 40 : 20;
 
-            // 防彈數學公式：追蹤火箭每一個時間點嘅精確高度，確保粒子唔會甩位
+            // 防彈數學公式
             let getRocketBottom = (t) => {
                 if (t <= 10) return rocketStartBottomNum;
                 if (t <= 25) return rocketStartBottomNum + ((t - 10) / 15) * (rocketMidBottomNum - rocketStartBottomNum);
@@ -452,7 +463,7 @@
                 trailContainer.appendChild(circle);
 
                 let spawnTime = 10 + (i / numBubbles) * 85; 
-                let rBottomVal = getRocketBottom(spawnTime); // 應用數學公式
+                let rBottomVal = getRocketBottom(spawnTime); 
                 let initialOffsetX = (Math.random() - 0.5) * 40; 
                 
                 masterTl.set(circle, { bottom: `calc(${rBottomVal}% - ${particleOffset}px)`, y: 0, x: initialOffsetX, width: 0, height: 0, opacity: 0, ...rocketCenterPos }, spawnTime);
