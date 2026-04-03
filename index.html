@@ -259,7 +259,7 @@
         </div>
     </div>
 
-    <!-- 🚨 完全解綁嘅文字 Wrapper -->
+    <!-- 完全解綁嘅文字 Wrapper -->
     <div id="summary-wrapper">
         <div id="vehicle-summary" class="absolute bottom-[150px] left-[50%] ml-[50px] md:ml-[58px] w-max">
             <div class="summary-line font-extrabold text-[5px] tracking-[0.04em] text-white mb-[4px] leading-none uppercase opacity-0">VEHICLE SUMMARY</div>
@@ -443,7 +443,7 @@
 
             gsap.set("#sticky-logo", { opacity: 0 });
 
-            // 🚨 將 #rocket-wrapper 同 #summary-wrapper 放在同一起點，但唔綁埋同一個動畫
+            // Resize 走位
             if (isDesktop) {
                 gsap.set("#logo-wrapper", { top: "50dvh", left: "-4vw", width: "70vw", yPercent: -50, scale: 1, xPercent: 0 });
                 gsap.set(["#rocket-wrapper", "#summary-wrapper"], { right: "15%", left: "auto", xPercent: 50, bottom: "0%" });
@@ -460,12 +460,11 @@
 
             let rocketStartBottomNum = 0; 
             let rocketMidBottomNum = isMobile ? 15 : 50;
-            let rocketHighBottomNum = isMobile ? 35 : 70;
+            // 🚨 將原本嘅 70 (Desktop) 同 35 (Mobile) 減半！
+            let rocketHighBottomNum = isMobile ? 25 : 60;
 
-            // 🚨 t=10 火箭郁，細字唔好郁 bottom！細字直接向下飛！
+            // 火箭郁，細字直接向下飛！
             masterTl.to("#rocket-wrapper", { bottom: `${rocketMidBottomNum}%`, ease: "none", duration: 15 }, 10);
-            
-            // 🚨 細字1px都唔升，喺 t=10 嗰刻即時以 100% 實色向下直落出界！
             masterTl.to("#summary-wrapper", { y: "100vh", duration: 15, ease: "power2.in" }, 10);
 
             masterTl.to("#launch-line-active", { height: "100%", duration: 10, ease: "none" }, 0);
@@ -518,7 +517,6 @@
             
             let particleOffset = isMobile ? 40 : 20;
 
-            // 🚨 粒子追蹤公式完美同步返 #rocket-wrapper 嘅 bottom，保證圈圈黐實噴嘴
             let getRocketBottom = (t) => {
                 if (t <= 10) return rocketStartBottomNum;
                 if (t <= 25) return rocketStartBottomNum + ((t - 10) / 15) * (rocketMidBottomNum - rocketStartBottomNum);
