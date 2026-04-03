@@ -83,6 +83,7 @@
             pointer-events: none; 
         }
 
+        /* 火箭主 Wrapper */
         #rocket-wrapper {
             position: fixed;
             z-index: 50;
@@ -213,11 +214,11 @@
             </svg>
         </div>
 
-        <!-- 頂部 Menu -->
+        <!-- 頂部 Menu (移除 opacity-0，交畀 GSAP 統一處理) -->
         <nav class="flex gap-6 md:gap-[35px] text-sm md:text-[15px] font-bold tracking-[0.04em] h-[20px] md:h-[26px] items-end pointer-events-auto">
-            <a href="#" class="nav-link cursor-pointer leading-none opacity-0">Works</a>
-            <a href="#" class="nav-link cursor-pointer leading-none opacity-0">About</a>
-            <a href="#" class="nav-link cursor-pointer leading-none opacity-0">Talk</a>
+            <a href="#" class="nav-link cursor-pointer leading-none">Works</a>
+            <a href="#" class="nav-link cursor-pointer leading-none">About</a>
+            <a href="#" class="nav-link cursor-pointer leading-none">Talk</a>
         </nav>
     </header>
 
@@ -230,25 +231,25 @@
         </svg>
     </div>
 
-    <!-- 倒數 UI -->
+    <!-- 倒數 UI (移除 opacity-0，交畀 GSAP) -->
     <div id="launch-ui-wrapper" class="pointer-events-none">
         <div id="launch-ui" class="flex flex-col items-center transition-opacity duration-300">
-            <p class="launch-text text-[#999999] text-[11px] md:text-[12px] font-medium tracking-[0.08em] leading-none uppercase m-0 opacity-0">Scroll to launch</p>
+            <p class="launch-text text-[#999999] text-[11px] md:text-[12px] font-medium tracking-[0.08em] leading-none uppercase m-0">Scroll to launch</p>
             <div class="h-[8px]"></div>
-            <p class="launch-text text-white text-[11px] md:text-[12px] font-medium tracking-[0.08em] leading-none uppercase m-0 opacity-0">Absolutions</p>
+            <p class="launch-text text-white text-[11px] md:text-[12px] font-medium tracking-[0.08em] leading-none uppercase m-0">Absolutions</p>
             <div class="h-[12px]"></div>
             
             <div class="flex flex-col items-center w-[7px]">
                 <div class="launch-line-bg w-[1px] h-[80px] md:h-[104px] bg-[#999999] relative opacity-60 origin-top">
                     <div id="launch-line-active" class="w-full bg-white absolute top-0 left-0 h-0">
-                        <div id="launch-circle" class="w-[7px] h-[7px] rounded-full border-[1.5px] border-white bg-[#000] absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-[50%] z-10 opacity-0"></div>
+                        <div id="launch-circle" class="w-[7px] h-[7px] rounded-full border-[1.5px] border-white bg-[#000] absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-[50%] z-10"></div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- 🚨 火箭主 Wrapper -->
+    <!-- 火箭本體 -->
     <div id="rocket-wrapper">
         <div id="rocket-drift">
             <div id="rocket-svg-container" class="w-16 md:w-20 relative z-20">
@@ -262,10 +263,11 @@
     <!-- 完全解綁嘅文字 Wrapper -->
     <div id="summary-wrapper">
         <div id="vehicle-summary" class="absolute bottom-[150px] left-[50%] ml-[50px] md:ml-[58px] w-max">
-            <div class="summary-line font-extrabold text-[5px] tracking-[0.04em] text-white mb-[4px] leading-none uppercase opacity-0">VEHICLE SUMMARY</div>
-            <div class="summary-line font-medium text-[5px] tracking-[0.04em] text-white leading-[1.6] uppercase opacity-0">240mH / 18mW</div>
-            <div class="summary-line font-medium text-[5px] tracking-[0.04em] text-white leading-[1.6] uppercase opacity-0">BOOSTER 4050t</div>
-            <div class="summary-line font-medium text-[5px] tracking-[0.04em] text-white leading-[1.6] uppercase opacity-0">PAYLOAD 200+t</div>
+            <!-- 🚨 移除了 HTML 入面嘅 opacity-0，防 FOUC 交由開頭嘅 gsap.set 處理 -->
+            <div class="summary-line font-extrabold text-[5px] tracking-[0.04em] text-white mb-[4px] leading-none uppercase">VEHICLE SUMMARY</div>
+            <div class="summary-line font-medium text-[5px] tracking-[0.04em] text-white leading-[1.6] uppercase">240mH / 18mW</div>
+            <div class="summary-line font-medium text-[5px] tracking-[0.04em] text-white leading-[1.6] uppercase">BOOSTER 4050t</div>
+            <div class="summary-line font-medium text-[5px] tracking-[0.04em] text-white leading-[1.6] uppercase">PAYLOAD 200+t</div>
         </div>
     </div>
 
@@ -304,6 +306,9 @@
     </div>
 
     <script>
+        // 🚨 初始化隱藏需要 Page Load 淡入嘅元素，解決 Resize FOUC 及洗白問題
+        gsap.set("#sticky-logo, .nav-link, .launch-text, #launch-circle, .summary-line", { opacity: 0 });
+
         // --- 核心防彈修復 ---
         gsap.registerPlugin(ScrollTrigger);
         ScrollTrigger.config({ ignoreMobileResize: true });
@@ -396,7 +401,7 @@
         }, 1.8);
 
         initTl.fromTo(".launch-text", 
-            { y: 15, opacity: 0, filter: "blur(4px)" }, 
+            { y: 15, filter: "blur(4px)" }, 
             { y: 0, opacity: 1, filter: "blur(0px)", duration: 1.2, stagger: 0.2, ease: "power3.out" }, 
             1.5
         );
@@ -408,19 +413,19 @@
         );
 
         initTl.fromTo(".summary-line", 
-            { x: 15, opacity: 0 }, 
+            { x: 15 }, 
             { x: 0, opacity: 1, duration: 1.2, stagger: 0.15, ease: "power3.out" }, 
             2.2
         );
 
         initTl.fromTo("#launch-circle", 
-            { scale: 0, opacity: 0 }, 
+            { scale: 0 }, 
             { scale: 1, opacity: 1, duration: 0.6, ease: "back.out(1.7)" }, 
             3.0
         );
 
         initTl.fromTo(".nav-link",
-            { y: -10, opacity: 0 },
+            { y: -10 },
             { y: 0, opacity: 1, duration: 1.2, stagger: 0.15, ease: "power3.out" },
             3.8
         );
@@ -441,8 +446,6 @@
             });
             masterTl.to({}, { duration: 100 }); 
 
-            gsap.set("#sticky-logo", { opacity: 0 });
-
             // Resize 走位
             if (isDesktop) {
                 gsap.set("#logo-wrapper", { top: "50dvh", left: "-4vw", width: "70vw", yPercent: -50, scale: 1, xPercent: 0 });
@@ -460,7 +463,6 @@
 
             let rocketStartBottomNum = 0; 
             let rocketMidBottomNum = isMobile ? 15 : 50;
-            // 🚨 將原本嘅 70 (Desktop) 同 35 (Mobile) 減半！
             let rocketHighBottomNum = isMobile ? 25 : 60;
 
             // 火箭郁，細字直接向下飛！
@@ -553,7 +555,8 @@
 
             return () => {
                 masterTl.kill(); 
-                gsap.set("#logo-wrapper, #logo-wrapper svg, #logo-wrapper path, #sticky-logo, #rocket-wrapper, #rocket-drift, #summary-wrapper, #vehicle-summary, .summary-line, .launch-text, .launch-line-bg, #launch-ui-wrapper, #launch-circle, #launch-line-active", { clearProps: "all" });
+                // 🚨 修正：移除咗 .summary-line, .launch-text, .launch-line-bg, #launch-circle 嘅 clearProps，完美保留佢哋嘅進場狀態！
+                gsap.set("#logo-wrapper, #logo-wrapper path, #sticky-logo, #rocket-wrapper, #rocket-drift, #summary-wrapper, #launch-ui-wrapper, #launch-line-active", { clearProps: "all" });
                 trailContainer.innerHTML = ''; 
             };
         });
