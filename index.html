@@ -71,17 +71,12 @@
             pointer-events: none; 
         }
 
-        /* 🚨 終極修復 SVG 動畫：利用 pathLength="100" 完美控制，無懼 DOM 載入延遲 */
         #logo-wrapper path {
             fill: #ffffff;
             stroke: #ffffff;
-            stroke-width: 2px;
+            stroke-width: 0;
             vector-effect: non-scaling-stroke; 
-            fill-opacity: 0;
-            stroke-opacity: 1;
-            stroke-dasharray: 102 102; /* 加 2 點緩衝，確保 100% 收起無殘影 */
-            stroke-dashoffset: 102;
-            will-change: fill-opacity, stroke-opacity, stroke-dashoffset;
+            will-change: fill-opacity, stroke-opacity, stroke-width, stroke-dashoffset;
         }
 
         #launch-ui-wrapper {
@@ -232,12 +227,12 @@
         </nav>
     </header>
 
-    <!-- 🚨 終極修復 Eric SVG：加入 pathLength="100"，令 CSS 同 GSAP 百分百準確控制 -->
+    <!-- 🚨 終極修復 Eric SVG：移除 pathLength，交由 JavaScript 處理真實像素長度 -->
     <div id="logo-wrapper" class="fouc-protect">
         <svg id="logo-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1018.87 499.02" class="w-full h-auto block" preserveAspectRatio="xMidYMid meet">
             <g transform="translate(-5.903 -7.597)">
-                <path pathLength="100" d="M756.02,75.31c-5.96-5.09-16.83,1.31-23.89,2.14-26.38,6.13-45.84-19.11-58.56-1.65-5.34,8.23-7.88,18.63-12.34,27.46-4.55,11.28-14.33,22.74-8.39,34.01,8.77,13.9,39.97,17.68,55.23,15.1,30.22-2.76,49.72-32.62,50.99-66.6.01-4.77-.92-8.4-2.94-10.37l-.09-.09Z" />
-                <path pathLength="100" d="M958.44,419.31c-20.15,12.27-46.97,18.27-70.1,10.55-49.79-16.8-53.97-79.98-43.9-124.37,6.64-27.03,22.17-63.13,49.19-72.97,15.29-4.52,28.03,7.39,30.2,22.62,1.43,8.02.76,16.33.86,24.42-.2,21.32,9.94,20.57,24.65,14.3,13.23-6,29.63-12.43,36.98-25.07,11.68-22.61-4.42-50.74-26.07-61.04-18.26-9.1-39.86-10.11-59.28-5.83-66.11,14.78-122.44,89.31-137.5,157.16a89.44,89.44,0,0,1-12.51,24.18c-9.45,12.64-23.66,25.77-37.39,31.75-15.8,6.94-32.06-.71-32.72-18.8-1.23-19.5,6.24-46.72,12.67-69.36,10.12-34.48,22.38-70.76,33.03-104.44,1.86-7.42,8.68-22.43-4.71-20.32-10.35,1.07-25.56,4.87-39.74,7.64-11.97,2.69-25.52,4.23-34.76,12.74-3.68,3.42-6.44,7.81-8.89,13.08-18.15,43.69-28.02,88.02-37.95,126.99-4.8,13.14-15.99,23.18-26.29,32.44-8.49,7.55-17.58,16.23-26.58,20.8-16.9,9.4-37.96,3.55-41.89-16.96-2.64-12.28-.46-25.35,2.41-37.39,9.14-33.7,23.33-69.27,35.12-102.83,3.22-8.86,6.42-17.62,9.64-26.43,5.36-13.24,12.14-32.57-7.19-28.34-29.06,10.36-39.17,55.27-81.65,73.8-6.31,3.09-17.93,7.07-19.34-3.18-1.27-15.73,9.49-36.05,4.48-52.32-5.6-23.26-35.8-23.53-52.06-11.22-22.23,16.34-38.65,50.06-33.89,77.95,2.17,10.98,10.62,19.62,14.29,29.28,6.8,17.99-11.7,32.66-21.49,45.59-31.68,38.12-74.48,72.98-123.49,81.56-32.51,6.34-69.04.42-94.66-21.51-54.67-43.37-43.97-143.01,20.64-170.17,17.91-8.17,38.52-6.16,57.68-6.07,7.79-.34,15.38-3.11,20.24-9.24,6.46-8.16,10.12-21.88,3.57-30.19-12.7-13.26-37.48-8.55-52.82-23.04-39.96-38.51-13.39-123.73,33.36-146.15,19.1-9.13,41.26-4.56,52.56,14.8,7.68,12.21,10.97,27.4,16.11,40.99,6.07,17.7,16.15,17.16,27.78,5.23,8.98-9.39,17.81-20.71,20.53-33.5,2.7-16.26-9.02-29.67-21.51-40.16C293.09,8.4,262.03,7,233.52,7.75,162.46,10.84,82.73,57.3,80.29,129.42c-1.53,32.14,13.68,60.98,41.18,78.69,14.75,9.83,21.09,16.1,1.4,22.68-33.42,10.69-62.57,24.27-84.55,48.96C-6.83,327.32-5.5,412.03,46.61,454.02c62.74,51.07,169.16,46.94,238.67,5.28,37.8-22.89,71.44-54.63,99.53-88.55,11.96-13.38,19.82-30.07,33.59-41.63,8.73-7,21.51-11.91,32.85-14.91,12.99-3.7,12.42,3.19,7.77,12.61-15.47,29.72-33.94,62.65-36.19,96.77-3.66,36.98,22.49,75.27,62.63,64.84,30-7.58,54.62-27.36,79.19-47.51,6.35-5.27,17.53-14.95,23.94-14.76,11.21.75,11.24,19.47,15.92,28.33a73.59,73.59,0,0,0,8.71,15.74c32.83,47.12,87.3-.82,130.76-40,5.9-4.47,11.01-6.85,15.25-6.29,4.63.52,8.23,4.54,11.68,10.37,20.21,44.37,70.5,63.91,117.37,53.81,38.8-6.85,69.82-28.11,101.42-55.98,10.48-8.68,19.69-20.22,22.41-33.59,1.52-7.93,1.41-14.78-5.13-15.24-7.71,1.77-13.87,9.51-22.03,16.29a179.2,179.2,0,0,1-26.36,19.61l-.16.1Z" />
+                <path d="M756.02,75.31c-5.96-5.09-16.83,1.31-23.89,2.14-26.38,6.13-45.84-19.11-58.56-1.65-5.34,8.23-7.88,18.63-12.34,27.46-4.55,11.28-14.33,22.74-8.39,34.01,8.77,13.9,39.97,17.68,55.23,15.1,30.22-2.76,49.72-32.62,50.99-66.6.01-4.77-.92-8.4-2.94-10.37l-.09-.09Z" />
+                <path d="M958.44,419.31c-20.15,12.27-46.97,18.27-70.1,10.55-49.79-16.8-53.97-79.98-43.9-124.37,6.64-27.03,22.17-63.13,49.19-72.97,15.29-4.52,28.03,7.39,30.2,22.62,1.43,8.02.76,16.33.86,24.42-.2,21.32,9.94,20.57,24.65,14.3,13.23-6,29.63-12.43,36.98-25.07,11.68-22.61-4.42-50.74-26.07-61.04-18.26-9.1-39.86-10.11-59.28-5.83-66.11,14.78-122.44,89.31-137.5,157.16a89.44,89.44,0,0,1-12.51,24.18c-9.45,12.64-23.66,25.77-37.39,31.75-15.8,6.94-32.06-.71-32.72-18.8-1.23-19.5,6.24-46.72,12.67-69.36,10.12-34.48,22.38-70.76,33.03-104.44,1.86-7.42,8.68-22.43-4.71-20.32-10.35,1.07-25.56,4.87-39.74,7.64-11.97,2.69-25.52,4.23-34.76,12.74-3.68,3.42-6.44,7.81-8.89,13.08-18.15,43.69-28.02,88.02-37.95,126.99-4.8,13.14-15.99,23.18-26.29,32.44-8.49,7.55-17.58,16.23-26.58,20.8-16.9,9.4-37.96,3.55-41.89-16.96-2.64-12.28-.46-25.35,2.41-37.39,9.14-33.7,23.33-69.27,35.12-102.83,3.22-8.86,6.42-17.62,9.64-26.43,5.36-13.24,12.14-32.57-7.19-28.34-29.06,10.36-39.17,55.27-81.65,73.8-6.31,3.09-17.93,7.07-19.34-3.18-1.27-15.73,9.49-36.05,4.48-52.32-5.6-23.26-35.8-23.53-52.06-11.22-22.23,16.34-38.65,50.06-33.89,77.95,2.17,10.98,10.62,19.62,14.29,29.28,6.8,17.99-11.7,32.66-21.49,45.59-31.68,38.12-74.48,72.98-123.49,81.56-32.51,6.34-69.04.42-94.66-21.51-54.67-43.37-43.97-143.01,20.64-170.17,17.91-8.17,38.52-6.16,57.68-6.07,7.79-.34,15.38-3.11,20.24-9.24,6.46-8.16,10.12-21.88,3.57-30.19-12.7-13.26-37.48-8.55-52.82-23.04-39.96-38.51-13.39-123.73,33.36-146.15,19.1-9.13,41.26-4.56,52.56,14.8,7.68,12.21,10.97,27.4,16.11,40.99,6.07,17.7,16.15,17.16,27.78,5.23,8.98-9.39,17.81-20.71,20.53-33.5,2.7-16.26-9.02-29.67-21.51-40.16C293.09,8.4,262.03,7,233.52,7.75,162.46,10.84,82.73,57.3,80.29,129.42c-1.53,32.14,13.68,60.98,41.18,78.69,14.75,9.83,21.09,16.1,1.4,22.68-33.42,10.69-62.57,24.27-84.55,48.96C-6.83,327.32-5.5,412.03,46.61,454.02c62.74,51.07,169.16,46.94,238.67,5.28,37.8-22.89,71.44-54.63,99.53-88.55,11.96-13.38,19.82-30.07,33.59-41.63,8.73-7,21.51-11.91,32.85-14.91,12.99-3.7,12.42,3.19,7.77,12.61-15.47,29.72-33.94,62.65-36.19,96.77-3.66,36.98,22.49,75.27,62.63,64.84,30-7.58,54.62-27.36,79.19-47.51,6.35-5.27,17.53-14.95,23.94-14.76,11.21.75,11.24,19.47,15.92,28.33a73.59,73.59,0,0,0,8.71,15.74c32.83,47.12,87.3-.82,130.76-40,5.9-4.47,11.01-6.85,15.25-6.29,4.63.52,8.23,4.54,11.68,10.37,20.21,44.37,70.5,63.91,117.37,53.81,38.8-6.85,69.82-28.11,101.42-55.98,10.48-8.68,19.69-20.22,22.41-33.59,1.52-7.93,1.41-14.78-5.13-15.24-7.71,1.77-13.87,9.51-22.03,16.29a179.2,179.2,0,0,1-26.36,19.61l-.16.1Z" />
             </g>
         </svg>
     </div>
@@ -372,18 +367,31 @@
             );
 
             let isScrolled = false;
-            window.addEventListener('scroll', () => {
-                if (window.scrollY > 10 && !isScrolled) {
-                    isScrolled = true;
-                    pulseTween.pause();
-                    gsap.to("#launch-circle", { opacity: 1, duration: 0.2 });
-                } else if (window.scrollY <= 10 && isScrolled) {
-                    isScrolled = false;
-                    pulseTween.play();
-                }
-            });
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 10 && !isScrolled) {
+                isScrolled = true;
+                pulseTween.pause();
+                gsap.to("#launch-circle", { opacity: 1, duration: 0.2 });
+            } else if (window.scrollY <= 10 && isScrolled) {
+                isScrolled = false;
+                pulseTween.play();
+            }
+        });
 
-            let initTl = gsap.timeline({
+        // 🚨 修正 SVG 殘影：精準取得原始長度並存入 dataset
+        const logoPaths = document.querySelectorAll('#logo-wrapper path');
+        logoPaths.forEach(path => {
+            const length = path.getTotalLength() + 5; // 加上 5px 緩衝區
+            path.dataset.length = length;
+            path.style.strokeDasharray = length;
+            path.style.strokeDashoffset = length;
+            path.style.strokeWidth = "2px";
+            path.style.fillOpacity = "0";
+            path.style.strokeOpacity = "1";
+        });
+
+        // 🚨 將 initTl 預設為 paused，等陣會根據 Scroll 位置決定播唔播
+        let initTl = gsap.timeline({
                 paused: true,
                 onComplete: () => {
                     if (!isScrolled) pulseTween.play();
@@ -452,34 +460,29 @@
                 masterTl.to("#launch-ui-wrapper", { autoAlpha: 0, duration: 5, ease: "power2.in" }, 10);
 
                 masterTl.to("#rocket-drift", {
-                    keyframes: { "0%": { y: 0, ease: "power2.out" }, "50%": { y: 40, ease: "power2.inOut" }, "100%": { y: 0, ease: "power2.out" } },
-                    duration: 15
-                }, 10);
-                
-                masterTl.to("#rocket-drift", {
-                    keyframes: { "0%": { y: 0, ease: "sine.inOut" }, "50%": { y: -15, ease: "sine.inOut" }, "100%": { y: 0, ease: "sine.inOut" } },
-                    duration: 50 
-                }, 25);
+                keyframes: { "0%": { y: 0, ease: "sine.inOut" }, "50%": { y: -15, ease: "sine.inOut" }, "100%": { y: 0, ease: "sine.inOut" } },
+                duration: 50 
+            }, 25);
 
-                // 🚨 確保 SVG 變白線，唔好有任何移位
-                masterTl.to("#logo-wrapper path", {
-                    fillOpacity: 0, strokeOpacity: 1, strokeWidth: 2,
-                    duration: 7, ease: "power1.inOut"
-                }, 35);
+            // 🚨 確保 SVG 變白線，唔好有任何移位
+            masterTl.to("#logo-wrapper path", {
+                fillOpacity: 0, strokeOpacity: 1, strokeWidth: 2,
+                duration: 7, ease: "power1.inOut"
+            }, 35);
 
-                // 🚨 退場：完美還原為 102 (完全隱藏)
-                masterTl.to("#logo-wrapper path", {
-                    strokeDashoffset: 102,
-                    duration: 12, 
-                    stagger: -0.1,
-                    ease: "power2.inOut"
-                }, 40);
+            // 🚨 退場：動態讀取返正確嘅長度進行反向收線
+            masterTl.to("#logo-wrapper path", {
+                strokeDashoffset: (i, el) => el.dataset.length,
+                duration: 12, 
+                stagger: -0.1,
+                ease: "power2.inOut"
+            }, 40);
 
-                // 🚨 雙重保險：收線後將成個 Logo Wrapper 隱藏，防止任何殘留
-                masterTl.to("#logo-wrapper", { autoAlpha: 0, duration: 0.1 }, 52);
+            // 🚨 雙重保險：收線後將成個 Logo Wrapper 隱藏，防止任何殘留
+            masterTl.to("#logo-wrapper", { autoAlpha: 0, duration: 0.1 }, 52);
 
-                masterTl.to("#rocket-wrapper", { 
-                    bottom: `${rocketHighBottomNum}%`, 
+            masterTl.to("#rocket-wrapper", { 
+                bottom: `${rocketHighBottomNum}%`, 
                     duration: 12, 
                     ease: "power2.inOut" 
                 }, 40);
@@ -556,30 +559,31 @@
                 }
 
                 let textPinEnd = isMobile ? "+=800" : "+=1500";
-                let textTl = gsap.timeline({
-                    scrollTrigger: { trigger: "#text-trigger", start: "center center", end: textPinEnd, pin: true, scrub: true } // 🚨 改為 true，實現零延遲淡出
-                });
-                textTl.from("#text-trigger .char-particle", { opacity: 0, x: () => (Math.random() - 0.5) * 500, y: () => (Math.random() - 0.5) * 500, rotation: () => (Math.random() - 0.5) * 90, filter: "blur(8px)", scale: () => Math.random() * 3, stagger: { amount: 1, from: "random" }, ease: "power2.out", duration: 2 });
-                textTl.to({}, { duration: 1 }); // 縮短等待時間，提早退場
-                textTl.to("#text-trigger .char-particle", { opacity: 0, y: -150, filter: "blur(4px)", stagger: { amount: 0.5, from: "start" }, ease: "power2.in", duration: 1.5 });
-
-                return () => {
-                    masterTl.kill(); 
-                    // 🚨 清除所有 Inline Style 防止 Resize 時互相污染
-                    gsap.set([
-                        "#rocket-wrapper", "#summary-wrapper", "#launch-line-active", 
-                        "#launch-ui-wrapper", "#rocket-drift", "#logo-wrapper", "#sticky-logo"
-                    ], { clearProps: "all" });
-                    
-                    // 重新將 Logo 重置為「進場後」嘅實體白色狀態，防止 Resize 期間短暫消失
-                    gsap.set("#logo-wrapper path", { clearProps: "all" });
-                    gsap.set("#logo-wrapper path", { strokeDashoffset: 0, fillOpacity: 1, strokeOpacity: 0 });
-
-                    if (trailContainer) trailContainer.innerHTML = ''; 
-                };
+            let textTl = gsap.timeline({
+                scrollTrigger: { trigger: "#text-trigger", start: "center center", end: textPinEnd, pin: true, scrub: true } // 🚨 改為 true，實現零延遲淡出
             });
+            textTl.from("#text-trigger .char-particle", { opacity: 0, x: () => (Math.random() - 0.5) * 500, y: () => (Math.random() - 0.5) * 500, rotation: () => (Math.random() - 0.5) * 90, filter: "blur(8px)", scale: () => Math.random() * 3, stagger: { amount: 1, from: "random" }, ease: "power2.out", duration: 2 });
+            textTl.to({}, { duration: 1 }); // 縮短等待時間，提早退場
+            textTl.to("#text-trigger .char-particle", { opacity: 0, y: -150, filter: "blur(4px)", stagger: { amount: 0.5, from: "start" }, ease: "power2.in", duration: 1.5 });
 
-            let shakeTween = gsap.to("#rocket-svg-container", {
+            return () => {
+                masterTl.kill(); 
+                // 🚨 清除所有 Inline Style 防止 Resize 時互相污染
+                gsap.set([
+                    "#rocket-wrapper", "#summary-wrapper", "#launch-line-active", 
+                    "#launch-ui-wrapper", "#rocket-drift", "#sticky-logo"
+                ], { clearProps: "all" });
+                
+                // 🚨 SVG 特殊清理：保留 strokeDasharray 避免 Resize 爛線
+                gsap.set("#logo-wrapper", { clearProps: "all" });
+                gsap.set("#logo-wrapper path", { clearProps: "fillOpacity,strokeOpacity,strokeDashoffset,strokeWidth" });
+                gsap.set("#logo-wrapper path", { strokeDashoffset: 0, fillOpacity: 1, strokeOpacity: 0, strokeWidth: "2px" });
+
+                if (trailContainer) trailContainer.innerHTML = ''; 
+            };
+        });
+
+        let shakeTween = gsap.to("#rocket-svg-container", {
                 x: () => Math.random() * 4 - 2, y: () => Math.random() * 4 - 2, rotation: () => Math.random() * 2 - 1,
                 duration: 0.1, repeat: -1, yoyo: true, ease: "none", paused: true 
             });
