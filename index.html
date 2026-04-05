@@ -31,7 +31,12 @@
         body {
             color: #fff;
             font-family: 'Inter', sans-serif;
-            height: 7000px; 
+        }
+
+        /* 🚨 新增：防止左上角閃現 (FOUC) 嘅保護層 */
+        .fouc-protect {
+            opacity: 0;
+            visibility: hidden;
         }
 
         /* --- Nav Link Hover 點點特效 --- */
@@ -103,7 +108,7 @@
             will-change: transform;
         }
 
-        /* 獨立嘅文字 Wrapper，專責處理精準對位，絕不與火箭綁定升降 */
+        /* 獨立嘅文字 Wrapper */
         #summary-wrapper {
             position: fixed;
             z-index: 45;
@@ -119,7 +124,7 @@
             top: 0;
             left: 0;
             width: 100%;
-            height: 100dvh;
+            height: 100%;
             pointer-events: none;
             z-index: 10;
         }
@@ -181,12 +186,13 @@
         }
     </style>
 </head>
-<body class="antialiased selection:bg-gray-700 selection:text-white">
+
+<body class="antialiased selection:bg-gray-700 selection:text-white h-[4200px] md:h-[7000px]">
 
     <div id="custom-cursor"><span>Discover</span></div>
 
-    <!-- Header -->
-    <header class="fixed top-0 left-0 w-full px-[30px] pt-[30px] md:px-[5.26vw] md:pt-[35px] z-[999] flex justify-between items-end pointer-events-none">
+    <!-- Header (加上 .fouc-protect) -->
+    <header class="fixed top-0 left-0 w-full px-[30px] pt-[30px] md:px-[5.26vw] md:pt-[35px] z-[999] flex justify-between items-end pointer-events-none fouc-protect">
         <div id="sticky-logo" class="h-[20px] md:h-[26px] opacity-0 pointer-events-auto cursor-pointer flex items-end">
             <svg xmlns="http://www.w3.org/2000/svg" width="124.586" height="25" viewBox="0 0 124.586 25" class="h-full w-auto block pointer-events-none">
               <g id="Group_16" data-name="Group 16" transform="translate(-92 -34)">
@@ -221,8 +227,8 @@
         </nav>
     </header>
 
-    <!-- 🚨 更換成修正版 Eric SVG，清除 fill="#fff" 交由 GSAP/CSS 控制 -->
-    <div id="logo-wrapper">
+    <!-- Eric SVG (加上 .fouc-protect) -->
+    <div id="logo-wrapper" class="fouc-protect">
         <svg id="logo-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1007.008 483.838" class="w-full h-auto block" preserveAspectRatio="xMidYMid meet">
             <g transform="translate(-5.903 -7.597)">
                 <path d="M756.02,75.31c-5.96-5.09-16.83,1.31-23.89,2.14-26.38,6.13-45.84-19.11-58.56-1.65-5.34,8.23-7.88,18.63-12.34,27.46-4.55,11.28-14.33,22.74-8.39,34.01,8.77,13.9,39.97,17.68,55.23,15.1,30.22-2.76,49.72-32.62,50.99-66.6.01-4.77-.92-8.4-2.94-10.37l-.09-.09Z" />
@@ -231,8 +237,8 @@
         </svg>
     </div>
 
-    <!-- 倒數 UI -->
-    <div id="launch-ui-wrapper" class="pointer-events-none">
+    <!-- 倒數 UI (加上 .fouc-protect) -->
+    <div id="launch-ui-wrapper" class="pointer-events-none fouc-protect">
         <div id="launch-ui" class="flex flex-col items-center transition-opacity duration-300">
             <p class="launch-text text-[#999999] text-[11px] md:text-[12px] font-medium tracking-[0.08em] leading-none uppercase m-0">Scroll to launch</p>
             <div class="h-[8px]"></div>
@@ -249,8 +255,8 @@
         </div>
     </div>
 
-    <!-- 火箭主 Wrapper -->
-    <div id="rocket-wrapper">
+    <!-- 火箭主 Wrapper (加上 .fouc-protect) -->
+    <div id="rocket-wrapper" class="fouc-protect">
         <div id="rocket-drift">
             <div id="rocket-svg-container" class="w-16 md:w-20 relative z-20">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 81.997 232.845" class="w-full h-auto block">
@@ -260,8 +266,8 @@
         </div>
     </div>
 
-    <!-- 完全解綁嘅文字 Wrapper -->
-    <div id="summary-wrapper">
+    <!-- 獨立嘅文字 Wrapper -->
+    <div id="summary-wrapper" class="fouc-protect">
         <div id="vehicle-summary" class="absolute bottom-[150px] left-[50%] ml-[50px] md:ml-[58px] w-max">
             <div class="summary-line font-extrabold text-[5px] tracking-[0.04em] text-white mb-[4px] leading-none uppercase">VEHICLE SUMMARY</div>
             <div class="summary-line font-medium text-[5px] tracking-[0.04em] text-white leading-[1.6] uppercase">240mH / 18mW</div>
@@ -276,7 +282,7 @@
         <div id="trail-container"></div>
 
         <!-- 釘選的文字區塊 -->
-        <div id="text-trigger" class="absolute w-full top-[3200px] z-20">
+        <div id="text-trigger" class="absolute w-full top-[1920px] md:top-[3200px] z-20">
             <div id="text-section" class="w-full h-[100dvh] flex justify-center items-center pointer-events-none px-6">
                 <p class="text-center text-2xl md:text-[32px] font-light leading-[1.8] md:leading-[2.2] max-w-[900px] text-gray-100 tracking-wide">
                     Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus parturient montes.
@@ -285,7 +291,7 @@
         </div>
 
         <!-- Portfolio 佈局區塊 -->
-        <div id="portfolio-section" class="absolute w-full top-[5500px] z-30 pb-64">
+        <div id="portfolio-section" class="absolute w-full top-[3300px] md:top-[5500px] z-30 pb-64">
             <div class="w-full mx-auto px-[30px] md:px-[5.26vw] grid grid-cols-4 md:grid-cols-6 gap-[15px] md:gap-[2.08vw]">
                 
                 <div class="portfolio-item group relative z-30 col-span-4 md:col-span-4 bg-zinc-800 aspect-[16/10] w-full cursor-pointer rounded-sm overflow-hidden">
@@ -306,6 +312,8 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", () => {
+            // 🚨 瞬間解除 FOUC 保護層，交由 GSAP 接管
+            gsap.set(".fouc-protect", { autoAlpha: 1 });
             gsap.set("#sticky-logo, .nav-link, .launch-text, #launch-circle, .summary-line", { opacity: 0 });
 
             gsap.registerPlugin(ScrollTrigger);
@@ -367,17 +375,20 @@
                 }
             });
 
+            // 🚨 修正 SVG 殘影：加上 5px 緩衝區，確保線條完全收起
             const logoPaths = document.querySelectorAll('#logo-wrapper path');
             logoPaths.forEach(path => {
                 const length = path.getTotalLength();
-                path.style.strokeDasharray = length;
-                path.style.strokeDashoffset = length;
+                path.style.strokeDasharray = length + 5;
+                path.style.strokeDashoffset = length + 5;
                 path.style.strokeWidth = "2px";
                 path.style.fillOpacity = "0";
                 path.style.strokeOpacity = "1";
             });
 
+            // 🚨 將 initTl 預設為 paused，等陣會根據 Scroll 位置決定播唔播
             let initTl = gsap.timeline({
+                paused: true,
                 onComplete: () => {
                     if (!isScrolled) pulseTween.play();
                 }
@@ -488,11 +499,14 @@
                 }, 35);
 
                 masterTl.to("#logo-wrapper path", {
-                    strokeDashoffset: (i, el) => el.getTotalLength(),
+                    strokeDashoffset: (i, el) => el.getTotalLength() + 5, // 🚨 緩衝區 5px，解決殘餘點點問題
                     duration: 12, 
                     stagger: -0.1,
                     ease: "power2.inOut"
                 }, 40);
+
+                // 🚨 強制隱藏：喺線條收縮完結後，直接將整個 Wrapper 隱藏，100% 解決殘影！
+                masterTl.to("#logo-wrapper", { opacity: 0, duration: 0.1 }, 52);
 
                 masterTl.to("#rocket-wrapper", { 
                     bottom: `${rocketHighBottomNum}%`, 
@@ -516,13 +530,20 @@
                     rocketCenterPos = { left: "50%", right: "auto", xPercent: -50 };
                 }
                 
-                let particleOffset = isMobile ? 40 : 20;
+                let particleOffset = isMobile ? 15 : 20;
+
+                function power2InOut(t) {
+                    return t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+                }
 
                 let getRocketBottom = (t) => {
                     if (t <= 10) return rocketStartBottomNum;
                     if (t <= 25) return rocketStartBottomNum + ((t - 10) / 15) * (rocketMidBottomNum - rocketStartBottomNum);
                     if (t <= 40) return rocketMidBottomNum;
-                    if (t <= 52) return rocketMidBottomNum + ((t - 40) / 12) * (rocketHighBottomNum - rocketMidBottomNum);
+                    if (t <= 52) {
+                        let progress = (t - 40) / 12;
+                        return rocketMidBottomNum + power2InOut(progress) * (rocketHighBottomNum - rocketMidBottomNum);
+                    }
                     if (t <= 82) return rocketHighBottomNum;
                     if (t <= 97) return rocketHighBottomNum + ((t - 82) / 15) * (120 - rocketHighBottomNum);
                     return 120;
@@ -600,6 +621,17 @@
                     scrollTrigger: { trigger: "#portfolio-section", start: "top 85%", toggleActions: "play none none reverse" }
                 });
             });
+
+            // 🚨 解決 Reload 錯位問題：根據 Scroll 位置決定係咪播 Intro
+            setTimeout(() => {
+                if (window.scrollY > 20) {
+                    // 如果用家已經捲落去，瞬間將 Intro 動畫快轉到 100%，交畀 ScrollTrigger 接手
+                    initTl.progress(1);
+                } else {
+                    // 如果喺頂部，正常播放
+                    initTl.play();
+                }
+            }, 50); // 畀少少時間等 Browser Scroll Restoration 生效
 
         });
     </script>
