@@ -227,7 +227,7 @@
         </nav>
     </header>
 
-    <!-- 🚨 終極修復 Eric SVG：移除 pathLength，交由 JavaScript 處理真實像素長度 -->
+    <!-- 🚨 終極修復 Eric SVG：交由 JavaScript 處理真實像素長度及大間距 -->
     <div id="logo-wrapper" class="fouc-protect">
         <svg id="logo-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1018.87 499.02" class="w-full h-auto block" preserveAspectRatio="xMidYMid meet">
             <g transform="translate(-5.903 -7.597)">
@@ -313,11 +313,23 @@
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             
-            // 將 SVG 最初狀態隱藏，唔使依賴 JS 計 Length
-            gsap.set("#sticky-logo, .nav-link, .launch-text, #launch-circle, .summary-line", { opacity: 0 });
+            // 🚨 防閃現 (FOUC) 處理：先計好 SVG 線條長度
+            const logoPaths = document.querySelectorAll('#logo-wrapper path');
+            logoPaths.forEach(path => {
+                // 加上特大緩衝區 (150px) 確保長度充足
+                const length = Math.ceil(path.getTotalLength()) + 150; 
+                path.dataset.length = length;
+                // 🚨 終極修復：實線 = length，空白間距 = length + 2000px (防止複合路徑折返點穿崩)
+                path.style.strokeDasharray = `${length}px ${length + 2000}px`;
+                path.style.strokeDashoffset = `${length}px`;
+                path.style.strokeWidth = "2px";
+                path.style.fillOpacity = "0";
+                path.style.strokeOpacity = "1";
+            });
 
-            // 所有準備功夫做完，正式解除保護層
+            // 線條設定好後，先至解除 FOUC 保護層，並將需要 Fade In 嘅元素隱藏
             gsap.set(".fouc-protect", { autoAlpha: 1 });
+            gsap.set("#sticky-logo, .nav-link, .launch-text, #launch-circle, .summary-line", { opacity: 0 });
 
             gsap.registerPlugin(ScrollTrigger);
             ScrollTrigger.config({ ignoreMobileResize: true });
@@ -367,53 +379,31 @@
             );
 
             let isScrolled = false;
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 10 && !isScrolled) {
-                isScrolled = true;
-                pulseTween.pause();
-                gsap.to("#launch-circle", { opacity: 1, duration: 0.2 });
-            } else if (window.scrollY <= 10 && isScrolled) {
-                isScrolled = false;
-                pulseTween.play();
-            }
-        });
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 10 && !isScrolled) {
+                    isScrolled = true;
+                    pulseTween.pause();
+                    gsap.to("#launch-circle", { opacity: 1, duration: 0.2 });
+                } else if (window.scrollY <= 10 && isScrolled) {
+                    isScrolled = false;
+                    pulseTween.play();
+                }
+            });
 
-        // 🚨 修正 SVG 殘影：精準取得原始長度並存入 dataset
-        const logoPaths = document.querySelectorAll('#logo-wrapper path');
-        logoPaths.forEach(path => {
-            const length = path.getTotalLength() + 5; // 加上 5px 緩衝區
-            path.dataset.length = length;
-            path.style.strokeDasharray = length;
-            path.style.strokeDashoffset = length;
-            path.style.strokeWidth = "2px";
-            path.style.fillOpacity = "0";
-            path.style.strokeOpacity = "1";
-        });
-
-        // 🚨 將 initTl 預設為 paused，等陣會根據 Scroll 位置決定播唔播
-        let initTl = gsap.timeline({
+            let initTl = gsap.timeline({
                 paused: true,
                 onComplete: () => {
                     if (!isScrolled) pulseTween.play();
                 }
             });
 
-            // 🚨 入場：配合 pathLength="100"，由 102 退到 0
-            initTl.to("#logo-wrapper path", { strokeDashoffset: 0, duration: 2.5, ease: "power2.inOut", stagger: 0.15 }, 0.2);
+            initTl.to("#logo-wrapper path", { strokeDashoffset: "0px", duration: 2.5, ease: "power2.inOut", stagger: 0.15 }, 0.2);
             initTl.to("#logo-wrapper path", { fillOpacity: 1, strokeOpacity: 0, duration: 1.5, ease: "power2.out", stagger: 0.1 }, 1.8);
-            
             initTl.fromTo(".launch-text", { y: 15, filter: "blur(4px)" }, { y: 0, opacity: 1, filter: "blur(0px)", duration: 1.2, stagger: 0.2, ease: "power3.out" }, 1.5);
             initTl.fromTo(".launch-line-bg", { scaleY: 0 }, { scaleY: 1, duration: 1.5, ease: "power3.inOut" }, 2.0);
             initTl.fromTo(".summary-line", { x: 15 }, { x: 0, opacity: 1, duration: 1.2, stagger: 0.15, ease: "power3.out" }, 2.2);
             initTl.fromTo("#launch-circle", { scale: 0 }, { scale: 1, opacity: 1, duration: 0.6, ease: "back.out(1.7)" }, 3.0);
             initTl.fromTo(".nav-link", { y: -10 }, { y: 0, opacity: 1, duration: 1.2, stagger: 0.15, ease: "power3.out" }, 3.8);
-
-            // 🚨 完美 Reload 修復：同步檢查，如果已經向下滑動，瞬間跳到動畫結尾
-            if (window.scrollY > 30) {
-                initTl.progress(1);
-            } else {
-                initTl.play();
-            }
 
             let mm = gsap.matchMedia();
 
@@ -460,29 +450,34 @@
                 masterTl.to("#launch-ui-wrapper", { autoAlpha: 0, duration: 5, ease: "power2.in" }, 10);
 
                 masterTl.to("#rocket-drift", {
-                keyframes: { "0%": { y: 0, ease: "sine.inOut" }, "50%": { y: -15, ease: "sine.inOut" }, "100%": { y: 0, ease: "sine.inOut" } },
-                duration: 50 
-            }, 25);
+                    keyframes: { "0%": { y: 0, ease: "power2.out" }, "50%": { y: 40, ease: "power2.inOut" }, "100%": { y: 0, ease: "power2.out" } },
+                    duration: 15
+                }, 10);
+                
+                masterTl.to("#rocket-drift", {
+                    keyframes: { "0%": { y: 0, ease: "sine.inOut" }, "50%": { y: -15, ease: "sine.inOut" }, "100%": { y: 0, ease: "sine.inOut" } },
+                    duration: 50 
+                }, 25);
 
-            // 🚨 確保 SVG 變白線，唔好有任何移位
-            masterTl.to("#logo-wrapper path", {
-                fillOpacity: 0, strokeOpacity: 1, strokeWidth: 2,
-                duration: 7, ease: "power1.inOut"
-            }, 35);
+                // 🚨 確保 SVG 變回白線，為收線做準備
+                masterTl.to("#logo-wrapper path", {
+                    fillOpacity: 0, strokeOpacity: 1, strokeWidth: "2px",
+                    duration: 7, ease: "power1.inOut"
+                }, 35);
 
-            // 🚨 退場：動態讀取返正確嘅長度進行反向收線
-            masterTl.to("#logo-wrapper path", {
-                strokeDashoffset: (i, el) => el.dataset.length,
-                duration: 12, 
-                stagger: -0.1,
-                ease: "power2.inOut"
-            }, 40);
+                // 🚨 退場：完美還原為預先儲存好嘅 length，連帶單位 px
+                masterTl.to("#logo-wrapper path", {
+                    strokeDashoffset: (i, el) => `${el.dataset.length}px`,
+                    duration: 12, 
+                    stagger: -0.1,
+                    ease: "power2.inOut"
+                }, 40);
 
-            // 🚨 雙重保險：收線後將成個 Logo Wrapper 隱藏，防止任何殘留
-            masterTl.to("#logo-wrapper", { autoAlpha: 0, duration: 0.1 }, 52);
+                // 🚨 雙重保險：收線後將成個 Logo Wrapper 隱藏，杜絕一切殘影
+                masterTl.to("#logo-wrapper", { autoAlpha: 0, duration: 0.1 }, 52);
 
-            masterTl.to("#rocket-wrapper", { 
-                bottom: `${rocketHighBottomNum}%`, 
+                masterTl.to("#rocket-wrapper", { 
+                    bottom: `${rocketHighBottomNum}%`, 
                     duration: 12, 
                     ease: "power2.inOut" 
                 }, 40);
@@ -546,7 +541,6 @@
                     masterTl.to(circle, { opacity: 0, duration: lifeDuration * 0.25, ease: "power2.inOut" }, spawnTime + Math.max(0, lifeDuration * 0.75));
                 }
 
-                // 🚨 將字體動畫搬入 MatchMedia，為 Mobile 調整專屬停留距離，防止同作品重疊
                 const mainTextElement = document.querySelector("#text-section p");
                 if (mainTextElement && !mainTextElement.hasAttribute('data-split')) {
                     const text = mainTextElement.textContent.trim().replace(/\s+/g, ' '); 
@@ -559,31 +553,39 @@
                 }
 
                 let textPinEnd = isMobile ? "+=800" : "+=1500";
-            let textTl = gsap.timeline({
-                scrollTrigger: { trigger: "#text-trigger", start: "center center", end: textPinEnd, pin: true, scrub: true } // 🚨 改為 true，實現零延遲淡出
+                let textTl = gsap.timeline({
+                    scrollTrigger: { trigger: "#text-trigger", start: "center center", end: textPinEnd, pin: true, scrub: true } 
+                });
+                textTl.from("#text-trigger .char-particle", { opacity: 0, x: () => (Math.random() - 0.5) * 500, y: () => (Math.random() - 0.5) * 500, rotation: () => (Math.random() - 0.5) * 90, filter: "blur(8px)", scale: () => Math.random() * 3, stagger: { amount: 1, from: "random" }, ease: "power2.out", duration: 2 });
+                textTl.to({}, { duration: 1 }); 
+                textTl.to("#text-trigger .char-particle", { opacity: 0, y: -150, filter: "blur(4px)", stagger: { amount: 0.5, from: "start" }, ease: "power2.in", duration: 1.5 });
+
+                return () => {
+                    masterTl.kill(); 
+                    gsap.set([
+                        "#rocket-wrapper", "#summary-wrapper", "#launch-line-active", 
+                        "#launch-ui-wrapper", "#rocket-drift", "#sticky-logo"
+                    ], { clearProps: "all" });
+                    
+                    // 🚨 SVG 特殊清理：保留設定好嘅實色狀態，防止 Resize 穿崩
+                    gsap.set("#logo-wrapper", { clearProps: "all" });
+                    gsap.set("#logo-wrapper path", { clearProps: "fillOpacity,strokeOpacity,strokeDashoffset,strokeWidth" });
+                    gsap.set("#logo-wrapper path", { strokeDashoffset: "0px", fillOpacity: 1, strokeOpacity: 0, strokeWidth: "2px" });
+
+                    if (trailContainer) trailContainer.innerHTML = ''; 
+                };
             });
-            textTl.from("#text-trigger .char-particle", { opacity: 0, x: () => (Math.random() - 0.5) * 500, y: () => (Math.random() - 0.5) * 500, rotation: () => (Math.random() - 0.5) * 90, filter: "blur(8px)", scale: () => Math.random() * 3, stagger: { amount: 1, from: "random" }, ease: "power2.out", duration: 2 });
-            textTl.to({}, { duration: 1 }); // 縮短等待時間，提早退場
-            textTl.to("#text-trigger .char-particle", { opacity: 0, y: -150, filter: "blur(4px)", stagger: { amount: 0.5, from: "start" }, ease: "power2.in", duration: 1.5 });
 
-            return () => {
-                masterTl.kill(); 
-                // 🚨 清除所有 Inline Style 防止 Resize 時互相污染
-                gsap.set([
-                    "#rocket-wrapper", "#summary-wrapper", "#launch-line-active", 
-                    "#launch-ui-wrapper", "#rocket-drift", "#sticky-logo"
-                ], { clearProps: "all" });
-                
-                // 🚨 SVG 特殊清理：保留 strokeDasharray 避免 Resize 爛線
-                gsap.set("#logo-wrapper", { clearProps: "all" });
-                gsap.set("#logo-wrapper path", { clearProps: "fillOpacity,strokeOpacity,strokeDashoffset,strokeWidth" });
-                gsap.set("#logo-wrapper path", { strokeDashoffset: 0, fillOpacity: 1, strokeOpacity: 0, strokeWidth: "2px" });
+            // 🚨 完美 Reload 修復：偵測 Scroll 位置，如果已經落咗去，瞬間跳到動畫結尾
+            setTimeout(() => {
+                if (window.scrollY > 30) {
+                    initTl.progress(1);
+                } else {
+                    initTl.play();
+                }
+            }, 50);
 
-                if (trailContainer) trailContainer.innerHTML = ''; 
-            };
-        });
-
-        let shakeTween = gsap.to("#rocket-svg-container", {
+            let shakeTween = gsap.to("#rocket-svg-container", {
                 x: () => Math.random() * 4 - 2, y: () => Math.random() * 4 - 2, rotation: () => Math.random() * 2 - 1,
                 duration: 0.1, repeat: -1, yoyo: true, ease: "none", paused: true 
             });
