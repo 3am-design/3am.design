@@ -36,7 +36,6 @@
         .fouc-protect { opacity: 0; visibility: hidden; }
 
         /* --- Injected SVG Styles --- */
-        /* 確保動態載入嘅 SVG 繼承返原本嘅樣式 */
         #preloader-logo-container svg, #header-logo-container svg { height: 100%; width: auto; display: block; }
         #logo-wrapper svg { width: 100%; height: auto; display: block; }
         #rocket-svg-container svg { width: 100%; height: auto; display: block; }
@@ -124,10 +123,10 @@
     </style>
 </head>
 
-<body class="antialiased selection:bg-gray-700 selection:text-white h-[6500px] md:h-[11000px]">
+<body class="antialiased selection:bg-gray-700 selection:text-white h-[10000px] md:h-[14000px]">
 
     <!-- 0. Background Grid Base -->
-    <div class="fixed top-0 left-0 w-full h-[100dvh] pointer-events-none z-0 px-[30px] md:px-[5.26vw]">
+    <div id="bg-grid" class="fixed top-0 left-0 w-full h-[100dvh] pointer-events-none z-0 px-[30px] md:px-[5.26vw] transition-opacity duration-300 opacity-0">
         <div class="w-full h-full grid grid-cols-4 md:grid-cols-6 gap-[15px] md:gap-[2.08vw]">
             <div class="bg-[#0b3834] w-full h-full"></div>
             <div class="bg-[#0b3834] w-full h-full"></div>
@@ -137,6 +136,9 @@
             <div class="bg-[#0b3834] hidden md:block w-full h-full"></div>
         </div>
     </div>
+
+    <!-- 0.5 月球 (Shared Persistent Moon) -->
+    <img id="shared-moon" src="assets/home/moon.webp" alt="Moon" class="fixed top-[-150vh] left-[-30vw] md:left-[-20vw] w-[130vw] md:w-[70vw] max-w-none z-10 pointer-events-none mix-blend-screen opacity-80" onerror="this.style.display='none'">
 
     <!-- 1. Preloader -->
     <div id="preloader" class="fixed top-0 left-0 w-full h-[100dvh] bg-[#000] z-[99999] flex justify-center items-center pointer-events-auto">
@@ -197,15 +199,12 @@
     <div class="relative w-full">
         <div id="trail-container"></div>
 
-        <!-- Intro Section -->
-        <div id="intro-trigger" class="absolute w-full top-[1920px] md:top-[3200px] z-20">
+        <!-- Intro Section (位置微調) -->
+        <div id="intro-trigger" class="absolute w-full top-[2000px] md:top-[3000px] z-20">
             <div id="intro-section" class="relative w-full h-[100dvh] flex justify-center items-center overflow-hidden pointer-events-none">
-                <img id="intro-moon" src="assets/home/moonn.webp" alt="Moon" class="absolute bottom-[-12vh] left-[-24vw] w-[110vw] md:w-[50vw] max-w-[820px] z-10 pointer-events-none opacity-0 mix-blend-screen" onerror="this.style.display='none'">
-
-                <div class="relative z-20 w-full mx-auto px-[30px] md:px-[5.26vw] grid grid-cols-4 md:grid-cols-6 gap-[15px] md:gap-[2.08vw] items-center">
-                    
-                    <div id="intro-3am-container" class="intro-fade col-span-4 md:col-span-2 md:col-start-1 flex justify-center md:justify-start"></div>
-
+                <div class="relative z-20 w-full mx-auto px-[30px] md:px-[5.26vw] grid grid-cols-4 md:grid-cols-6 gap-[15px] md:gap-[2.08vw] items-start">
+                    <!-- 3am SVG 置頂對齊 -->
+                    <div id="intro-3am-container" class="col-span-4 md:col-span-2 md:col-start-1 flex justify-center md:justify-end md:pt-[10px]"></div>
                     <div class="col-span-4 md:col-span-3 md:col-start-3 text-center md:text-left mt-[30px] md:mt-0">
                         <p class="intro-fade text-[20px] md:text-[30px] font-normal leading-[36px] md:leading-[50px] tracking-[0] text-white">is the vibe that clears my head.</p>
                         <p class="intro-fade text-[20px] md:text-[30px] font-normal leading-[36px] md:leading-[50px] tracking-[0] text-white">A mindset, not a schedule.</p>
@@ -217,11 +216,9 @@
             </div>
         </div>
 
-        <!-- Awards Section -->
-        <div id="awards-trigger" class="absolute w-full top-[2820px] md:top-[4550px] z-20">
+        <!-- Awards Section (提早入場) -->
+        <div id="awards-trigger" class="absolute w-full top-[3200px] md:top-[4200px] z-20">
             <div id="awards-section" class="relative w-full h-[100dvh] flex items-center overflow-hidden pointer-events-none">
-                <img id="awards-moon" src="assets/home/moonn.webp" alt="Moon" class="absolute bottom-[-16vh] left-[-28vw] w-[105vw] md:w-[46vw] max-w-[760px] z-10 pointer-events-none opacity-0 mix-blend-screen" onerror="this.style.display='none'">
-
                 <div class="relative z-20 w-full mx-auto px-[30px] md:px-[5.26vw] grid grid-cols-4 md:grid-cols-6 gap-[15px] md:gap-[2.08vw] items-start">
                     <div class="col-span-4 md:col-span-6 md:-mx-[8vw] pt-[7vh] md:pt-[8vh]">
                         <div class="awards-marquee">
@@ -232,13 +229,11 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="col-span-4 md:col-span-4 md:col-start-3 pt-[18px] md:pt-[6.5vw] text-center md:text-left">
                         <p class="awards-fade text-[24px] md:text-[38px] font-bold leading-[1.15] text-white">15 years of experience</p>
                         <div class="h-[18px] md:h-[28px]"></div>
                         <p class="awards-fade text-[24px] md:text-[38px] font-bold leading-[1.15] text-white">30+ awards</p>
                         <div class="h-[28px] md:h-[42px]"></div>
-
                         <div class="flex flex-col gap-y-[22px] md:gap-y-[34px] items-center md:items-start">
                             <div class="flex flex-wrap md:flex-nowrap justify-center md:justify-start items-center gap-x-[20px] gap-y-[22px] md:gap-x-[52px] md:gap-y-[0px] w-full">
                                 <div id="award-hkda" class="awards-logo w-[41px] shrink-0"></div>
@@ -254,17 +249,15 @@
             </div>
         </div>
 
-        <!-- Portfolio Section -->
-        <div id="portfolio-section" class="absolute w-full top-[4800px] md:top-[7500px] z-30 pb-64">
+        <!-- Portfolio Section (提早接續) -->
+        <div id="portfolio-section" class="absolute w-full top-[4800px] md:top-[6500px] z-30 pb-64">
             <div class="w-full mx-auto px-[30px] md:px-[5.26vw] grid grid-cols-4 md:grid-cols-6 gap-[15px] md:gap-[2.08vw]">
                 <div class="portfolio-item group relative z-30 col-span-4 md:col-span-4 bg-zinc-800 aspect-[16/10] w-full cursor-pointer rounded-sm overflow-hidden">
                     <img src="assets/home/Home_01.webp" alt="Project 1" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" onerror="this.style.display='none'">
                 </div>
-
                 <div class="portfolio-item group relative z-30 col-span-2 md:col-span-2 bg-zinc-800 aspect-[3/4] w-full mt-10 md:mt-[8vw] cursor-pointer rounded-sm overflow-hidden">
                     <video src="assets/home/Home_02.mp4" autoplay loop muted playsinline class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"></video>
                 </div>
-
                 <div class="portfolio-item group relative z-30 col-span-2 md:col-start-2 md:col-span-2 bg-zinc-800 aspect-square w-full mt-4 md:mt-[4vw] cursor-pointer rounded-sm overflow-hidden">
                     <img src="assets/home/Home_03.jpg" alt="Project 3" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" onerror="this.style.display='none'">
                 </div>
@@ -276,10 +269,6 @@
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             
-            // --- 1. SVG Fetcher 邏輯與 Canvas Fallback 機制 ---
-            // 在 Canvas 預覽環境下，基於安全限制 (blob URL) 無法直接 fetch 本地相對路徑。
-            // 因此我準備了預設的簡易 SVG 作為 fallback，確保在 Canvas 也能預覽動畫效果。
-            // 當你在 Local Server 運行時，它就會正常去讀取你的精緻 SVG！
             const fallbackSVGs = {
                 'assets/home/3amDS.svg': '<svg viewBox="0 0 114 25"><text x="0" y="20" fill="#fff" font-size="20" font-weight="bold" font-family="sans-serif">3am.</text></svg>',
                 'assets/home/ayoh.svg': '<svg viewBox="0 0 1427 794" preserveAspectRatio="xMidYMid meet"><path d="M400,397 L1027,397" fill="none" stroke="#ffffff" stroke-width="8" stroke-linecap="round"/><text x="713" y="380" fill="#fff" font-size="40" text-anchor="middle" font-family="sans-serif">AYOH (Preview)</text></svg>',
@@ -295,7 +284,6 @@
 
             async function fetchSVG(url, containerId) {
                 try {
-                    // 檢查是否處於 Blob/Data URL 的沙盒環境 (如 Canvas 預覽)
                     if (window.location.protocol === 'blob:' || window.location.protocol === 'data:') {
                         throw new Error("預覽環境無法直接 fetch 本地檔案");
                     }
@@ -304,7 +292,7 @@
                     const svgData = await response.text();
                     document.getElementById(containerId).innerHTML = svgData;
                 } catch (error) {
-                    console.warn(`[Canvas 預覽模式] 無法加載 ${url}，已自動使用 Fallback SVG。請在 Local Server (如 Live Server) 運行以查看實際圖片。`);
+                    console.warn(`[Canvas 預覽模式] 無法加載 ${url}，已自動使用 Fallback SVG。`);
                     if (fallbackSVGs[url]) {
                         document.getElementById(containerId).innerHTML = fallbackSVGs[url];
                     }
@@ -312,7 +300,6 @@
             }
 
             async function loadAllSVGs() {
-                // 陣列裝住所有需要 Fetch 嘅 SVG
                 await Promise.all([
                     fetchSVG('assets/home/3amDS.svg', 'preloader-logo-container'),
                     fetchSVG('assets/home/3amDS.svg', 'header-logo-container'),
@@ -326,12 +313,9 @@
                     fetchSVG('assets/home/WebAward.svg', 'award-webaward'),
                     fetchSVG('assets/home/ComAward.svg', 'award-comaward')
                 ]);
-
-                // 當所有 SVG 順利載入後，先啟動 GSAP 動畫！
                 initGSAPAnimations();
             }
 
-            // --- 2. GSAP Animations Logic ---
             function initGSAPAnimations() {
                 gsap.registerPlugin(ScrollTrigger);
                 ScrollTrigger.config({ ignoreMobileResize: true });
@@ -349,7 +333,6 @@
                 gsap.ticker.add((time) => lenis.raf(time * 1000));
                 gsap.ticker.lagSmoothing(0, 0);
 
-                // Setup SVG Path lengths for Drawing Animation
                 const logoPaths = gsap.utils.toArray("#logo-wrapper svg path");
                 logoPaths.forEach((path) => {
                     const dash = Math.ceil(path.getTotalLength()) + 10;
@@ -364,15 +347,12 @@
                     gsap.set(path, { strokeDasharray: `${dash} ${dash}`, strokeDashoffset: dash, strokeWidth: 2, fillOpacity: 0, strokeOpacity: 1 });
                 });
 
-                // Init states
                 gsap.set(".fouc-protect", { autoAlpha: 1 });
                 gsap.set(".nav-link, .launch-text, #launch-circle, .summary-line", { opacity: 0 });
                 gsap.set(".intro-fade", { opacity: 0, y: 24 });
                 gsap.set(".awards-fade, .awards-logo", { opacity: 0, y: 34, filter: "blur(10px)" });
-                gsap.set("#intro-moon, #awards-moon", { opacity: 0, scale: 0.92 });
                 gsap.set(".awards-marquee-track", { xPercent: 14 });
 
-                // Cursor logic
                 if (window.matchMedia("(pointer: fine)").matches) {
                     const cursor = document.getElementById("custom-cursor");
                     if (cursor) {
@@ -395,7 +375,6 @@
                     if (cursor) cursor.style.display = "none";
                 }
 
-                // Initial Sequences
                 const pulseTween = gsap.fromTo("#launch-circle", { opacity: 1 }, { opacity: 0, repeat: -1, yoyo: true, duration: 0.6, ease: "power1.inOut", paused: true });
                 let isScrolled = false;
 
@@ -409,7 +388,6 @@
 
                 const initTl = gsap.timeline({ paused: true, onComplete: () => { if (!isScrolled) pulseTween.play(); } });
                 
-                // 防止因無 Path 而報錯
                 if (logoPaths.length > 0) {
                     initTl.to(logoPaths, { strokeDashoffset: 0, duration: 2.4, ease: "none", stagger: 0.03 }, 0);
                     initTl.to(logoPaths, { fillOpacity: 1, strokeOpacity: 0, duration: 0.8, ease: "power2.out", stagger: 0.03 }, 2.45);
@@ -425,7 +403,6 @@
                 preloaderTl.to("#preloader-logo-container", { opacity: 0, duration: 0.6, delay: 0.5, ease: "power2.inOut" })
                            .to("#preloader", { opacity: 0, duration: 0.8, ease: "power2.inOut", onStart: () => initTl.play() }, "-=0.2");
 
-                // Scroll Animations
                 const mm = gsap.matchMedia();
                 mm.add({
                     isMobile: "(max-width: 767px)",
@@ -436,6 +413,7 @@
                     const trailContainer = document.getElementById("trail-container");
                     if (trailContainer) trailContainer.innerHTML = "";
 
+                    // Master Timeline: mapped to scroll progress (0-100)
                     const masterTl = gsap.timeline({ scrollTrigger: { trigger: "body", start: "top top", end: "bottom bottom", scrub: 1 } });
                     masterTl.to({}, { duration: 100 });
 
@@ -459,33 +437,54 @@
                     const rocketStartBottomNum = 0;
                     const rocketMidBottomNum = isMobile ? 15 : 50;
 
-                    masterTl.to("#rocket-wrapper", { bottom: `${rocketMidBottomNum}%`, ease: "none", duration: 15 }, 10);
-                    masterTl.to("#summary-wrapper", { y: "100vh", duration: 15, ease: "power2.in" }, 10);
-                    masterTl.to("#launch-line-active", { height: "100%", duration: 10, ease: "none" }, 0);
-                    masterTl.to("#launch-ui-wrapper", { autoAlpha: 0, duration: 5, ease: "power2.in" }, 10);
-                    masterTl.to("#rocket-drift", { keyframes: { "0%": { y: 0, ease: "power2.out" }, "50%": { y: 40, ease: "power2.inOut" }, "100%": { y: 0, ease: "power2.out" } }, duration: 15 }, 10);
-                    masterTl.to("#rocket-drift", { keyframes: { "0%": { y: 0, ease: "sine.inOut" }, "50%": { y: 8, ease: "sine.inOut" }, "100%": { y: 0, ease: "sine.inOut" } }, duration: 50 }, 25);
-                    
-                    if (logoPaths.length > 0) {
-                        masterTl.to(logoPaths, { fillOpacity: 0, strokeOpacity: 0.8, duration: 2.1, ease: "power1.inOut", stagger: 0.015 }, 34.8);
-                        masterTl.to(logoPaths, { strokeDashoffset: (_, target) => Number(target.dataset.dash), duration: 16.4, stagger: -0.05, ease: "none" }, 36.5);
-                    }
-                    
-                    masterTl.to("#logo-wrapper", { autoAlpha: 0, duration: 0.5 }, 53);
-                    masterTl.to("#header-logo-container", { opacity: 1, duration: 5, ease: "power2.inOut" }, 55);
-                    masterTl.to("#rocket-wrapper", { bottom: "120%", ease: "none", duration: 15 }, 82);
+                    // 1. Initial elements hide
+                    masterTl.to("#summary-wrapper", { y: "100vh", duration: 8, ease: "power2.in" }, 5);
+                    masterTl.to("#launch-line-active", { height: "100%", duration: 8, ease: "none" }, 0);
+                    masterTl.to("#launch-ui-wrapper", { autoAlpha: 0, duration: 4, ease: "power2.in" }, 5);
 
+                    // 2. Rocket logic
+                    // (a) 初次升空
+                    masterTl.to("#rocket-wrapper", { bottom: `${rocketMidBottomNum}%`, ease: "none", duration: 10 }, 0);
+                    // (b) 為 Awards 準備而升高少少 (提早至 28 開始)
+                    masterTl.to("#rocket-wrapper", { bottom: `${rocketMidBottomNum + 15}%`, ease: "power1.inOut", duration: 5 }, 28);
+                    // (c) Awards 完結後，火箭正式飛走離場 (提早至 48 開始)
+                    masterTl.to("#rocket-wrapper", { bottom: "150%", ease: "power2.in", duration: 10 }, 48);
+                    
+                    // 火箭微震：第一階段 (Intro)
+                    masterTl.to("#rocket-drift", { keyframes: { "0%": { y: 0, ease: "sine.inOut" }, "50%": { y: 30, ease: "sine.inOut" }, "100%": { y: 0, ease: "sine.inOut" } }, duration: 18 }, 10);
+                    // 火箭微震：第二階段 (Awards)
+                    masterTl.to("#rocket-drift", { keyframes: { "0%": { y: 0, ease: "sine.inOut" }, "50%": { y: 15, ease: "sine.inOut" }, "100%": { y: 0, ease: "sine.inOut" } }, duration: 15 }, 33);
+
+                    // 3. Ayoh Logo Exit (提早退場，為 Moon 及 Intro 讓路)
+                    if (logoPaths.length > 0) {
+                        masterTl.to(logoPaths, { fillOpacity: 0, strokeOpacity: 0.8, duration: 2, ease: "power1.inOut", stagger: 0.015 }, 8);
+                        masterTl.to(logoPaths, { strokeDashoffset: (_, target) => Number(target.dataset.dash), duration: 8, stagger: -0.05, ease: "none" }, 10);
+                    }
+                    masterTl.to("#logo-wrapper", { autoAlpha: 0, duration: 0.5 }, 19);
+                    masterTl.to("#header-logo-container", { opacity: 1, duration: 3, ease: "power2.inOut" }, 20);
+                    
+                    // 4. Moon Logic
+                    // 月球由 Ayoh 消失時 (12%) 出現，一直下沉到頁面最底才完全消失 (進度 100%)
+                    masterTl.fromTo("#shared-moon", 
+                        { y: "0vh" }, 
+                        { y: "450vh", duration: 88, ease: "none" }, 
+                        12
+                    );
+
+                    // 5. Particles (Bubbles) Logic
                     const colors = ["#EF4444", "#10B981", "#3B82F6", "#F59E0B", "#FFFFFF"];
                     const numBubbles = 100;
                     let rocketCenterPos = isDesktop ? { left: "75%", xPercent: -50 } : isTablet ? { left: "80%", xPercent: -50 } : { left: "50%", xPercent: -50 };
                     const particleOffset = isMobile ? 15 : 20;
 
+                    // 配合火箭全新 Timeline 節奏
                     const getRocketBottom = (t) => {
-                        if (t <= 10) return rocketStartBottomNum;
-                        if (t <= 25) return rocketStartBottomNum + ((t - 10) / 15) * (rocketMidBottomNum - rocketStartBottomNum);
-                        if (t <= 82) return rocketMidBottomNum;
-                        if (t <= 97) return rocketMidBottomNum + ((t - 82) / 15) * (120 - rocketMidBottomNum);
-                        return 120;
+                        if (t <= 10) return rocketStartBottomNum + (t / 10) * (rocketMidBottomNum - rocketStartBottomNum);
+                        if (t <= 28) return rocketMidBottomNum;
+                        if (t <= 33) return rocketMidBottomNum + ((t - 28) / 5) * 15;
+                        if (t <= 48) return rocketMidBottomNum + 15;
+                        if (t <= 58) return rocketMidBottomNum + 15 + ((t - 48) / 10) * (150 - (rocketMidBottomNum + 15));
+                        return 150; // 火箭飛走後，氣泡固定喺上方生成向下掉落
                     };
 
                     for (let i = 0; i < numBubbles; i++) {
@@ -503,8 +502,11 @@
                         const rBottomVal = getRocketBottom(spawnTime);
                         const initialOffsetX = (Math.random() - 0.5) * 40;
                         const lifeDuration = 15 + Math.random() * 15;
-                        const dropY = Math.random() * 500 + 400;
                         const finalOffsetX = initialOffsetX + (Math.random() - 0.5) * 400;
+
+                        // 火箭飛走後氣泡於天際落下，營造唯美感
+                        const isHighUp = rBottomVal > 100;
+                        const dropY = isHighUp ? (Math.random() * 800 + 1000) : (Math.random() * 500 + 400);
 
                         masterTl.set(circle, { bottom: `calc(${rBottomVal}% - ${particleOffset}px)`, y: 0, x: initialOffsetX, width: 0, height: 0, opacity: 0, ...rocketCenterPos }, spawnTime);
                         masterTl.to(circle, { opacity: 1, width: targetSize * 0.15, height: targetSize * 0.15, duration: lifeDuration * 0.05, ease: "power2.out" }, spawnTime);
@@ -512,22 +514,19 @@
                         masterTl.to(circle, { opacity: 0, duration: lifeDuration * 0.25, ease: "power2.inOut" }, spawnTime + Math.max(0, lifeDuration * 0.75));
                     }
 
-                    // --- Intro Section Pinned Timeline ---
-                    const introPinEnd = isMobile ? "+=1050" : "+=1600";
+                    // --- Introduction Section Pinned Timeline ---
+                    const introPinEnd = isMobile ? "+=1050" : "+=1500";
                     const introTl = gsap.timeline({ scrollTrigger: { trigger: "#intro-trigger", start: "center center", end: introPinEnd, pin: true, scrub: 1 } });
-                    
-                    introTl.to("#intro-moon", { opacity: 0.82, scale: 1, duration: 1.6, ease: "power2.out" }, 0);
                     
                     if (intro3amPaths.length > 0) {
                         introTl.to(intro3amPaths, { strokeDashoffset: 0, duration: 2.3, ease: "none", stagger: 0.08 }, 0.05);
                         introTl.to(intro3amPaths, { fillOpacity: 1, strokeOpacity: 0, duration: 0.9, ease: "power2.out" }, 1.95);
                     }
                     
-                    introTl.to(".intro-fade:not(#intro-3am-container)", { opacity: 1, y: 0, duration: 1.4, stagger: 0.18, ease: "power3.out" }, 0.15);
-                    introTl.to({}, { duration: 1.8 }); // Reading buffer
+                    introTl.to(".intro-fade", { opacity: 1, y: 0, duration: 1.4, stagger: 0.18, ease: "power3.out" }, 0.15);
+                    introTl.to({}, { duration: 1.8 });
 
-                    // Ayoh Exit line-drawing effect
-                    introTl.to(".intro-fade:not(#intro-3am-container)", { opacity: 0, y: -20, duration: 0.8, ease: "power2.in" });
+                    introTl.to(".intro-fade", { opacity: 0, y: -20, duration: 0.8, ease: "power2.in" });
                     
                     if (intro3amPaths.length > 0) {
                         introTl.to(intro3amPaths, { fillOpacity: 0, strokeOpacity: 1, duration: 0.5, ease: "power2.in" }, "<");
@@ -537,10 +536,9 @@
                     introTl.to("#intro-section", { opacity: 0, y: -90, duration: 1.3, ease: "power2.in" }, "-=0.5");
 
                     // --- Awards Section Pinned Timeline ---
-                    const awardsPinEnd = isMobile ? "+=1100" : "+=1600";
+                    const awardsPinEnd = isMobile ? "+=1100" : "+=1500";
                     const awardsTl = gsap.timeline({ scrollTrigger: { trigger: "#awards-trigger", start: "center center", end: awardsPinEnd, pin: true, scrub: 1 } });
                     
-                    awardsTl.to("#awards-moon", { opacity: 0.72, scale: 1, duration: 1.8, ease: "power2.out" }, 0);
                     awardsTl.to(".awards-marquee-track", { xPercent: isMobile ? -24 : -42, duration: 6.6, ease: "none" }, 0);
                     awardsTl.to(".awards-fade", { opacity: 1, y: 0, filter: "blur(0px)", duration: 1.45, stagger: 0.14, ease: "power3.out" }, 0.18);
                     awardsTl.to(".awards-logo", { opacity: 1, y: 0, filter: "blur(0px)", duration: 1.2, stagger: 0.08, ease: "power3.out" }, 0.72);
@@ -561,6 +559,14 @@
                     gsap.from(".portfolio-item", { y: 60, opacity: 0, duration: 1.2, stagger: 0, ease: "power3.out", scrollTrigger: { trigger: "#portfolio-section", start: "top 85%", toggleActions: "play none none reverse" } });
                 });
             }
+
+            // --- 3. Grid Toggle Hotkey ---
+            document.addEventListener('keydown', (e) => {
+                if (e.key.toLowerCase() === 'g' && !e.ctrlKey && !e.metaKey) {
+                    const grid = document.getElementById('bg-grid');
+                    if (grid) grid.classList.toggle('opacity-0');
+                }
+            });
 
             // 啟動第一步：加載所有 SVG
             loadAllSVGs();
