@@ -39,15 +39,18 @@
         #preloader-logo-container svg, #header-logo-container svg { height: 100%; width: auto; display: block; }
         #logo-wrapper svg { width: 100%; height: auto; display: block; }
         #rocket-svg-container svg { width: 100%; height: auto; display: block; }
-        #intro-3am-container svg { height: 108px; width: auto; display: block; }
-        @media (min-width: 768px) { #intro-3am-container svg { height: 150px; } }
+        
+        /* 縮細 3am SVG 大小，加大 8% 配合隔離 3 行字嘅高度 */
+        #intro-3am-container svg { height: 86px; width: auto; display: block; }
+        @media (min-width: 768px) { #intro-3am-container svg { height: 119px; } }
+        
         .awards-logo svg { width: 100%; height: auto; display: block; }
         
         /* CTA Section SVGs */
         #cta-title-container svg { width: 100%; height: auto; display: block; }
         #astronaut-container svg { width: 100%; height: auto; display: block; }
 
-        /* 動態繪圖路徑預設樣式 (加入 CTA Title 並強制覆蓋 SVG 內置顏色) */
+        /* 動態繪圖路徑預設樣式 */
         #logo-wrapper svg path, #intro-3am-container svg path, 
         #cta-title-container svg path, #cta-title-container svg text,
         #cta-title-container svg rect, #cta-title-container svg polygon, 
@@ -63,7 +66,6 @@
         #rocket-wrapper svg path { fill: #ffffff; }
 
         /* --- 其他 UI Styles --- */
-        /* 頂部主選單 - 圓點浮現動畫 */
         .nav-link { position: relative; transition: color 0.3s ease; }
         .nav-link::after {
             content: ""; position: absolute; width: 5px; height: 5px;
@@ -73,11 +75,10 @@
         }
         .nav-link:hover::after { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-        /* 文字連結 - 由左至右畫線動畫 */
         .hover-underline-link { position: relative; transition: color 0.3s ease; }
         .hover-underline-link::after {
             content: ""; position: absolute; width: 0; height: 2px;
-            bottom: 0; left: 0; background-color: currentColor; /* 自動跟隨字體顏色 (如 hover 時變灰) */
+            bottom: 0; left: 0; background-color: currentColor;
             transition: width 0.3s ease-out;
         }
         .hover-underline-link:hover::after { width: 100%; }
@@ -108,6 +109,7 @@
             pointer-events: none; z-index: 10;
         }
 
+        /* 📍 Karina Fix: 加返舊版唔見咗嘅火箭氣泡噴射圈圈 CSS */
         .circle-particle {
             position: absolute; border-radius: 50%; border: 2px solid;
             background: transparent; opacity: 0; will-change: transform, opacity, width, height;
@@ -132,7 +134,6 @@
         }
         #custom-cursor.hover-img span { opacity: 1; }
 
-        /* 修正 clipping 問題，改用 overflow: visible 確保字體唔會被切斷 */
         .awards-marquee { overflow: visible; white-space: nowrap; width: 100%; position: relative; }
         .awards-marquee-track {
             display: inline-flex; align-items: center; gap: 20px;
@@ -144,7 +145,6 @@
     </style>
 </head>
 
-<!-- 移除死板高度限制，高度將由 JavaScript 精確計算，保障所有 Scroll 次序完美同步 -->
 <body class="antialiased selection:bg-gray-700 selection:text-white">
 
     <!-- 0. Background Grid Base -->
@@ -159,7 +159,7 @@
         </div>
     </div>
 
-    <!-- 0.5 月球 (Shared Persistent Moon) -->
+    <!-- 0.5 月球 -->
     <img id="shared-moon" src="assets/home/moon.webp" alt="Moon" class="fixed top-[-150vh] left-[-30vw] md:left-[-20vw] w-[130vw] md:w-[70vw] max-w-none z-10 pointer-events-none mix-blend-screen opacity-80" onerror="this.style.display='none'">
 
     <!-- 1. Preloader -->
@@ -172,7 +172,7 @@
 
     <!-- 3. Header -->
     <header class="fixed top-0 left-0 w-full px-[30px] pt-[30px] md:px-[5.26vw] md:pt-[35px] z-[999] flex justify-between items-end pointer-events-none fouc-protect">
-        <div id="header-logo-container" class="h-[20px] md:h-[26px] pointer-events-auto cursor-pointer flex items-end opacity-0"></div>
+        <a href="index.html" id="header-logo-container" class="h-[20px] md:h-[26px] pointer-events-auto cursor-pointer flex items-end opacity-0"></a>
         <nav class="flex gap-6 md:gap-[35px] text-sm md:text-[15px] font-bold tracking-[0.04em] h-[20px] md:h-[26px] items-end pointer-events-auto">
             <a href="#" class="nav-link cursor-pointer leading-none opacity-0">Works</a>
             <a href="#" class="nav-link cursor-pointer leading-none opacity-0">About</a>
@@ -207,7 +207,7 @@
         </div>
     </div>
 
-    <!-- 7. Summary Text (Desktop 時貼實 Grid 最右邊) -->
+    <!-- 7. Summary Text -->
     <div id="summary-wrapper" class="fouc-protect">
         <div id="vehicle-summary" class="absolute bottom-[150px] left-[50%] ml-[50px] md:left-auto md:-right-[6.59vw] md:ml-0 w-max text-left">
             <div class="summary-line font-extrabold text-[5px] tracking-[0.04em] text-white mb-[4px] leading-none uppercase">VEHICLE SUMMARY</div>
@@ -222,19 +222,17 @@
         <div id="trail-container"></div>
 
         <!-- Intro Section -->
-        <div id="intro-trigger" class="absolute w-full top-[1440px] md:top-[2000px] z-20">
+        <div id="intro-trigger" class="absolute w-full top-[1140px] md:top-[1400px] z-20">
             <div id="intro-section" class="relative w-full h-[100dvh] flex justify-center items-center overflow-hidden pointer-events-none">
                 <div class="relative z-20 w-full mx-auto px-[30px] md:px-[5.26vw]">
-                    <!-- 上半部分：3am Logo 同 3行字底對齊 -->
                     <div class="grid grid-cols-4 md:grid-cols-6 gap-[15px] md:gap-[2.08vw] items-end">
-                        <div id="intro-3am-container" class="col-span-4 md:col-span-2 md:col-start-1 flex justify-center md:justify-end translate-y-[10px] md:translate-y-[16px]"></div>
+                        <div id="intro-3am-container" class="col-span-4 md:col-span-2 md:col-start-1 flex justify-center md:justify-end mb-[5px] md:mb-[10px]"></div>
                         <div class="col-span-4 md:col-span-3 md:col-start-3 text-center md:text-left mt-[30px] md:mt-0">
                             <p class="intro-fade text-[20px] md:text-[30px] font-normal leading-[36px] md:leading-[50px] tracking-[0] text-white m-0">is the vibe that clears my head.</p>
                             <p class="intro-fade text-[20px] md:text-[30px] font-normal leading-[36px] md:leading-[50px] tracking-[0] text-white m-0">A mindset, not a schedule.</p>
                             <p class="intro-fade text-[20px] md:text-[30px] font-normal leading-[36px] md:leading-[50px] tracking-[0] text-white m-0">For sharp, functional &amp; striking work.</p>
                         </div>
                     </div>
-                    <!-- 下半部分：DONE BY 5PM -->
                     <div class="grid grid-cols-4 md:grid-cols-6 gap-[15px] md:gap-[2.08vw] mt-[42px] md:mt-[75px]">
                         <div class="col-span-4 md:col-span-3 md:col-start-3 text-center md:text-left">
                             <p class="intro-fade text-[12px] font-medium leading-[18px] tracking-[0.04em] uppercase text-white m-0">DONE BY 5PM. NOT ALL-NIGHTERS.</p>
@@ -244,15 +242,13 @@
             </div>
         </div>
 
-        <!-- Awards Section Pinned Timeline -->
-        <div id="awards-trigger" class="absolute w-full top-[3500px] md:top-[5000px] z-20">
+        <!-- Awards Section -->
+        <div id="awards-trigger" class="absolute w-full top-[3200px] md:top-[4800px] z-20">
             <div id="awards-section" class="relative w-full h-[100dvh] flex items-center overflow-hidden pointer-events-none">
                 <div class="relative z-20 w-full mx-auto px-[30px] md:px-[5.26vw] grid grid-cols-4 md:grid-cols-6 gap-[15px] md:gap-[2.08vw] items-start">
                     <div class="col-span-4 md:col-span-6 md:-mx-[8vw] pt-[7vh] md:pt-[8vh]">
-                        <!-- 加入 md:mt-[180px] 將成行 skill 再向下移低 100px -->
                         <div class="awards-marquee mt-[140px] md:mt-[180px]">
-                            <!-- 加入 leading-[1.2] 以防被 mask，內容改為純橫向進入 -->
-                            <div class="awards-marquee-track text-[40px] md:text-[88px] font-extrabold leading-[1.2] tracking-[-0.05em] text-white">
+                            <div class="awards-marquee-track text-[40px] md:text-[100px] font-bold leading-[1.2] tracking-[-0.05em] text-white">
                                 <span>UXUI</span>
                                 <div class="w-[8px] h-[8px] md:w-[16px] md:h-[16px] bg-[#999999] rounded-full shrink-0"></div>
                                 <span>Web &amp; App</span>
@@ -268,10 +264,7 @@
                         </div>
                     </div>
                     
-                    <!-- 精準設定 md:pt-[133px] 以符合設計圖 133px 嘅高度間距 -->
                     <div class="col-span-4 md:col-span-4 md:col-start-3 pt-[40px] md:pt-[133px] text-center md:text-left">
-                        
-                        <!-- 設定 gap-[12px] 以符合設計圖 12px 嘅圓點文字間距，並將字體大小與 is the vibe (text-[20px] md:text-[30px]) 一致 -->
                         <div class="awards-fade flex items-center justify-center md:justify-start gap-[12px]">
                             <div class="w-[8px] h-[8px] md:w-[10px] md:h-[10px] rounded-full bg-white shrink-0 -translate-y-[1px] md:-translate-y-[2px]"></div>
                             <p class="text-[20px] md:text-[30px] font-normal leading-[1.15] text-white text-left">15 years of experience</p>
@@ -303,8 +296,8 @@
             </div>
         </div>
 
-        <!-- Portfolio Section 改回 Absolute 保障 GSAP 次序，底部加入 70px Padding 完美收尾。因應 Awards 拖長 50%，整體向下對應順延 -->
-        <div id="portfolio-section" class="absolute w-full top-[7200px] md:top-[10700px] z-30 pb-[70px]">
+        <!-- Portfolio Section -->
+        <div id="portfolio-section" class="absolute w-full top-[7600px] md:top-[11000px] z-30 pb-[70px]">
             <div class="w-full mx-auto px-[30px] md:px-[5.26vw] grid grid-cols-4 md:grid-cols-6 gap-[15px] md:gap-[2.08vw] items-start">
                 
                 <!-- Item 1 -->
@@ -312,73 +305,62 @@
                     <img src="assets/home/Home_01.webp" alt="Project 1" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" onerror="this.style.display='none'">
                 </div>
 
-                <!-- Item 2 (右上方，稍微推低) -->
+                <!-- Item 2 -->
                 <div class="portfolio-item group relative z-30 col-span-2 md:col-span-2 md:col-start-5 bg-zinc-800 aspect-[3/4] w-full mt-[15px] md:mt-[8vw] cursor-pointer rounded-sm overflow-hidden">
                     <video src="assets/home/Home_02.mp4" autoplay loop muted playsinline class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"></video>
                 </div>
 
-                <!-- Item 3 (中間偏左，利用負 margin 向上攝入 Item 1 底部) -->
+                <!-- Item 3 -->
                 <div class="portfolio-item group relative z-30 col-span-2 md:col-span-2 md:col-start-2 bg-zinc-800 aspect-square w-full mt-[15px] md:-mt-[6vw] cursor-pointer rounded-sm overflow-hidden">
                     <img src="assets/home/Home_03.jpg" alt="Project 3" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" onerror="this.style.display='none'">
                 </div>
 
-                <!-- Item 4 (中間偏右，大型橫圖) -->
+                <!-- Item 4 -->
                 <div class="portfolio-item group relative z-30 col-span-3 md:col-span-3 md:col-start-4 bg-zinc-800 aspect-[4/3] w-full mt-[15px] md:mt-[2vw] cursor-pointer rounded-sm overflow-hidden">
                     <img src="assets/home/Home_04.webp" alt="Project 4" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" onerror="this.style.display='none'">
                 </div>
 
-                <!-- Item 5 (左下方，利用負 margin 向上攝) -->
+                <!-- Item 5 -->
                 <div class="portfolio-item group relative z-30 col-span-3 md:col-span-3 md:col-start-1 bg-zinc-800 aspect-[16/10] w-full mt-[15px] md:-mt-[10vw] cursor-pointer rounded-sm overflow-hidden">
                     <img src="assets/home/Home_05.webp" alt="Project 5" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" onerror="this.style.display='none'">
                 </div>
 
-                <!-- View All Projects (替換為 hover-underline-link，並利用 Flex 高度確保貼底畫線) -->
+                <!-- View All Projects -->
                 <div class="col-span-full -mt-[50px] md:-mt-[10px] flex justify-center items-center h-[76px] z-30 relative">
-                    <a href="#" class="text-white text-[16px] md:text-[20px] font-bold hover:text-gray-300 transition-colors hover-underline-link inline-block pb-[2px]">View all projects</a>
+                    <a href="#" class="text-white text-[16px] md:text-[20px] font-bold transition-colors hover-underline-link inline-block pb-[2px]">View all projects</a>
                 </div>
 
-                <!-- CTA / Footer Section (跟隨 XD 數值: mt 200px) -->
+                <!-- CTA / Footer Section -->
                 <div class="col-span-full mt-[100px] md:mt-[200px] relative w-full pb-0">
                     
-                    <!-- 背景 Grid：獨立圖層 z-0 放 Astronaut，確保絕對墊喺文字下面 -->
                     <div class="absolute inset-0 grid grid-cols-4 md:grid-cols-6 gap-[15px] md:gap-[2.08vw] pointer-events-none z-0">
                         <div class="col-span-2 col-start-3 md:col-start-5 md:col-span-2 relative w-full h-full">
-                            <!-- Astronaut SVG Container (設定 bottom-[-200px] 令圖片喺最邊緣出血，被頁底截斷) -->
-                            <div id="astronaut-container" class="absolute bottom-[-150px] md:bottom-[-200px] right-[-30px] md:right-0 w-[60vw] md:w-full"></div>
+                            <div id="astronaut-container" class="absolute bottom-[-120px] md:bottom-[-160px] right-0 w-[48vw] md:w-[80%]"></div>
                         </div>
                     </div>
 
-                    <!-- 前景文字 Grid：設定為 z-10，防止被 Astronaut SVG 食字 -->
                     <div class="grid grid-cols-4 md:grid-cols-6 gap-[15px] md:gap-[2.08vw] items-start relative z-10 pointer-events-none">
-                        
-                        <!-- AI x Human Title (精準對齊 col 2-3，保留畫線動畫) -->
                         <div id="cta-title-container" class="col-span-4 md:col-span-2 md:col-start-2 flex justify-start items-start pointer-events-auto"></div>
                         
-                        <!-- Description (精準對齊 col 4-5) -->
                         <div class="col-span-4 md:col-span-2 md:col-start-4 mt-[40px] md:mt-0 flex flex-col justify-start pointer-events-auto">
-                            <!-- 已分拆顏色：首句全白，其餘 #999999 -->
-                            <p class="text-[10px] md:text-[12px] font-medium tracking-[0.04em] leading-[20px] uppercase mb-[20px] md:mb-[30px]">
+                            <p class="cta-fade-text text-[10px] md:text-[12px] font-medium tracking-[0.04em] leading-[20px] uppercase mb-[20px] md:mb-[30px]">
                                 <span class="text-white">2026: The year of launch.</span><br>
                                 <span class="text-[#999999]">While others fear the machine,<br>I synchronize with it.</span>
                             </p>
-                            <p class="text-white text-[18px] md:text-[30px] font-normal leading-[1.5] md:leading-[50px]">
+                            <p class="cta-fade-text text-white text-[18px] md:text-[30px] font-normal leading-[1.5] md:leading-[50px]">
                                 By mastering the latest tech, I deliver smarter, faster &amp; more flexible design solutions that fit your budget, without compromising the soul of the craft.
                             </p>
                         </div>
 
-                        <!-- Contact (精準置中跨越 col 3-4，間距 168px) -->
                         <div class="col-span-4 md:col-span-2 md:col-start-3 mt-[120px] md:mt-[168px] flex flex-col items-center text-center pointer-events-auto">
-                            <!-- 已分拆顏色：首句全白，其餘 #999999 -->
                             <p class="text-[9px] md:text-[10px] font-bold tracking-[0.08em] leading-[1.8] uppercase mb-[20px]">
                                 <span class="text-white">Want to collaborate?</span><br>
                                 <span class="text-[#999999]">Work with 3am.</span>
                             </p>
-                            <!-- 替換為 hover-underline-link，由左至右畫線動畫 -->
-                            <a href="mailto:ericng@hello-3am.com" class="text-white text-[14px] md:text-[18px] font-bold leading-[1.6] tracking-[0.02em] hover:text-gray-300 transition-colors mb-[5px] hover-underline-link inline-block pb-[2px]">ericng@hello-3am.com</a>
-                            <a href="tel:+85263577861" class="text-white text-[14px] md:text-[18px] font-bold leading-[1.6] tracking-[0.02em] hover:text-gray-300 transition-colors hover-underline-link inline-block pb-[2px]">+852 6357 7861</a>
+                            <a href="mailto:ericng@hello-3am.com" class="text-white text-[14px] md:text-[18px] font-bold leading-[1.6] tracking-[0.02em] transition-colors mb-[5px] hover-underline-link inline-block pb-[2px]">ericng@hello-3am.com</a>
+                            <a href="tel:+85263577861" class="text-white text-[14px] md:text-[18px] font-bold leading-[1.6] tracking-[0.02em] transition-colors hover-underline-link inline-block pb-[2px]">+852 6357 7861</a>
                         </div>
 
-                        <!-- Copyright (減 150px 間距) -->
                         <div class="col-span-full text-center mt-[80px] md:mt-[110px] pointer-events-auto">
                             <p class="text-[#999999] text-[9px] md:text-[10px] font-medium tracking-[0.04em]">Copyright © 2026 3am Design Studio. All rights reserved.</p>
                         </div>
@@ -466,22 +448,19 @@
                 gsap.ticker.add((time) => lenis.raf(time * 1000));
                 gsap.ticker.lagSmoothing(0, 0);
 
-                // 自動計算網頁高度，精準保障絕對定位與 GSAP Timeline 同步
                 const setBodyHeight = () => {
                     const portfolio = document.getElementById("portfolio-section");
                     if (portfolio) {
-                        // totalHeight 已經包含咗 pb-[100px] 嘅 Padding
                         const totalHeight = portfolio.offsetTop + portfolio.offsetHeight;
                         document.body.style.height = totalHeight + "px";
                         ScrollTrigger.refresh();
                     }
                 };
                 
-                // 初步設定高度
                 setBodyHeight();
                 window.addEventListener("load", () => {
                     setBodyHeight();
-                    setTimeout(setBodyHeight, 500); // 確保資源完全載入後再次重算
+                    setTimeout(setBodyHeight, 500); 
                 });
                 window.addEventListener("resize", setBodyHeight);
 
@@ -511,7 +490,8 @@
                 gsap.set(".intro-fade", { opacity: 0, y: 24 });
                 gsap.set(".awards-fade, .awards-logo", { opacity: 0, y: 34, filter: "blur(10px)" });
                 
-                // 設定 Marquee 的初始位置於螢幕極右側
+                gsap.set(".cta-fade-text", { opacity: 0, y: 24 });
+                
                 gsap.set(".awards-marquee-track", { x: "130vw", xPercent: 0 });
 
                 if (window.matchMedia("(pointer: fine)").matches) {
@@ -522,7 +502,6 @@
                         const yTo = gsap.quickTo(cursor, "y", { duration: 0.15, ease: "power3" });
 
                         window.addEventListener("mousemove", (e) => { xTo(e.clientX); yTo(e.clientY); });
-                        // 將 hover-underline-link 加入觸發 custom cursor 放大嘅對象
                         document.querySelectorAll(".nav-link, .hover-underline-link, #header-logo-container").forEach((link) => {
                             link.addEventListener("mouseenter", () => cursor.classList.add("hover-nav"));
                             link.addEventListener("mouseleave", () => cursor.classList.remove("hover-nav"));
@@ -557,12 +536,14 @@
 
                 initTl.fromTo(".launch-text", { y: 15, filter: "blur(4px)" }, { y: 0, opacity: 1, filter: "blur(0px)", duration: 1.2, stagger: 0.2, ease: "power3.out" }, 1.5);
                 initTl.fromTo(".launch-line-bg", { scaleY: 0 }, { scaleY: 1, duration: 1.5, ease: "power3.inOut" }, 2.0);
+                
                 initTl.fromTo(".summary-line", { x: 15 }, { x: 0, opacity: 1, duration: 1.2, stagger: 0.15, ease: "power3.out" }, 2.2);
+                initTl.fromTo(".nav-link", { y: -10 }, { y: 0, opacity: 1, duration: 1.2, stagger: 0.15, ease: "power3.out" }, 2.2);
+                
                 initTl.fromTo("#launch-circle", { scale: 0 }, { scale: 1, opacity: 1, duration: 0.6, ease: "back.out(1.7)" }, 3.0);
-                initTl.fromTo(".nav-link", { y: -10 }, { y: 0, opacity: 1, duration: 1.2, stagger: 0.15, ease: "power3.out" }, 3.8);
 
                 const preloaderTl = gsap.timeline({ onComplete: () => { document.getElementById("preloader").style.display = "none"; lenis.start(); } });
-                preloaderTl.to("#preloader-logo-container", { opacity: 0, duration: 0.6, delay: 0.5, ease: "power2.inOut" })
+                preloaderTl.to("#preloader-logo-container", { opacity: 0, duration: 0.8, delay: 1.5, ease: "power2.inOut" })
                            .to("#preloader", { opacity: 0, duration: 0.8, ease: "power2.inOut", onStart: () => initTl.play() }, "-=0.2");
 
                 const mm = gsap.matchMedia();
@@ -575,11 +556,9 @@
                     const trailContainer = document.getElementById("trail-container");
                     if (trailContainer) trailContainer.innerHTML = "";
 
-                    // Master Timeline
-                    const masterTl = gsap.timeline({ scrollTrigger: { trigger: "body", start: "top top", end: "bottom bottom", scrub: 1 } });
-                    masterTl.to({}, { duration: 100 });
+                    const rocketStartBottomNum = 0;
+                    const rocketMidBottomNum = isMobile ? 15 : 50;
 
-                    // 精確計算第 6 條 Grid 中心點：88.15vw
                     if (isDesktop) {
                         gsap.set("#logo-wrapper", { top: "50dvh", left: "-4vw", width: "70vw", yPercent: -50, scale: 1, xPercent: 0 });
                         gsap.set("#rocket-wrapper, #launch-ui-wrapper, #summary-wrapper", { left: "88.15%", right: "auto", xPercent: -50 });
@@ -597,52 +576,31 @@
                         gsap.set("#rocket-wrapper, #summary-wrapper", { bottom: "0%" });
                     }
 
-                    const rocketStartBottomNum = 0;
-                    const rocketMidBottomNum = isMobile ? 15 : 50;
+                    const masterTl = gsap.timeline({ scrollTrigger: { trigger: "body", start: "top top", end: "bottom bottom", scrub: 1 } });
+                    
+                    masterTl.to({}, { duration: 120 });
 
-                    // 1. Initial UI Hide (Summary 同步延遲到 10，同火箭一齊郁)
                     masterTl.to("#summary-wrapper", { y: "100vh", duration: 10, ease: "power2.in" }, 10);
-                    masterTl.to("#launch-line-active", { height: "100%", duration: 10, ease: "none" }, 0); // 0 到 10 填滿線
+                    masterTl.to("#launch-line-active", { height: "100%", duration: 10, ease: "none" }, 0); 
                     masterTl.to("#launch-ui-wrapper", { autoAlpha: 0, duration: 5, ease: "power2.in" }, 5);
-
-                    // 2. Rocket Logic (等 Scroll-to-launch 條線填滿(進度10)先開始升空)
+                    
                     masterTl.to("#rocket-wrapper", { bottom: `${rocketMidBottomNum}%`, ease: "none", duration: 15 }, 10);
-                    masterTl.to("#rocket-wrapper", { bottom: `calc(${rocketMidBottomNum}% + 200px)`, ease: "power1.inOut", duration: 6 }, 42);
-                    masterTl.to("#rocket-wrapper", { bottom: "150%", ease: "power2.in", duration: 12 }, 74);
-                    
-                    masterTl.to("#rocket-drift", { keyframes: { "0%": { y: 0, ease: "sine.inOut" }, "50%": { y: 30, ease: "sine.inOut" }, "100%": { y: 0, ease: "sine.inOut" } }, duration: 32 }, 10);
-                    masterTl.to("#rocket-drift", { keyframes: { "0%": { y: 0, ease: "sine.inOut" }, "50%": { y: 15, ease: "sine.inOut" }, "100%": { y: 0, ease: "sine.inOut" } }, duration: 26 }, 48);
+                    masterTl.to("#rocket-wrapper", { bottom: `calc(${rocketMidBottomNum}% + 200px)`, ease: "none", duration: 6 }, 36);
+                    masterTl.to("#rocket-wrapper", { bottom: "150%", ease: "none", duration: 10 }, 85);
 
-                    // 3. Ayoh Logo Exit
-                    if (logoPaths.length > 0) {
-                        masterTl.to(logoPaths, { fillOpacity: 0, strokeOpacity: 0.8, duration: 2, ease: "power1.inOut", stagger: 0.015 }, 10);
-                        masterTl.to(logoPaths, { strokeDashoffset: (_, target) => Number(target.dataset.dash), duration: 4, stagger: -0.05, ease: "none" }, 10);
-                    }
-                    masterTl.to("#logo-wrapper", { autoAlpha: 0, duration: 0.5 }, 15);
-                    masterTl.to("#header-logo-container", { opacity: 1, duration: 3, ease: "power2.inOut" }, 16);
-                    
-                    // 4. Moon Logic (加深下沉幅度至 225vh，確保到達頁底時月球剛好出界/出血但剩少少)
-                    masterTl.fromTo("#shared-moon", 
-                        { y: "0vh" }, 
-                        { y: "225vh", duration: 85, ease: "none" }, 
-                        15
-                    );
-
-                    // 5. Particles (Bubbles) Logic
                     const colors = ["#EF4444", "#10B981", "#3B82F6", "#F59E0B", "#FFFFFF"];
                     const numBubbles = 100;
                     let rocketCenterPos = isDesktop ? { left: "88.15%", xPercent: -50 } : isTablet ? { left: "88.15%", xPercent: -50 } : { left: "50%", xPercent: -50 };
                     
-                    // 加大 particleOffset 令氣泡推低啲，唔會太貼火箭尾部
                     const particleOffset = isMobile ? 35 : 60;
 
                     const getRocketBottomStr = (t) => {
                         if (t <= 10) return `${rocketStartBottomNum}%`; 
                         if (t <= 25) return `${rocketStartBottomNum + ((t - 10) / 15) * (rocketMidBottomNum - rocketStartBottomNum)}%`;
-                        if (t <= 42) return `${rocketMidBottomNum}%`;
-                        if (t <= 48) return `calc(${rocketMidBottomNum}% + ${200 * ((t - 42) / 6)}px)`;
-                        if (t <= 74) return `calc(${rocketMidBottomNum}% + 200px)`; 
-                        if (t <= 86) return `calc(${rocketMidBottomNum}% + 200px + ${(150 - rocketMidBottomNum) * ((t - 74) / 12)}%)`;
+                        if (t <= 36) return `${rocketMidBottomNum}%`;
+                        if (t <= 42) return `calc(${rocketMidBottomNum}% + ${200 * ((t - 36) / 6)}px)`;
+                        if (t <= 85) return `calc(${rocketMidBottomNum}% + 200px)`; 
+                        if (t <= 95) return `calc(${rocketMidBottomNum}% + 200px + ${(150 - rocketMidBottomNum) * ((t - 85) / 10)}%)`;
                         return "150%"; 
                     };
 
@@ -660,10 +618,10 @@
                         const spawnTime = 10 + (i / numBubbles) * 85;
                         const rBottomStr = getRocketBottomStr(spawnTime);
                         const initialOffsetX = (Math.random() - 0.5) * 40;
-                        const lifeDuration = 15 + Math.random() * 15;
+                        const lifeDuration = 12 + Math.random() * 12; 
                         const finalOffsetX = initialOffsetX + (Math.random() - 0.5) * 400;
 
-                        const isHighUp = spawnTime > 74; 
+                        const isHighUp = spawnTime > 80; 
                         const dropY = isHighUp ? (Math.random() * 800 + 1000) : (Math.random() * 500 + 400);
 
                         masterTl.set(circle, { bottom: `calc(${rBottomStr} - ${particleOffset}px)`, y: 0, x: initialOffsetX, width: 0, height: 0, opacity: 0, ...rocketCenterPos }, spawnTime);
@@ -672,44 +630,58 @@
                         masterTl.to(circle, { opacity: 0, duration: lifeDuration * 0.25, ease: "power2.inOut" }, spawnTime + Math.max(0, lifeDuration * 0.75));
                     }
 
+                    if (logoPaths.length > 0) {
+                        masterTl.to(logoPaths, { fillOpacity: 0, strokeOpacity: 1, duration: 1.5, ease: "power2.out", stagger: 0.01 }, 5);
+                        masterTl.to(logoPaths, { strokeDashoffset: (_, target) => Number(target.dataset.dash), duration: 3.5, stagger: -0.02, ease: "power2.inOut" }, 6);
+                    }
+                    masterTl.to("#logo-wrapper", { autoAlpha: 0, duration: 0.5 }, 10);
+                    masterTl.to("#header-logo-container", { opacity: 1, duration: 3, ease: "power2.inOut" }, 11);
+                    
+                    masterTl.fromTo("#shared-moon", { y: "0vh" }, { y: "210vh", duration: 120, ease: "none" }, 0);
+
+                    masterTl.to("#rocket-drift", { keyframes: { "0%": { y: 0, ease: "sine.inOut" }, "50%": { y: 30, ease: "sine.inOut" }, "100%": { y: 0, ease: "sine.inOut" } }, duration: 32 }, 10);
+                    masterTl.to("#rocket-drift", { keyframes: { "0%": { y: 0, ease: "sine.inOut" }, "50%": { y: 15, ease: "sine.inOut" }, "100%": { y: 0, ease: "sine.inOut" } }, duration: 26 }, 48);
+
                     // --- Introduction Section Pinned Timeline ---
-                    const introPinEnd = isMobile ? "+=1500" : "+=2400";
+                    const introPinEnd = isMobile ? "+=2000" : "+=3400";
                     const introTl = gsap.timeline({ scrollTrigger: { trigger: "#intro-trigger", start: "center center", end: introPinEnd, pin: true, scrub: 1 } });
                     
                     if (intro3amPaths.length > 0) {
-                        introTl.to(intro3amPaths, { strokeDashoffset: 0, duration: 2.3, ease: "none", stagger: 0.08 }, 0.05);
-                        introTl.to(intro3amPaths, { fillOpacity: 1, strokeOpacity: 0, duration: 0.9, ease: "power2.out" }, 1.95);
+                        introTl.to(intro3amPaths, { strokeDashoffset: 0, duration: 2.3, ease: "none", stagger: 0.08 }, 0);
+                        introTl.to(intro3amPaths, { fillOpacity: 1, strokeOpacity: 0, duration: 0.9, ease: "power2.out" }, 1.9);
                     }
                     
-                    introTl.to(".intro-fade", { opacity: 1, y: 0, duration: 1.4, stagger: 0.18, ease: "power3.out" }, 0.15);
-                    introTl.to({}, { duration: 3.5 });
-                    introTl.to(".intro-fade", { opacity: 0, y: -20, duration: 0.8, ease: "power2.in" });
+                    introTl.to(".intro-fade", { opacity: 1, y: 0, duration: 1.4, stagger: 0.18, ease: "power3.out" }, 0.05);
+                    introTl.to({}, { duration: 3.0 }); 
+                    
+                    const exitLabel = "introExit";
+                    introTl.addLabel(exitLabel);
+                    
+                    introTl.to(".intro-fade", { opacity: 0, y: -90, duration: 1.5, ease: "power2.in" }, exitLabel);
+                    introTl.to("#intro-3am-container", { y: -90, duration: 1.5, ease: "power2.in" }, exitLabel);
                     
                     if (intro3amPaths.length > 0) {
-                        introTl.to(intro3amPaths, { fillOpacity: 0, strokeOpacity: 1, duration: 0.5, ease: "power2.in" }, "<");
-                        introTl.to(intro3amPaths, { strokeDashoffset: (_, target) => Number(target.dataset.dash), duration: 1.5, ease: "none", stagger: -0.05 }, "<0.3");
+                        introTl.to(intro3amPaths, { fillOpacity: 0, strokeOpacity: 1, duration: 0.5, ease: "power2.in" }, exitLabel);
+                        introTl.to(intro3amPaths, { strokeDashoffset: (_, target) => Number(target.dataset.dash), duration: 1.5, ease: "none", stagger: -0.05 }, exitLabel);
                     }
-                    
-                    introTl.to("#intro-section", { opacity: 0, y: -90, duration: 1.3, ease: "power2.in" }, "-=0.5");
+                    introTl.to("#intro-section", { opacity: 0, duration: 1.5, ease: "power2.in" }, exitLabel);
 
-                    // --- Awards Section Pinned Timeline (增加 50% 鎖定長度，拖長動畫體驗) ---
-                    const awardsPinEnd = isMobile ? "+=3000" : "+=4500";
+                    // --- Awards Section Pinned Timeline ---
+                    const awardsPinEnd = isMobile ? "+=3500" : "+=5000";
                     const awardsTl = gsap.timeline({ scrollTrigger: { trigger: "#awards-trigger", start: "center center", end: awardsPinEnd, pin: true, scrub: 1 } });
                     
                     awardsTl.to(".awards-marquee-track", { x: "-20vw", xPercent: -100, duration: 10, ease: "none" }, 0);
                     awardsTl.to(".awards-fade", { opacity: 1, y: 0, filter: "blur(0px)", duration: 1.5, stagger: 0.2, ease: "power3.out" }, 1.0);
                     awardsTl.to(".awards-logo", { opacity: 1, y: 0, filter: "blur(0px)", duration: 1.5, stagger: 0.1, ease: "power3.out" }, 2.0);
+                    
                     awardsTl.to("#awards-section", { opacity: 0, y: -90, duration: 1.5, ease: "power2.in" }, 8.5);
 
                     return () => { if (trailContainer) trailContainer.innerHTML = ""; };
                 });
 
                 const shakeTween = gsap.to("#rocket-svg-container", { x: () => Math.random() * 4 - 2, y: () => Math.random() * 4 - 2, rotation: () => Math.random() * 2 - 1, duration: 0.1, repeat: -1, yoyo: true, ease: "none", paused: true });
-                // 稍微延後震動停止時間，對應被拖長的頁面高度
-                ScrollTrigger.create({ trigger: "body", start: "500px top", end: "8000px top", onEnter: () => shakeTween.play(), onLeave: () => shakeTween.pause(), onEnterBack: () => shakeTween.play(), onLeaveBack: () => shakeTween.pause() });
+                ScrollTrigger.create({ trigger: "body", start: "500px top", end: "9000px top", onEnter: () => shakeTween.play(), onLeave: () => shakeTween.pause(), onEnterBack: () => shakeTween.play(), onLeaveBack: () => shakeTween.pause() });
 
-                // 移除了 Portfolio 及 Footer 文字的 Y 軸浮現動畫，解決 Lag 機問題。
-                // 現在只保留 AI x Human 的 SVG 畫線動畫。
                 const aiTitle = document.getElementById("cta-title-container");
                 if (aiTitle) {
                     let tl = gsap.timeline({ 
@@ -725,6 +697,11 @@
                         tl.to(paths, { strokeDashoffset: 0, duration: 1.2, ease: "power2.inOut", stagger: 0.05 }, 0.2);
                         tl.to(paths, { fillOpacity: 1, strokeOpacity: 0, duration: 0.6, ease: "power2.out", stagger: 0.05 }, "-=0.6");
                     }
+                    
+                    const fadeTexts = gsap.utils.toArray(".cta-fade-text");
+                    if (fadeTexts.length > 0) {
+                        tl.to(fadeTexts, { opacity: 1, y: 0, duration: 1.4, stagger: 0.18, ease: "power3.out" }, 0.4);
+                    }
                 }
             }
 
@@ -736,7 +713,7 @@
                 }
             });
 
-            // 啟動第一步：加載所有 SVG
+            // 啟直第一步：加載所有 SVG
             loadAllSVGs();
         });
     </script>
