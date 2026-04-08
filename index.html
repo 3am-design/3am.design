@@ -63,6 +63,7 @@
         #rocket-wrapper svg path { fill: #ffffff; }
 
         /* --- 其他 UI Styles --- */
+        /* 頂部主選單 - 圓點浮現動畫 */
         .nav-link { position: relative; transition: color 0.3s ease; }
         .nav-link::after {
             content: ""; position: absolute; width: 5px; height: 5px;
@@ -71,6 +72,15 @@
             transition: opacity 0.3s ease, transform 0.3s ease;
         }
         .nav-link:hover::after { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+        /* 文字連結 - 由左至右畫線動畫 */
+        .hover-underline-link { position: relative; transition: color 0.3s ease; }
+        .hover-underline-link::after {
+            content: ""; position: absolute; width: 0; height: 2px;
+            bottom: 0; left: 0; background-color: currentColor; /* 自動跟隨字體顏色 (如 hover 時變灰) */
+            transition: width 0.3s ease-out;
+        }
+        .hover-underline-link:hover::after { width: 100%; }
 
         #logo-wrapper {
             position: fixed; z-index: 40; transform-origin: center center;
@@ -239,7 +249,8 @@
             <div id="awards-section" class="relative w-full h-[100dvh] flex items-center overflow-hidden pointer-events-none">
                 <div class="relative z-20 w-full mx-auto px-[30px] md:px-[5.26vw] grid grid-cols-4 md:grid-cols-6 gap-[15px] md:gap-[2.08vw] items-start">
                     <div class="col-span-4 md:col-span-6 md:-mx-[8vw] pt-[7vh] md:pt-[8vh]">
-                        <div class="awards-marquee">
+                        <!-- 加入 md:mt-[180px] 將成行 skill 再向下移低 100px -->
+                        <div class="awards-marquee mt-[140px] md:mt-[180px]">
                             <!-- 加入 leading-[1.2] 以防被 mask，內容改為純橫向進入 -->
                             <div class="awards-marquee-track text-[40px] md:text-[88px] font-extrabold leading-[1.2] tracking-[-0.05em] text-white">
                                 <span>UXUI</span>
@@ -251,15 +262,31 @@
                                 <span>Visual Communication</span>
                                 <div class="w-[8px] h-[8px] md:w-[16px] md:h-[16px] bg-[#999999] rounded-full shrink-0"></div>
                                 <span>Digital Strategy</span>
+                                <div class="w-[8px] h-[8px] md:w-[16px] md:h-[16px] bg-[#999999] rounded-full shrink-0"></div>
+                                <span>and more...</span>
                             </div>
                         </div>
                     </div>
-                    <div class="col-span-4 md:col-span-4 md:col-start-3 pt-[18px] md:pt-[6.5vw] text-center md:text-left">
-                        <p class="awards-fade text-[24px] md:text-[38px] font-bold leading-[1.15] text-white">15 years of experience</p>
+                    
+                    <!-- 精準設定 md:pt-[133px] 以符合設計圖 133px 嘅高度間距 -->
+                    <div class="col-span-4 md:col-span-4 md:col-start-3 pt-[40px] md:pt-[133px] text-center md:text-left">
+                        
+                        <!-- 設定 gap-[12px] 以符合設計圖 12px 嘅圓點文字間距，並將字體大小與 is the vibe (text-[20px] md:text-[30px]) 一致 -->
+                        <div class="awards-fade flex items-center justify-center md:justify-start gap-[12px]">
+                            <div class="w-[8px] h-[8px] md:w-[10px] md:h-[10px] rounded-full bg-white shrink-0 -translate-y-[1px] md:-translate-y-[2px]"></div>
+                            <p class="text-[20px] md:text-[30px] font-normal leading-[1.15] text-white text-left">15 years of experience</p>
+                        </div>
                         <div class="h-[18px] md:h-[28px]"></div>
-                        <p class="awards-fade text-[24px] md:text-[38px] font-bold leading-[1.15] text-white">Hong Kong based. Work everywhere</p>
+                        <div class="awards-fade flex items-center justify-center md:justify-start gap-[12px]">
+                            <div class="w-[8px] h-[8px] md:w-[10px] md:h-[10px] rounded-full bg-white shrink-0 -translate-y-[1px] md:-translate-y-[2px]"></div>
+                            <p class="text-[20px] md:text-[30px] font-normal leading-[1.15] text-white text-left">Hong Kong based. Work everywhere</p>
+                        </div>
                         <div class="h-[18px] md:h-[28px]"></div>
-                        <p class="awards-fade text-[24px] md:text-[38px] font-bold leading-[1.15] text-white">30+ awards. 10,000+ coffees</p>
+                        <div class="awards-fade flex items-center justify-center md:justify-start gap-[12px]">
+                            <div class="w-[8px] h-[8px] md:w-[10px] md:h-[10px] rounded-full bg-white shrink-0 -translate-y-[1px] md:-translate-y-[2px]"></div>
+                            <p class="text-[20px] md:text-[30px] font-normal leading-[1.15] text-white text-left">30+ awards. 10,000+ coffees</p>
+                        </div>
+                        
                         <div class="h-[28px] md:h-[42px]"></div>
                         <div class="flex flex-col gap-y-[22px] md:gap-y-[34px] items-center md:items-start">
                             <div class="flex flex-wrap md:flex-nowrap justify-center md:justify-start items-center gap-x-[20px] gap-y-[22px] md:gap-x-[52px] md:gap-y-[0px] w-full">
@@ -276,8 +303,8 @@
             </div>
         </div>
 
-        <!-- Portfolio Section 改回 Absolute 保障 GSAP 次序，底部加入 100px Padding 完美收尾 -->
-        <div id="portfolio-section" class="absolute w-full top-[6500px] md:top-[9500px] z-30 pb-[100px]">
+        <!-- Portfolio Section 改回 Absolute 保障 GSAP 次序，底部加入 70px Padding 完美收尾。因應 Awards 拖長 50%，整體向下對應順延 -->
+        <div id="portfolio-section" class="absolute w-full top-[7200px] md:top-[10700px] z-30 pb-[70px]">
             <div class="w-full mx-auto px-[30px] md:px-[5.26vw] grid grid-cols-4 md:grid-cols-6 gap-[15px] md:gap-[2.08vw] items-start">
                 
                 <!-- Item 1 -->
@@ -305,9 +332,9 @@
                     <img src="assets/home/Home_05.webp" alt="Project 5" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" onerror="this.style.display='none'">
                 </div>
 
-                <!-- View All Projects (跟隨 XD 數值: 20px, 76px line-height, mt: 90px) -->
-                <div class="col-span-full mt-[50px] md:mt-[90px] flex justify-center z-30 relative">
-                    <a href="#" class="text-white text-[16px] md:text-[20px] font-bold leading-[76px] underline underline-offset-[6px] hover:text-gray-300 transition-colors">View all projects</a>
+                <!-- View All Projects (替換為 hover-underline-link，並利用 Flex 高度確保貼底畫線) -->
+                <div class="col-span-full -mt-[50px] md:-mt-[10px] flex justify-center items-center h-[76px] z-30 relative">
+                    <a href="#" class="text-white text-[16px] md:text-[20px] font-bold hover:text-gray-300 transition-colors hover-underline-link inline-block pb-[2px]">View all projects</a>
                 </div>
 
                 <!-- CTA / Footer Section (跟隨 XD 數值: mt 200px) -->
@@ -316,8 +343,8 @@
                     <!-- 背景 Grid：獨立圖層 z-0 放 Astronaut，確保絕對墊喺文字下面 -->
                     <div class="absolute inset-0 grid grid-cols-4 md:grid-cols-6 gap-[15px] md:gap-[2.08vw] pointer-events-none z-0">
                         <div class="col-span-2 col-start-3 md:col-start-5 md:col-span-2 relative w-full h-full">
-                            <!-- Astronaut SVG Container (精準鎖定最後兩格 Grid，底部 -100px 出血) -->
-                            <div id="astronaut-container" class="absolute bottom-[-100px] right-[-30px] md:right-0 w-[60vw] md:w-full"></div>
+                            <!-- Astronaut SVG Container (設定 bottom-[-200px] 令圖片喺最邊緣出血，被頁底截斷) -->
+                            <div id="astronaut-container" class="absolute bottom-[-150px] md:bottom-[-200px] right-[-30px] md:right-0 w-[60vw] md:w-full"></div>
                         </div>
                     </div>
 
@@ -346,12 +373,13 @@
                                 <span class="text-white">Want to collaborate?</span><br>
                                 <span class="text-[#999999]">Work with 3am.</span>
                             </p>
-                            <a href="mailto:ericng@hello-3am.com" class="text-white text-[14px] md:text-[18px] font-bold leading-[1.6] tracking-[0.02em] hover:text-gray-300 transition-colors mb-[5px]">ericng@hello-3am.com</a>
-                            <a href="tel:+85263577861" class="text-white text-[14px] md:text-[18px] font-bold leading-[1.6] tracking-[0.02em] hover:text-gray-300 transition-colors">+852 6357 7861</a>
+                            <!-- 替換為 hover-underline-link，由左至右畫線動畫 -->
+                            <a href="mailto:ericng@hello-3am.com" class="text-white text-[14px] md:text-[18px] font-bold leading-[1.6] tracking-[0.02em] hover:text-gray-300 transition-colors mb-[5px] hover-underline-link inline-block pb-[2px]">ericng@hello-3am.com</a>
+                            <a href="tel:+85263577861" class="text-white text-[14px] md:text-[18px] font-bold leading-[1.6] tracking-[0.02em] hover:text-gray-300 transition-colors hover-underline-link inline-block pb-[2px]">+852 6357 7861</a>
                         </div>
 
-                        <!-- Copyright (間距 310px) -->
-                        <div class="col-span-full text-center mt-[120px] md:mt-[310px] pointer-events-auto">
+                        <!-- Copyright (減 150px 間距) -->
+                        <div class="col-span-full text-center mt-[80px] md:mt-[110px] pointer-events-auto">
                             <p class="text-[#999999] text-[9px] md:text-[10px] font-medium tracking-[0.04em]">Copyright © 2026 3am Design Studio. All rights reserved.</p>
                         </div>
                     </div>
@@ -494,7 +522,8 @@
                         const yTo = gsap.quickTo(cursor, "y", { duration: 0.15, ease: "power3" });
 
                         window.addEventListener("mousemove", (e) => { xTo(e.clientX); yTo(e.clientY); });
-                        document.querySelectorAll(".nav-link, #header-logo-container").forEach((link) => {
+                        // 將 hover-underline-link 加入觸發 custom cursor 放大嘅對象
+                        document.querySelectorAll(".nav-link, .hover-underline-link, #header-logo-container").forEach((link) => {
                             link.addEventListener("mouseenter", () => cursor.classList.add("hover-nav"));
                             link.addEventListener("mouseleave", () => cursor.classList.remove("hover-nav"));
                         });
@@ -663,8 +692,8 @@
                     
                     introTl.to("#intro-section", { opacity: 0, y: -90, duration: 1.3, ease: "power2.in" }, "-=0.5");
 
-                    // --- Awards Section Pinned Timeline ---
-                    const awardsPinEnd = isMobile ? "+=2000" : "+=3000";
+                    // --- Awards Section Pinned Timeline (增加 50% 鎖定長度，拖長動畫體驗) ---
+                    const awardsPinEnd = isMobile ? "+=3000" : "+=4500";
                     const awardsTl = gsap.timeline({ scrollTrigger: { trigger: "#awards-trigger", start: "center center", end: awardsPinEnd, pin: true, scrub: 1 } });
                     
                     awardsTl.to(".awards-marquee-track", { x: "-20vw", xPercent: -100, duration: 10, ease: "none" }, 0);
@@ -676,7 +705,8 @@
                 });
 
                 const shakeTween = gsap.to("#rocket-svg-container", { x: () => Math.random() * 4 - 2, y: () => Math.random() * 4 - 2, rotation: () => Math.random() * 2 - 1, duration: 0.1, repeat: -1, yoyo: true, ease: "none", paused: true });
-                ScrollTrigger.create({ trigger: "body", start: "500px top", end: "5000px top", onEnter: () => shakeTween.play(), onLeave: () => shakeTween.pause(), onEnterBack: () => shakeTween.play(), onLeaveBack: () => shakeTween.pause() });
+                // 稍微延後震動停止時間，對應被拖長的頁面高度
+                ScrollTrigger.create({ trigger: "body", start: "500px top", end: "8000px top", onEnter: () => shakeTween.play(), onLeave: () => shakeTween.pause(), onEnterBack: () => shakeTween.play(), onLeaveBack: () => shakeTween.pause() });
 
                 // 移除了 Portfolio 及 Footer 文字的 Y 軸浮現動畫，解決 Lag 機問題。
                 // 現在只保留 AI x Human 的 SVG 畫線動畫。
