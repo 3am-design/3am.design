@@ -155,18 +155,18 @@
             .awards-marquee-track { gap: 34px; }
         }
 
-        /* 📍 Karina Fix: 太空人向下移多 50px */
+        /* 📍 Karina Fix: 太空人向下移多啲，營造明顯的出血（被切斷）效果 */
         #astronaut-container {
             position: absolute;
-            right: -4vw; /* 稍微推右，增加出血感 */
+            right: -4vw; 
             width: 55vw;
-            bottom: -50px; /* 向下移多 50px */
+            bottom: -80px; /* 將負值加大，確保會跌出 Page 嘅最底被硬切 */
         }
         @media (min-width: 768px) {
             #astronaut-container {
                 width: 80%;
                 right: 0;
-                bottom: 0; /* Desktop 保持原位，或者你都可以加 -50px，視乎你需要 */
+                bottom: 0; 
             }
         }
     </style>
@@ -355,8 +355,8 @@
                     <a href="#" class="text-white text-[16px] md:text-[20px] font-bold transition-colors hover-underline-link inline-block pb-[2px]">View all projects</a>
                 </div>
 
-                <!-- CTA Section -->
-                <div class="col-span-full mt-[100px] md:mt-[200px] relative w-full pb-[calc(50px+env(safe-area-inset-bottom,0px))] md:pb-[calc(85px+env(safe-area-inset-bottom,0px))]">
+                <!-- 📍 Karina Fix: 將 pb 減半到 25px，令 Copyright 下面距離縮短，成個網頁早啲完結！ -->
+                <div class="col-span-full mt-[100px] md:mt-[200px] relative w-full pb-[calc(25px+env(safe-area-inset-bottom,0px))] md:pb-[calc(85px+env(safe-area-inset-bottom,0px))]">
                     
                     <div class="absolute inset-0 grid grid-cols-4 md:grid-cols-6 gap-[15px] md:gap-[2.08vw] pointer-events-none z-0">
                         <div class="col-span-2 col-start-3 md:col-start-5 md:col-span-2 relative w-full h-full">
