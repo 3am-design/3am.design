@@ -355,12 +355,13 @@
                     <a href="#" class="text-white text-[16px] md:text-[20px] font-bold transition-colors hover-underline-link inline-block pb-[2px]">View all projects</a>
                 </div>
 
-                <!-- 📍 Karina Fix: 將 pb 減半到 25px，令 Copyright 下面距離縮短，成個網頁早啲完結！ -->
-                <div class="col-span-full mt-[100px] md:mt-[200px] relative w-full pb-[calc(25px+env(safe-area-inset-bottom,0px))] md:pb-[calc(85px+env(safe-area-inset-bottom,0px))]">
+                <!-- 📍 Karina Fix: 
+                     1. 將 padding bottom 再減 25px (即係清空，只保留 env() 作為安全區)
+                -->
+                <div class="col-span-full mt-[100px] md:mt-[200px] relative w-full pb-[env(safe-area-inset-bottom,0px)] md:pb-[calc(85px+env(safe-area-inset-bottom,0px))]">
                     
                     <div class="absolute inset-0 grid grid-cols-4 md:grid-cols-6 gap-[15px] md:gap-[2.08vw] pointer-events-none z-0">
                         <div class="col-span-2 col-start-3 md:col-start-5 md:col-span-2 relative w-full h-full">
-                            <!-- Astronaut 位置而家由 CSS `#astronaut-container` 控制 -->
                             <div id="astronaut-container"></div>
                         </div>
                     </div>
@@ -388,7 +389,11 @@
                             <a href="tel:+85263577861" class="text-white text-[16px] md:text-[18px] font-bold leading-[1.6] tracking-[0.02em] transition-colors hover-underline-link inline-block pb-[2px]">+852 6357 7861</a>
                         </div>
 
-                        <div class="col-span-full text-center mt-[80px] md:mt-[110px] pointer-events-auto">
+                        <!-- 📍 Karina Fix: 
+                             2. 將 mt 由 80px 減到 55px (扣咗 25px)
+                             合共扣減 50px！版面會早啲完，太空人會沉得更深。
+                        -->
+                        <div class="col-span-full text-center mt-[55px] md:mt-[110px] pointer-events-auto">
                             <p class="text-[#999999] text-[9px] md:text-[10px] font-medium tracking-[0.04em]">Copyright © 2026 3am Design Studio. All rights reserved.</p>
                         </div>
                     </div>
