@@ -175,7 +175,7 @@
         </div>
     </div>
 
-    <!-- 0.5 月球 📍 Karina Enhancement: 月球擺左邊 (left-[-20vw])，縮細30% (w-[90vw]) -->
+    <!-- 0.5 月球 -->
     <img id="shared-moon" src="assets/home/moon.webp" alt="Moon" class="fixed top-[-80vh] md:top-[-150vh] left-[-20vw] md:left-[-20vw] w-[90vw] md:w-[70vw] max-w-none z-10 pointer-events-none mix-blend-screen opacity-80" onerror="this.style.display='none'">
 
     <!-- 1. Preloader -->
@@ -196,7 +196,7 @@
         </nav>
     </header>
 
-    <!-- 4. Logo SVG Container (Ayoh) -->
+    <!-- 4. Logo SVG Container -->
     <div id="logo-wrapper" class="fouc-protect"></div>
 
     <!-- 5. Launch UI -->
@@ -237,7 +237,7 @@
     <div class="relative w-full">
         <div id="trail-container"></div>
 
-        <!-- Intro Section 📍 這裡保留 overflow-hidden 阻止橫向 SVG 撐爆 -->
+        <!-- Intro Section -->
         <div id="intro-trigger" class="absolute w-full top-[1140px] md:top-[1400px] z-20 pointer-events-none">
             <div id="intro-section" class="relative w-full h-[100dvh] flex justify-center items-center overflow-hidden pointer-events-none">
                 <div class="relative z-20 w-full mx-auto px-[30px] md:px-[5.26vw] -translate-y-[10vh] md:translate-y-0">
@@ -258,7 +258,7 @@
             </div>
         </div>
 
-        <!-- Awards Section 📍 這裡保留 overflow-hidden 阻止橫向字撐爆 -->
+        <!-- Awards Section -->
         <div id="awards-trigger" class="absolute w-full top-[3200px] md:top-[4800px] z-20 pointer-events-none">
             <div id="awards-section" class="relative w-full h-[100dvh] flex items-center overflow-hidden pointer-events-none">
                 <div class="relative z-20 w-full mx-auto px-[30px] md:px-[5.26vw] grid grid-cols-4 md:grid-cols-6 gap-[15px] md:gap-[2.08vw] items-start">
@@ -312,7 +312,6 @@
             </div>
         </div>
 
-        <!-- 📍 Karina Fix: 解除 overflow-hidden，令絕對定位嘅太空人可以完美突破邊界「出血」 -->
         <!-- Portfolio Section -->
         <div id="portfolio-section" class="absolute w-full top-[7500px] md:top-[11000px] z-30 pb-0">
             <div class="w-full mx-auto px-[30px] md:px-[5.26vw] grid grid-cols-4 md:grid-cols-6 gap-[15px] md:gap-[2.08vw] items-start">
@@ -352,8 +351,8 @@
                     
                     <div class="absolute inset-0 grid grid-cols-4 md:grid-cols-6 gap-[15px] md:gap-[2.08vw] pointer-events-none z-0">
                         <div class="col-span-2 col-start-3 md:col-start-5 md:col-span-2 relative w-full h-full">
-                            <!-- 📍 Karina Fix: 移除所有 Mask 漸變限制，太空人 100% 觸底 -->
-                            <div id="astronaut-container" class="absolute bottom-[-85px] md:bottom-[-160px] right-0 w-[48vw] md:w-[80%]"></div>
+                            <!-- 📍 Karina Fix: 加入 iOS 安全距離！用 calc 將太空人推向下 (85px + 安全距離)。咁樣太空人就會 100% 貼住 iPhone 真正嘅物理邊緣，而唔會畀 UI Bar 斬平底！ -->
+                            <div id="astronaut-container" class="absolute right-0 w-[48vw] md:w-[80%]" style="bottom: calc(-85px - env(safe-area-inset-bottom, 0px));"></div>
                         </div>
                     </div>
 
@@ -387,8 +386,8 @@
 
                 </div>
 
-                <!-- 📍 Karina Rollback: 還原為 85px Spacer，確保 Copyright 同底部距離完美 -->
-                <div class="col-span-full h-[85px] w-full pointer-events-none"></div>
+                <!-- 📍 Karina Fix: 將底部 Spacer 改為動態高度。佢會喺原本嘅 85px 上面，加上 Safari 底部 UI Bar 嘅厚度。咁樣 JS 計 height 嗰陣就會預留充足空間，畀用家可以 Scroll 到底兼觸發 Safari Fullscreen 狀態！ -->
+                <div class="col-span-full w-full pointer-events-none" style="height: calc(85px + env(safe-area-inset-bottom, 0px));"></div>
 
             </div>
         </div>
@@ -473,6 +472,8 @@
                 const setBodyHeight = () => {
                     const portfolio = document.getElementById("portfolio-section");
                     if (portfolio) {
+                        // 📍 Karina Note: 因為 CSS 加咗 env()，offsetHeight 會自動計埋安全距離，
+                        // 確保 totalHeight 有足夠「過界空間 (Overscroll)」，令 Safari UI Bar 順利縮細！
                         const totalHeight = portfolio.offsetTop + portfolio.offsetHeight;
                         document.body.style.height = totalHeight + "px";
                         ScrollTrigger.refresh();
@@ -589,7 +590,6 @@
                     const rocketMidBottomNum = isMobile ? 18 : 50;
                     const rocketAwardsOffset = isMobile ? 400 : 200;
                     
-                    // 📍 Karina Fix: 將手機版月球 Scroll 距離設定為 135vh，令佢啱啱好停喺畫面左下角，唔會跌走
                     const moonScrollDistance = isMobile ? "135vh" : "210vh";
 
                     if (isDesktop) {
