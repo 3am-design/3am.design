@@ -57,8 +57,8 @@
         #logo-wrapper svg { width: 100%; height: auto; display: block; }
         #rocket-svg-container svg { width: 100%; height: auto; display: block; }
         
-        /* 縮細 3am SVG 大小，加大 8% 配合隔離 3 行字嘅高度 */
-        #intro-3am-container svg { height: 86px; width: auto; display: block; }
+        /* 📍 Karina Enhancement: 收細 3am SVG 大小 30% (由 86px -> 60px) */
+        #intro-3am-container svg { height: 60px; width: auto; display: block; }
         @media (min-width: 768px) { #intro-3am-container svg { height: 119px; } }
         
         .awards-logo svg { width: 100%; height: auto; display: block; }
@@ -175,8 +175,8 @@
         </div>
     </div>
 
-    <!-- 0.5 月球 -->
-    <img id="shared-moon" src="assets/home/moon.webp" alt="Moon" class="fixed top-[-150vh] left-[-30vw] md:left-[-20vw] w-[130vw] md:w-[70vw] max-w-none z-10 pointer-events-none mix-blend-screen opacity-80" onerror="this.style.display='none'">
+    <!-- 0.5 月球 📍 Karina Enhancement: 月球擺左邊 (left-[-20vw])，縮細30% (w-[90vw]) -->
+    <img id="shared-moon" src="assets/home/moon.webp" alt="Moon" class="fixed top-[-80vh] md:top-[-150vh] left-[-20vw] md:left-[-20vw] w-[90vw] md:w-[70vw] max-w-none z-10 pointer-events-none mix-blend-screen opacity-80" onerror="this.style.display='none'">
 
     <!-- 1. Preloader -->
     <div id="preloader" class="fixed top-0 left-0 w-full h-[100dvh] bg-[#000] z-[99999] flex justify-center items-center pointer-events-auto">
@@ -240,7 +240,7 @@
         <!-- Intro Section -->
         <div id="intro-trigger" class="absolute w-full top-[1140px] md:top-[1400px] z-20 pointer-events-none">
             <div id="intro-section" class="relative w-full h-[100dvh] flex justify-center items-center overflow-hidden pointer-events-none">
-                <div class="relative z-20 w-full mx-auto px-[30px] md:px-[5.26vw]">
+                <div class="relative z-20 w-full mx-auto px-[30px] md:px-[5.26vw] -translate-y-[10vh] md:translate-y-0">
                     <div class="grid grid-cols-4 md:grid-cols-6 gap-[15px] md:gap-[2.08vw] items-end">
                         <div id="intro-3am-container" class="col-span-4 md:col-span-2 md:col-start-1 flex justify-center md:justify-end mb-[5px] md:mb-[10px]"></div>
                         <div class="col-span-4 md:col-span-3 md:col-start-3 text-center md:text-left mt-[30px] md:mt-0">
@@ -298,13 +298,13 @@
                         
                         <div class="h-[28px] md:h-[42px]"></div>
                         <div class="flex flex-col gap-y-[22px] md:gap-y-[34px] items-center md:items-start">
-                            <div class="flex flex-wrap md:flex-nowrap justify-center md:justify-start items-center gap-x-[20px] gap-y-[22px] md:gap-x-[52px] md:gap-y-[0px] w-full">
-                                <div id="award-hkda" class="awards-logo w-[41px] shrink-0"></div>
-                                <div id="award-awwwards" class="awards-logo w-[120px] shrink-0"></div>
-                                <div id="award-w3" class="awards-logo w-[36px] shrink-0"></div>
-                                <div id="award-horizon" class="awards-logo w-[88px] shrink-0"></div>
-                                <div id="award-webaward" class="awards-logo w-[41px] shrink-0"></div>
-                                <div id="award-comaward" class="awards-logo w-[124px] shrink-0"></div>
+                            <div class="grid grid-cols-3 md:flex md:flex-nowrap justify-items-center md:justify-start items-center gap-y-[40px] gap-x-[15px] md:gap-x-[52px] md:gap-y-[0px] w-full">
+                                <div id="award-hkda" class="awards-logo w-[33px] md:w-[41px] shrink-0"></div>
+                                <div id="award-awwwards" class="awards-logo w-[96px] md:w-[120px] shrink-0"></div>
+                                <div id="award-w3" class="awards-logo w-[29px] md:w-[36px] shrink-0"></div>
+                                <div id="award-horizon" class="awards-logo w-[70px] md:w-[88px] shrink-0"></div>
+                                <div id="award-webaward" class="awards-logo w-[33px] md:w-[41px] shrink-0"></div>
+                                <div id="award-comaward" class="awards-logo w-[99px] md:w-[124px] shrink-0"></div>
                             </div>
                         </div>
                     </div>
@@ -312,8 +312,9 @@
             </div>
         </div>
 
+        <!-- 📍 Karina Fix: 加入 overflow-hidden 確保 copyright 底下精準 cut 走多餘出血部分 -->
         <!-- Portfolio Section -->
-        <div id="portfolio-section" class="absolute w-full top-[7600px] md:top-[11000px] z-30 pb-[70px]">
+        <div id="portfolio-section" class="absolute w-full top-[7600px] md:top-[11000px] z-30 pb-0 overflow-hidden">
             <div class="w-full mx-auto px-[30px] md:px-[5.26vw] grid grid-cols-4 md:grid-cols-6 gap-[15px] md:gap-[2.08vw] items-start">
                 
                 <!-- Item 1 -->
@@ -322,27 +323,27 @@
                 </div>
 
                 <!-- Item 2 -->
-                <div class="portfolio-item group relative z-30 col-span-2 md:col-span-2 md:col-start-5 bg-zinc-800 aspect-[3/4] w-full mt-[15px] md:mt-[8vw] cursor-pointer rounded-sm overflow-hidden">
+                <div class="portfolio-item group relative z-30 col-span-2 md:col-span-2 md:col-start-5 bg-zinc-800 aspect-square md:aspect-[3/4] w-full mt-0 md:mt-[8vw] cursor-pointer rounded-sm overflow-hidden">
                     <video src="assets/home/Home_02.mp4" autoplay loop muted playsinline class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"></video>
                 </div>
 
                 <!-- Item 3 -->
-                <div class="portfolio-item group relative z-30 col-span-2 md:col-span-2 md:col-start-2 bg-zinc-800 aspect-square w-full mt-[15px] md:-mt-[6vw] cursor-pointer rounded-sm overflow-hidden">
+                <div class="portfolio-item group relative z-30 col-span-2 md:col-span-2 md:col-start-2 bg-zinc-800 aspect-square w-full mt-0 md:-mt-[6vw] cursor-pointer rounded-sm overflow-hidden">
                     <img src="assets/home/Home_03.jpg" alt="Project 3" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" onerror="this.style.display='none'">
                 </div>
 
                 <!-- Item 4 -->
-                <div class="portfolio-item group relative z-30 col-span-3 md:col-span-3 md:col-start-4 bg-zinc-800 aspect-[4/3] w-full mt-[15px] md:mt-[2vw] cursor-pointer rounded-sm overflow-hidden">
+                <div class="portfolio-item group relative z-30 col-span-4 md:col-span-3 md:col-start-4 bg-zinc-800 aspect-[16/10] md:aspect-[4/3] w-full mt-0 md:mt-[2vw] cursor-pointer rounded-sm overflow-hidden">
                     <img src="assets/home/Home_04.webp" alt="Project 4" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" onerror="this.style.display='none'">
                 </div>
 
                 <!-- Item 5 -->
-                <div class="portfolio-item group relative z-30 col-span-3 md:col-span-3 md:col-start-1 bg-zinc-800 aspect-[16/10] w-full mt-[15px] md:-mt-[10vw] cursor-pointer rounded-sm overflow-hidden">
+                <div class="portfolio-item group relative z-30 col-span-4 md:col-span-3 md:col-start-1 bg-zinc-800 aspect-[16/10] w-full mt-0 md:-mt-[10vw] cursor-pointer rounded-sm overflow-hidden">
                     <img src="assets/home/Home_05.webp" alt="Project 5" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" onerror="this.style.display='none'">
                 </div>
 
                 <!-- View All Projects -->
-                <div class="col-span-full -mt-[50px] md:-mt-[10px] flex justify-center items-center h-[76px] z-30 relative">
+                <div class="col-span-full mt-[15px] md:-mt-[10px] flex justify-center items-center h-[76px] z-30 relative">
                     <a href="#" class="text-white text-[16px] md:text-[20px] font-bold transition-colors hover-underline-link inline-block pb-[2px]">View all projects</a>
                 </div>
 
@@ -356,14 +357,17 @@
                     </div>
 
                     <div class="grid grid-cols-4 md:grid-cols-6 gap-[15px] md:gap-[2.08vw] items-start relative z-10 pointer-events-none">
-                        <div id="cta-title-container" class="col-span-4 md:col-span-2 md:col-start-2 flex justify-start items-start pointer-events-auto"></div>
                         
-                        <div class="col-span-4 md:col-span-2 md:col-start-4 mt-[40px] md:mt-0 flex flex-col justify-start pointer-events-auto">
+                        <!-- 📍 Karina Enhancement: scale-[1.2] 加大 SVG 20%，origin-center 確保置中對齊 -->
+                        <div id="cta-title-container" class="col-span-2 col-start-2 md:col-span-2 md:col-start-2 flex justify-center md:justify-start items-center md:items-start pointer-events-auto scale-[1.2] md:scale-100 origin-center md:origin-left"></div>
+                        
+                        <div class="col-span-4 md:col-span-2 md:col-start-4 mt-[40px] md:mt-0 flex flex-col items-center text-center md:items-start md:text-left justify-start pointer-events-auto">
                             <p class="cta-fade-text text-[10px] md:text-[12px] font-medium tracking-[0.04em] leading-[20px] uppercase mb-[20px] md:mb-[30px]">
                                 <span class="text-white">2026: The year of launch.</span><br>
                                 <span class="text-[#999999]">While others fear the machine,<br>I synchronize with it.</span>
                             </p>
-                            <p class="cta-fade-text text-white text-[18px] md:text-[30px] font-normal leading-[1.5] md:leading-[50px]">
+                            <!-- 📍 Karina Enhancement: 手機版字體大細同埋行距跟足 Intro (text-[20px] leading-[36px])，闊度再收細到 75%，mx-auto 置中 -->
+                            <p class="cta-fade-text text-white text-[20px] md:text-[30px] font-normal leading-[36px] md:leading-[50px] w-[75%] md:w-full mx-auto md:mx-0">
                                 By mastering the latest tech, I deliver smarter, faster &amp; more flexible design solutions that fit your budget, without compromising the soul of the craft.
                             </p>
                         </div>
@@ -373,8 +377,9 @@
                                 <span class="text-white">Want to collaborate?</span><br>
                                 <span class="text-[#999999]">Work with 3am.</span>
                             </p>
-                            <a href="mailto:ericng@hello-3am.com" class="text-white text-[14px] md:text-[18px] font-bold leading-[1.6] tracking-[0.02em] transition-colors mb-[5px] hover-underline-link inline-block pb-[2px]">ericng@hello-3am.com</a>
-                            <a href="tel:+85263577861" class="text-white text-[14px] md:text-[18px] font-bold leading-[1.6] tracking-[0.02em] transition-colors hover-underline-link inline-block pb-[2px]">+852 6357 7861</a>
+                            <!-- 📍 Karina Enhancement: Email/Phone font size 由 14px 轉為 16px 對齊 View all projects -->
+                            <a href="mailto:ericng@hello-3am.com" class="text-white text-[16px] md:text-[18px] font-bold leading-[1.6] tracking-[0.02em] transition-colors mb-[5px] hover-underline-link inline-block pb-[2px]">ericng@hello-3am.com</a>
+                            <a href="tel:+85263577861" class="text-white text-[16px] md:text-[18px] font-bold leading-[1.6] tracking-[0.02em] transition-colors hover-underline-link inline-block pb-[2px]">+852 6357 7861</a>
                         </div>
 
                         <div class="col-span-full text-center mt-[80px] md:mt-[110px] pointer-events-auto">
@@ -383,6 +388,9 @@
                     </div>
 
                 </div>
+
+                <!-- 📍 Karina Fix: 統一 Spacer 為 h-[85px] 配合父層 overflow-hidden 精準 cut 齊 -->
+                <div class="col-span-full h-[85px] w-full pointer-events-none"></div>
 
             </div>
         </div>
@@ -580,10 +588,13 @@
                     if (trailContainer) trailContainer.innerHTML = "";
 
                     const rocketStartBottomNum = 0;
-                    const rocketMidBottomNum = isMobile ? 15 : 50;
+                    const rocketMidBottomNum = isMobile ? 18 : 50;
+                    const rocketAwardsOffset = isMobile ? 550 : 200;
+                    
+                    // 📍 Karina Fix: 手機版月球下沉距離設定為 165vh，令佢 100% 同步落到底
+                    const moonScrollDistance = isMobile ? "165vh" : "210vh";
 
                     if (isDesktop) {
-                        // 📍 Karina Fix: Desktop 闊度由 84vw 加大 1% 到 85vw，重新計算 left 為 -5.52vw 確保貼實第 5 個 grid
                         gsap.set("#logo-wrapper", { top: "50dvh", left: "-5.52vw", width: "85vw", yPercent: -50, scale: 1, xPercent: 0 });
                         gsap.set("#rocket-wrapper, #launch-ui-wrapper, #summary-wrapper", { left: "88.15%", right: "auto", xPercent: -50 });
                         gsap.set("#launch-ui-wrapper", { top: "50dvh", bottom: "auto", yPercent: -50 });
@@ -594,7 +605,7 @@
                         gsap.set("#launch-ui-wrapper", { top: "50dvh", bottom: "auto", yPercent: -50 });
                         gsap.set("#rocket-wrapper, #summary-wrapper", { bottom: "0%" });
                     } else {
-                        gsap.set("#logo-wrapper", { top: "30dvh", left: "50%", width: "160vw", yPercent: -50, scale: 1, xPercent: -50 });
+                        gsap.set("#logo-wrapper", { top: "30dvh", left: "50%", width: "115vw", yPercent: -50, scale: 1, xPercent: -50 });
                         gsap.set("#rocket-wrapper, #launch-ui-wrapper, #summary-wrapper", { left: "50%", right: "auto", xPercent: -50 });
                         gsap.set("#launch-ui-wrapper", { top: "60dvh", bottom: "auto", yPercent: -50 });
                         gsap.set("#rocket-wrapper, #summary-wrapper", { bottom: "0%" });
@@ -609,7 +620,7 @@
                     masterTl.to("#launch-ui-wrapper", { autoAlpha: 0, duration: 5, ease: "power2.in" }, 5);
                     
                     masterTl.to("#rocket-wrapper", { bottom: `${rocketMidBottomNum}%`, ease: "none", duration: 15 }, 10);
-                    masterTl.to("#rocket-wrapper", { bottom: `calc(${rocketMidBottomNum}% + 200px)`, ease: "none", duration: 6 }, 36);
+                    masterTl.to("#rocket-wrapper", { bottom: `calc(${rocketMidBottomNum}% + ${rocketAwardsOffset}px)`, ease: "none", duration: 6 }, 36);
                     masterTl.to("#rocket-wrapper", { bottom: "150%", ease: "none", duration: 10 }, 85);
 
                     const colors = ["#EF4444", "#10B981", "#3B82F6", "#F59E0B", "#FFFFFF"];
@@ -622,9 +633,9 @@
                         if (t <= 10) return `${rocketStartBottomNum}%`; 
                         if (t <= 25) return `${rocketStartBottomNum + ((t - 10) / 15) * (rocketMidBottomNum - rocketStartBottomNum)}%`;
                         if (t <= 36) return `${rocketMidBottomNum}%`;
-                        if (t <= 42) return `calc(${rocketMidBottomNum}% + ${200 * ((t - 36) / 6)}px)`;
-                        if (t <= 85) return `calc(${rocketMidBottomNum}% + 200px)`; 
-                        if (t <= 95) return `calc(${rocketMidBottomNum}% + 200px + ${(150 - rocketMidBottomNum) * ((t - 85) / 10)}%)`;
+                        if (t <= 42) return `calc(${rocketMidBottomNum}% + ${rocketAwardsOffset * ((t - 36) / 6)}px)`;
+                        if (t <= 85) return `calc(${rocketMidBottomNum}% + ${rocketAwardsOffset}px)`; 
+                        if (t <= 95) return `calc(${rocketMidBottomNum}% + ${rocketAwardsOffset}px + ${(150 - rocketMidBottomNum) * ((t - 85) / 10)}%)`;
                         return "150%"; 
                     };
 
@@ -661,7 +672,7 @@
                     masterTl.to("#logo-wrapper", { autoAlpha: 0, duration: 0.5 }, 10);
                     masterTl.to("#header-logo-container", { opacity: 1, duration: 3, ease: "power2.inOut" }, 11);
                     
-                    masterTl.fromTo("#shared-moon", { y: "0vh" }, { y: "210vh", duration: 120, ease: "none" }, 0);
+                    masterTl.fromTo("#shared-moon", { y: "0vh" }, { y: moonScrollDistance, duration: 120, ease: "none" }, 0);
 
                     masterTl.to("#rocket-drift", { keyframes: { "0%": { y: 0, ease: "sine.inOut" }, "50%": { y: 30, ease: "sine.inOut" }, "100%": { y: 0, ease: "sine.inOut" } }, duration: 32 }, 10);
                     masterTl.to("#rocket-drift", { keyframes: { "0%": { y: 0, ease: "sine.inOut" }, "50%": { y: 15, ease: "sine.inOut" }, "100%": { y: 0, ease: "sine.inOut" } }, duration: 26 }, 48);
