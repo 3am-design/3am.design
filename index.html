@@ -172,7 +172,7 @@
             bottom: 0;
             height: 42svh;
             pointer-events: none;
-            z-index: 16;
+            z-index: 12;
             opacity: 0;
             visibility: hidden;
         }
@@ -188,6 +188,16 @@
         @media (min-width: 768px) {
             #footer-art-layer {
                 display: none;
+            }
+        }
+
+        .footer-end-spacer {
+            height: calc(128px + env(safe-area-inset-bottom, 0px));
+        }
+
+        @media (min-width: 768px) {
+            .footer-end-spacer {
+                height: calc(32px + env(safe-area-inset-bottom, 0px));
             }
         }
 
@@ -454,13 +464,13 @@
                             <a href="tel:+85263577861" class="text-white text-[16px] md:text-[18px] font-bold leading-[1.6] tracking-[0.02em] transition-colors hover-underline-link inline-block pb-[2px]">+852 6357 7861</a>
                         </div>
 
-                        <div class="col-span-full text-center mt-[80px] md:mt-[110px] pointer-events-auto">
-                            <p class="text-[#999999] text-[9px] md:text-[10px] font-medium tracking-[0.04em]" style="margin-bottom: calc(env(safe-area-inset-bottom, 0px) + 20px);">Copyright © 2026 3am Design Studio. All rights reserved.</p>
+                        <div id="footer-end-trigger" class="col-span-full text-center mt-[80px] md:mt-[110px] pointer-events-auto">
+                            <p class="text-[#999999] text-[9px] md:text-[10px] font-medium tracking-[0.04em]" style="margin-bottom: calc(env(safe-area-inset-bottom, 0px) + 8px);">Copyright © 2026 3am Design Studio. All rights reserved.</p>
                         </div>
                     </div>
                 </div>
 
-                <div class="col-span-full w-full pointer-events-none" style="height: calc(env(safe-area-inset-bottom, 0px) + 12px);"></div>
+                <div class="col-span-full w-full pointer-events-none footer-end-spacer"></div>
             </div>
         </div>
     </div>
@@ -909,11 +919,11 @@
 
                 if (window.innerWidth < 768) {
                     ScrollTrigger.create({
-                        trigger: "#portfolio-section",
-                        start: "top 78%",
+                        trigger: "#footer-end-trigger",
+                        start: "top 92%",
                         end: "bottom bottom",
                         onEnter: () => gsap.to("#footer-art-layer", { autoAlpha: 1, y: 0, duration: 0.8, ease: "power2.out" }),
-                        onLeaveBack: () => gsap.to("#footer-art-layer", { autoAlpha: 0, y: 40, duration: 0.5, ease: "power2.in" })
+                        onLeaveBack: () => gsap.to("#footer-art-layer", { autoAlpha: 0, y: 40, duration: 0.45, ease: "power2.in" })
                     });
                 }
             }
