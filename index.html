@@ -20,17 +20,35 @@
     </script>
 
     <style>
+        /* 📍 Karina Fix: 改用 overscroll-behavior: none 關閉 iOS 橡筋邊效應，防止 GSAP 計算出錯 */
         html, body {
             overflow-x: hidden;
             width: 100%;
             max-width: 100vw;
-            overscroll-behavior-x: none;
+            overscroll-behavior: none;
             background-color: #000;
         }
 
         body {
             color: #fff;
             font-family: "Inter", sans-serif;
+        }
+
+        /* 📍 Karina Fix: 補加 Lenis 官方基礎 CSS，保障 Scroll 引擎絕對穩定 */
+        html.lenis, html.lenis body {
+            height: auto;
+        }
+        .lenis.lenis-smooth {
+            scroll-behavior: auto !important;
+        }
+        .lenis.lenis-smooth [data-lenis-prevent] {
+            overscroll-behavior: contain;
+        }
+        .lenis.lenis-stopped {
+            overflow: hidden;
+        }
+        .lenis.lenis-smooth iframe {
+            pointer-events: none;
         }
 
         .fouc-protect { opacity: 0; visibility: hidden; }
@@ -109,7 +127,6 @@
             pointer-events: none; z-index: 10;
         }
 
-        /* 📍 Karina Fix: 加返舊版唔見咗嘅火箭氣泡噴射圈圈 CSS */
         .circle-particle {
             position: absolute; border-radius: 50%; border: 2px solid;
             background: transparent; opacity: 0; will-change: transform, opacity, width, height;
@@ -221,7 +238,7 @@
     <div class="relative w-full">
         <div id="trail-container"></div>
 
-        <!-- Intro Section 📍 Karina Fix: 補加 pointer-events-none 確保手機 GSAP Pin Spacer 唔會阻住 Scroll -->
+        <!-- Intro Section -->
         <div id="intro-trigger" class="absolute w-full top-[1140px] md:top-[1400px] z-20 pointer-events-none">
             <div id="intro-section" class="relative w-full h-[100dvh] flex justify-center items-center overflow-hidden pointer-events-none">
                 <div class="relative z-20 w-full mx-auto px-[30px] md:px-[5.26vw]">
@@ -242,7 +259,7 @@
             </div>
         </div>
 
-        <!-- Awards Section 📍 Karina Fix: 補加 pointer-events-none -->
+        <!-- Awards Section -->
         <div id="awards-trigger" class="absolute w-full top-[3200px] md:top-[4800px] z-20 pointer-events-none">
             <div id="awards-section" class="relative w-full h-[100dvh] flex items-center overflow-hidden pointer-events-none">
                 <div class="relative z-20 w-full mx-auto px-[30px] md:px-[5.26vw] grid grid-cols-4 md:grid-cols-6 gap-[15px] md:gap-[2.08vw] items-start">
@@ -463,8 +480,6 @@
                     setTimeout(setBodyHeight, 500); 
                 });
                 
-                // 📍 Karina Fix: 改良 resize listener，只喺寬度（Width）改變時先觸發
-                // 防止手機上下 Scroll 收起 URL Bar 時觸發多餘嘅 Height Recalculation 同 Scroll 卡頓！
                 let currentWindowWidth = window.innerWidth;
                 window.addEventListener("resize", () => {
                     if (window.innerWidth !== currentWindowWidth) {
@@ -652,9 +667,9 @@
                     masterTl.to("#rocket-drift", { keyframes: { "0%": { y: 0, ease: "sine.inOut" }, "50%": { y: 15, ease: "sine.inOut" }, "100%": { y: 0, ease: "sine.inOut" } }, duration: 26 }, 48);
 
                     // --- Introduction Section Pinned Timeline ---
-                    // 📍 Karina Fix: 加上 pinSpacing: false 防止 GSAP 自動加 padding 撐爆個 layout 搞到 scroll hang 死
+                    // 📍 Karina Fix: 加入 pinType: "transform"，100% 解決 Safari 手機版 position: fixed 嘅 Scroll Hang 機問題
                     const introPinEnd = isMobile ? "+=2000" : "+=3400";
-                    const introTl = gsap.timeline({ scrollTrigger: { trigger: "#intro-trigger", start: "center center", end: introPinEnd, pin: true, pinSpacing: false, scrub: 1 } });
+                    const introTl = gsap.timeline({ scrollTrigger: { trigger: "#intro-trigger", start: "center center", end: introPinEnd, pin: true, pinSpacing: false, pinType: "transform", scrub: 1 } });
                     
                     if (intro3amPaths.length > 0) {
                         introTl.to(intro3amPaths, { strokeDashoffset: 0, duration: 2.3, ease: "none", stagger: 0.08 }, 0);
@@ -677,9 +692,9 @@
                     introTl.to("#intro-section", { opacity: 0, duration: 1.5, ease: "power2.in" }, exitLabel);
 
                     // --- Awards Section Pinned Timeline ---
-                    // 📍 Karina Fix: 同樣加上 pinSpacing: false 防止 Padding 改變高度
+                    // 📍 Karina Fix: 加入 pinType: "transform"
                     const awardsPinEnd = isMobile ? "+=3500" : "+=5000";
-                    const awardsTl = gsap.timeline({ scrollTrigger: { trigger: "#awards-trigger", start: "center center", end: awardsPinEnd, pin: true, pinSpacing: false, scrub: 1 } });
+                    const awardsTl = gsap.timeline({ scrollTrigger: { trigger: "#awards-trigger", start: "center center", end: awardsPinEnd, pin: true, pinSpacing: false, pinType: "transform", scrub: 1 } });
                     
                     awardsTl.to(".awards-marquee-track", { x: "-20vw", xPercent: -100, duration: 10, ease: "none" }, 0);
                     awardsTl.to(".awards-fade", { opacity: 1, y: 0, filter: "blur(0px)", duration: 1.5, stagger: 0.2, ease: "power3.out" }, 1.0);
