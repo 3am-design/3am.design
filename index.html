@@ -153,12 +153,12 @@
             .awards-marquee-track { gap: 34px; }
         }
 
-        /* 📍 Karina Fix: 太空人向下沉多啲，確保跌出版面界線，營造強烈出血感 */
+        /* 📍 Karina Fix: 大幅加大負值並稍微放大，確保就算頁面提早完結都能夠被完美切斷（出血） */
         #astronaut-container {
             position: absolute;
-            right: -4vw; 
-            width: 55vw;
-            bottom: -110px; /* 將負值加大至 110px，配合縮短嘅版面完美被 Cut */
+            right: -6vw; 
+            width: 65vw;
+            bottom: -160px; 
         }
         @media (min-width: 768px) {
             #astronaut-container {
@@ -352,13 +352,15 @@
                     <a href="#" class="text-white text-[16px] md:text-[20px] font-bold transition-colors hover-underline-link inline-block pb-[2px]">View all projects</a>
                 </div>
 
-                <!-- 📍 Karina Fix: 分攤 Crop 走 60px -->
-                <!-- Section 1/3: 頂部 mt 由 100px 減至 80px (-20px) -->
-                <div class="col-span-full mt-[80px] md:mt-[200px] relative w-full pb-[env(safe-area-inset-bottom,0px)] md:pb-[calc(85px+env(safe-area-inset-bottom,0px))]">
+                <!-- 📍 Karina Fix: 
+                     1. 移除 padding bottom (`pb-[10px]`) 減省空間。
+                     2. 頂部 margin 收細：`mt-[80px]` -> `mt-[50px]`
+                -->
+                <div class="col-span-full mt-[50px] md:mt-[200px] relative w-full pb-[10px] md:pb-[calc(85px+env(safe-area-inset-bottom,0px))]">
                     
                     <div class="absolute inset-0 grid grid-cols-4 md:grid-cols-6 gap-[15px] md:gap-[2.08vw] pointer-events-none z-0">
                         <div class="col-span-2 col-start-3 md:col-start-5 md:col-span-2 relative w-full h-full">
-                            <!-- Astronaut 位置由 CSS `#astronaut-container` 絕對控制 -->
+                            <!-- Astronaut -->
                             <div id="astronaut-container"></div>
                         </div>
                     </div>
@@ -377,8 +379,8 @@
                             </p>
                         </div>
 
-                        <!-- 📍 Karina Fix: Section 2/3: Contact mt 由 60px 減至 40px (-20px) -->
-                        <div class="col-span-4 md:col-span-2 md:col-start-3 mt-[40px] md:mt-[168px] flex flex-col items-center text-center pointer-events-auto">
+                        <!-- 📍 Karina Fix: Contact margin 收細：`mt-[40px]` -> `mt-[25px]` -->
+                        <div class="col-span-4 md:col-span-2 md:col-start-3 mt-[25px] md:mt-[168px] flex flex-col items-center text-center pointer-events-auto">
                             <p class="text-[9px] md:text-[10px] font-bold tracking-[0.08em] leading-[1.8] uppercase mb-[20px]">
                                 <span class="text-white">Want to collaborate?</span><br>
                                 <span class="text-[#999999]">Work with 3am.</span>
@@ -387,8 +389,8 @@
                             <a href="tel:+85263577861" class="text-white text-[16px] md:text-[18px] font-bold leading-[1.6] tracking-[0.02em] transition-colors hover-underline-link inline-block pb-[2px]">+852 6357 7861</a>
                         </div>
 
-                        <!-- 📍 Karina Fix: Section 3/3: Copyright mt 由 55px 減至 35px (-20px)。總共完美 Cut 走 60px 頁底長度！ -->
-                        <div class="col-span-full text-center mt-[35px] md:mt-[110px] pointer-events-auto">
+                        <!-- 📍 Karina Fix: Copyright margin 收細：`mt-[35px]` -> `mt-[15px]` -->
+                        <div class="col-span-full text-center mt-[15px] md:mt-[110px] pointer-events-auto">
                             <p class="text-[#999999] text-[9px] md:text-[10px] font-medium tracking-[0.04em]">Copyright © 2026 3am Design Studio. All rights reserved.</p>
                         </div>
                     </div>
@@ -477,7 +479,11 @@
                 const setBodyHeight = () => {
                     const portfolio = document.getElementById("portfolio-section");
                     if (portfolio) {
-                        const totalHeight = portfolio.offsetTop + portfolio.offsetHeight;
+                        let totalHeight = portfolio.offsetTop + portfolio.offsetHeight;
+                        // 📍 Karina Fix: 手動強制裁切 (Hard Crop) 頁底多餘的 25px 滾動空間，配合排版擠壓，令成個 page 更早完結兼逼出太空人出血效果！
+                        if (window.innerWidth < 768) {
+                            totalHeight -= 25; 
+                        }
                         document.body.style.height = totalHeight + "px";
                         ScrollTrigger.refresh();
                     }
