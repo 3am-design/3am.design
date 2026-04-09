@@ -20,38 +20,22 @@
     </script>
 
     <style>
+        /* 📍 Karina Fix: 根據截圖建議，加入 min-height: 100% 同 overflow-x: hidden 穩定佈局 */
         html, body {
             width: 100%;
             max-width: 100vw;
             min-height: 100%;
+            overflow-x: hidden;
             background-color: #000;
         }
 
         body {
             color: #fff;
             font-family: "Inter", sans-serif;
+            /* 📍 加入 env() 作為全局 padding-bottom，確保有安全距離 */
+            padding-bottom: env(safe-area-inset-bottom);
         }
 
-        /* Mobile Safari safe area fix */
-        :root {
-            --mobile-safe-bottom: env(safe-area-inset-bottom, 0px);
-        }
-
-        @media (max-width: 767px) {
-            body {
-                padding-bottom: var(--mobile-safe-bottom);
-            }
-
-            .mobile-safe-bottom {
-                padding-bottom: calc(var(--mobile-safe-bottom) + 24px);
-            }
-
-            .mobile-safe-bottom-spacer {
-                height: calc(var(--mobile-safe-bottom) + 24px);
-            }
-        }
-
-        /* Lenis */
         html.lenis, html.lenis body {
             height: auto;
         }
@@ -70,7 +54,6 @@
 
         .fouc-protect { opacity: 0; visibility: hidden; }
 
-        /* --- Injected SVG Styles --- */
         #preloader-logo-container svg, #header-logo-container svg { height: 100%; width: auto; display: block; }
         #logo-wrapper svg { width: 100%; height: auto; display: block; }
         #rocket-svg-container svg { width: 100%; height: auto; display: block; }
@@ -80,11 +63,9 @@
         
         .awards-logo svg { width: 100%; height: auto; display: block; }
         
-        /* CTA Section SVGs */
         #cta-title-container svg { width: 100%; height: auto; display: block; }
         #astronaut-container svg { width: 100%; height: auto; display: block; }
 
-        /* 動態繪圖路徑預設樣式 */
         #logo-wrapper svg path, #intro-3am-container svg path, 
         #cta-title-container svg path, #cta-title-container svg text,
         #cta-title-container svg rect, #cta-title-container svg polygon, 
@@ -99,7 +80,6 @@
         }
         #rocket-wrapper svg path { fill: #ffffff; }
 
-        /* --- 其他 UI Styles --- */
         .nav-link { position: relative; transition: color 0.3s ease; }
         .nav-link::after {
             content: ""; position: absolute; width: 5px; height: 5px;
@@ -175,13 +155,27 @@
         @media (min-width: 768px) {
             .awards-marquee-track { gap: 34px; }
         }
+
+        /* 📍 Karina Fix: 將太空人嘅位置交由 CSS 處理，針對 mobile 同 desktop 配合最新 Spacer 深度落底 */
+        #astronaut-container {
+            position: absolute;
+            right: 0;
+            width: 48vw;
+            bottom: calc(-140px - env(safe-area-inset-bottom, 0px));
+        }
+        @media (min-width: 768px) {
+            #astronaut-container {
+                width: 80%;
+                bottom: calc(-85px - env(safe-area-inset-bottom, 0px));
+            }
+        }
     </style>
 </head>
 
 <body class="antialiased selection:bg-gray-700 selection:text-white">
 
-    <!-- 0. Background Grid Base -->
-    <div id="bg-grid" class="fixed top-0 left-0 w-full h-[100dvh] pointer-events-none z-0 px-[30px] md:px-[5.26vw] transition-opacity duration-300 opacity-0">
+    <!-- 📍 Karina Fix: 將背景 100dvh 改做 min-height 100lvh，避免 iOS Toolbar 消失時造成畫面抖動 -->
+    <div id="bg-grid" class="fixed top-0 left-0 w-full min-h-[100lvh] h-[100lvh] pointer-events-none z-0 px-[30px] md:px-[5.26vw] transition-opacity duration-300 opacity-0">
         <div class="w-full h-full grid grid-cols-4 md:grid-cols-6 gap-[15px] md:gap-[2.08vw]">
             <div class="bg-[#0b3834] w-full h-full"></div>
             <div class="bg-[#0b3834] w-full h-full"></div>
@@ -192,18 +186,17 @@
         </div>
     </div>
 
-    <!-- 0.5 月球 -->
     <img id="shared-moon" src="assets/home/moon.webp" alt="Moon" class="fixed top-[-80vh] md:top-[-150vh] left-[-20vw] md:left-[-20vw] w-[90vw] md:w-[70vw] max-w-none z-10 pointer-events-none mix-blend-screen opacity-80" onerror="this.style.display='none'">
 
-    <!-- 1. Preloader -->
-    <div id="preloader" class="fixed top-0 left-0 w-full h-[100dvh] bg-[#000] z-[99999] flex justify-center items-center pointer-events-auto">
+    <!-- 📍 Karina Fix: preloader 亦改為 100lvh -->
+    <div id="preloader" class="fixed top-0 left-0 w-full h-[100lvh] bg-[#000] z-[99999] flex justify-center items-center pointer-events-auto">
         <div id="preloader-logo-container" class="h-[20px] md:h-[26px]"></div>
     </div>
 
-    <!-- 2. Cursor -->
+    <!-- Cursor -->
     <div id="custom-cursor"><span>Discover</span></div>
 
-    <!-- 3. Header -->
+    <!-- Header -->
     <header class="fixed top-0 left-0 w-full px-[30px] pt-[30px] md:px-[5.26vw] md:pt-[35px] z-[999] flex justify-between items-end pointer-events-none fouc-protect">
         <a href="index.html" id="header-logo-container" class="h-[20px] md:h-[26px] pointer-events-auto cursor-pointer flex items-end opacity-0"></a>
         <nav class="flex gap-6 md:gap-[35px] text-sm md:text-[15px] font-bold tracking-[0.04em] h-[20px] md:h-[26px] items-end pointer-events-auto">
@@ -213,10 +206,10 @@
         </nav>
     </header>
 
-    <!-- 4. Logo SVG Container (Ayoh) -->
+    <!-- Logo SVG Container -->
     <div id="logo-wrapper" class="fouc-protect"></div>
 
-    <!-- 5. Launch UI -->
+    <!-- Launch UI -->
     <div id="launch-ui-wrapper" class="pointer-events-none fouc-protect">
         <div id="launch-ui" class="flex flex-col items-center transition-opacity duration-300">
             <p class="launch-text text-[#999999] text-[11px] md:text-[12px] font-medium tracking-[0.08em] leading-none uppercase m-0">Scroll to launch</p>
@@ -233,14 +226,14 @@
         </div>
     </div>
 
-    <!-- 6. Rocket -->
+    <!-- Rocket -->
     <div id="rocket-wrapper" class="fouc-protect">
         <div id="rocket-drift">
             <div id="rocket-svg-container" class="w-16 md:w-20 relative z-20"></div>
         </div>
     </div>
 
-    <!-- 7. Summary Text -->
+    <!-- Summary Text -->
     <div id="summary-wrapper" class="fouc-protect">
         <div id="vehicle-summary" class="absolute bottom-[150px] left-[50%] ml-[50px] md:left-auto md:-right-[6.59vw] md:ml-0 w-max text-left">
             <div class="summary-line font-extrabold text-[5px] tracking-[0.04em] text-white mb-[4px] leading-none uppercase">VEHICLE SUMMARY</div>
@@ -250,13 +243,13 @@
         </div>
     </div>
 
-    <!-- 8. Scrollable Content Container -->
+    <!-- Scrollable Content Container -->
     <div class="relative w-full">
         <div id="trail-container"></div>
 
-        <!-- Intro Section -->
+        <!-- Intro Section 📍 改用 h-[100lvh] -->
         <div id="intro-trigger" class="absolute w-full top-[1140px] md:top-[1400px] z-20 pointer-events-none">
-            <div id="intro-section" class="relative w-full h-[100dvh] flex justify-center items-center overflow-hidden pointer-events-none">
+            <div id="intro-section" class="relative w-full h-[100lvh] flex justify-center items-center overflow-hidden pointer-events-none">
                 <div class="relative z-20 w-full mx-auto px-[30px] md:px-[5.26vw] -translate-y-[10vh] md:translate-y-0">
                     <div class="grid grid-cols-4 md:grid-cols-6 gap-[15px] md:gap-[2.08vw] items-end">
                         <div id="intro-3am-container" class="col-span-4 md:col-span-2 md:col-start-1 flex justify-center md:justify-end mt-[65px] md:mt-0 mb-0 md:mb-[10px]"></div>
@@ -275,9 +268,9 @@
             </div>
         </div>
 
-        <!-- Awards Section -->
+        <!-- Awards Section 📍 改用 h-[100lvh] -->
         <div id="awards-trigger" class="absolute w-full top-[3200px] md:top-[4800px] z-20 pointer-events-none">
-            <div id="awards-section" class="relative w-full h-[100dvh] flex items-center overflow-hidden pointer-events-none">
+            <div id="awards-section" class="relative w-full h-[100lvh] flex items-center overflow-hidden pointer-events-none">
                 <div class="relative z-20 w-full mx-auto px-[30px] md:px-[5.26vw] grid grid-cols-4 md:grid-cols-6 gap-[15px] md:gap-[2.08vw] items-start">
                     <div class="col-span-4 md:col-span-6 md:-mx-[8vw] pt-[7vh] md:pt-[8vh]">
                         <div class="awards-marquee mt-[140px] md:mt-[180px]">
@@ -364,15 +357,12 @@
                 </div>
 
                 <!-- CTA / Footer Section -->
-                <div class="col-span-full mt-[100px] md:mt-[200px] relative w-full pb-0 mobile-safe-bottom">
+                <div class="col-span-full mt-[100px] md:mt-[200px] relative w-full pb-0">
                     
                     <div class="absolute inset-0 grid grid-cols-4 md:grid-cols-6 gap-[15px] md:gap-[2.08vw] pointer-events-none z-0">
                         <div class="col-span-2 col-start-3 md:col-start-5 md:col-span-2 relative w-full h-full">
-                            <div
-                                id="astronaut-container"
-                                class="absolute md:bottom-[-160px] right-0 w-[48vw] md:w-[80%]"
-                                style="bottom: calc(var(--mobile-safe-bottom) - 45px);">
-                            </div>
+                            <!-- 📍 Karina Fix: 移除 inline style，交畀 CSS 控制 deep bottom 位置 -->
+                            <div id="astronaut-container"></div>
                         </div>
                     </div>
 
@@ -406,9 +396,9 @@
 
                 </div>
 
-                <!-- Bottom spacer -->
-                <div class="col-span-full w-full pointer-events-none hidden md:block h-[85px]"></div>
-                <div class="col-span-full w-full pointer-events-none mobile-safe-bottom-spacer md:hidden"></div>
+                <!-- 📍 Karina Fix: 改用截圖建議嘅 Spacer 設定，Mobile 落到 140px -->
+                <div class="col-span-full hidden md:block w-full pointer-events-none" style="height: calc(85px + env(safe-area-inset-bottom, 0px));"></div>
+                <div class="col-span-full block md:hidden w-full pointer-events-none" style="height: calc(140px + env(safe-area-inset-bottom, 0px));"></div>
 
             </div>
         </div>
@@ -493,7 +483,9 @@
                 const setBodyHeight = () => {
                     const portfolio = document.getElementById("portfolio-section");
                     if (portfolio) {
-                        const totalHeight = portfolio.offsetTop + portfolio.offsetHeight;
+                        // 📍 Karina Fix: 加入 safeBottom 補償，強制撐起 Scroll 空間！
+                        const safeBottom = 34; // iPhone 底部預留緩衝
+                        const totalHeight = portfolio.offsetTop + portfolio.offsetHeight + safeBottom;
                         document.body.style.height = totalHeight + "px";
                         ScrollTrigger.refresh();
                     }
@@ -538,7 +530,9 @@
                 gsap.set(".nav-link, .launch-text, #launch-circle, .summary-line", { opacity: 0 });
                 gsap.set(".intro-fade", { opacity: 0, y: 24 });
                 gsap.set(".awards-fade, .awards-logo", { opacity: 0, y: 34, filter: "blur(10px)" });
+                
                 gsap.set(".cta-fade-text", { opacity: 0, y: 24 });
+                
                 gsap.set(".awards-marquee-track", { x: "130vw", xPercent: 0 });
 
                 if (window.matchMedia("(pointer: fine)").matches) {
@@ -583,20 +577,15 @@
 
                 initTl.fromTo(".launch-text", { y: 15, filter: "blur(4px)" }, { y: 0, opacity: 1, filter: "blur(0px)", duration: 1.2, stagger: 0.2, ease: "power3.out" }, 1.5);
                 initTl.fromTo(".launch-line-bg", { scaleY: 0 }, { scaleY: 1, duration: 1.5, ease: "power3.inOut" }, 2.0);
+                
                 initTl.fromTo(".summary-line", { x: 15 }, { x: 0, opacity: 1, duration: 1.2, stagger: 0.15, ease: "power3.out" }, 2.2);
                 initTl.fromTo(".nav-link", { y: -10 }, { y: 0, opacity: 1, duration: 1.2, stagger: 0.15, ease: "power3.out" }, 2.2);
+                
                 initTl.fromTo("#launch-circle", { scale: 0 }, { scale: 1, opacity: 1, duration: 0.6, ease: "back.out(1.7)" }, 3.0);
 
-                const preloaderTl = gsap.timeline({
-                    onComplete: () => {
-                        document.getElementById("preloader").style.display = "none";
-                        lenis.start();
-                    }
-                });
-
-                preloaderTl
-                    .to("#preloader-logo-container", { opacity: 0, duration: 0.8, delay: 1.5, ease: "power2.inOut" })
-                    .to("#preloader", { opacity: 0, duration: 0.8, ease: "power2.inOut", onStart: () => initTl.play() }, "-=0.2");
+                const preloaderTl = gsap.timeline({ onComplete: () => { document.getElementById("preloader").style.display = "none"; lenis.start(); } });
+                preloaderTl.to("#preloader-logo-container", { opacity: 0, duration: 0.8, delay: 1.5, ease: "power2.inOut" })
+                           .to("#preloader", { opacity: 0, duration: 0.8, ease: "power2.inOut", onStart: () => initTl.play() }, "-=0.2");
 
                 const mm = gsap.matchMedia();
                 mm.add({
@@ -611,6 +600,7 @@
                     const rocketStartBottomNum = 0;
                     const rocketMidBottomNum = isMobile ? 18 : 50;
                     const rocketAwardsOffset = isMobile ? 400 : 200;
+                    
                     const moonScrollDistance = isMobile ? "135vh" : "210vh";
 
                     if (isDesktop) {
@@ -630,14 +620,7 @@
                         gsap.set("#rocket-wrapper, #summary-wrapper", { bottom: "0%" });
                     }
 
-                    const masterTl = gsap.timeline({
-                        scrollTrigger: {
-                            trigger: "body",
-                            start: "top top",
-                            end: "bottom bottom",
-                            scrub: 1
-                        }
-                    });
+                    const masterTl = gsap.timeline({ scrollTrigger: { trigger: "body", start: "top top", end: "bottom bottom", scrub: 1 } });
                     
                     masterTl.to({}, { duration: 120 });
 
@@ -652,6 +635,7 @@
                     const colors = ["#EF4444", "#10B981", "#3B82F6", "#F59E0B", "#FFFFFF"];
                     const numBubbles = 100;
                     let rocketCenterPos = isDesktop ? { left: "88.15%", xPercent: -50 } : isTablet ? { left: "88.15%", xPercent: -50 } : { left: "50%", xPercent: -50 };
+                    
                     const particleOffset = isMobile ? 35 : 60;
 
                     const getRocketBottomStr = (t) => {
@@ -702,17 +686,9 @@
                     masterTl.to("#rocket-drift", { keyframes: { "0%": { y: 0, ease: "sine.inOut" }, "50%": { y: 30, ease: "sine.inOut" }, "100%": { y: 0, ease: "sine.inOut" } }, duration: 32 }, 10);
                     masterTl.to("#rocket-drift", { keyframes: { "0%": { y: 0, ease: "sine.inOut" }, "50%": { y: 15, ease: "sine.inOut" }, "100%": { y: 0, ease: "sine.inOut" } }, duration: 26 }, 48);
 
+                    // --- Introduction Section Pinned Timeline ---
                     const introPinEnd = isMobile ? "+=2000" : "+=3400";
-                    const introTl = gsap.timeline({
-                        scrollTrigger: {
-                            trigger: "#intro-trigger",
-                            start: "center center",
-                            end: introPinEnd,
-                            pin: true,
-                            pinSpacing: false,
-                            scrub: 1
-                        }
-                    });
+                    const introTl = gsap.timeline({ scrollTrigger: { trigger: "#intro-trigger", start: "center center", end: introPinEnd, pin: true, pinSpacing: false, scrub: 1 } });
                     
                     if (intro3amPaths.length > 0) {
                         introTl.to(intro3amPaths, { strokeDashoffset: 0, duration: 2.3, ease: "none", stagger: 0.08 }, 0);
@@ -734,48 +710,21 @@
                     }
                     introTl.to("#intro-section", { opacity: 0, duration: 1.5, ease: "power2.in" }, exitLabel);
 
+                    // --- Awards Section Pinned Timeline ---
                     const awardsPinEnd = isMobile ? "+=3500" : "+=5000";
-                    const awardsTl = gsap.timeline({
-                        scrollTrigger: {
-                            trigger: "#awards-trigger",
-                            start: "center center",
-                            end: awardsPinEnd,
-                            pin: true,
-                            pinSpacing: false,
-                            scrub: 1
-                        }
-                    });
+                    const awardsTl = gsap.timeline({ scrollTrigger: { trigger: "#awards-trigger", start: "center center", end: awardsPinEnd, pin: true, pinSpacing: false, scrub: 1 } });
                     
                     awardsTl.to(".awards-marquee-track", { x: "-20vw", xPercent: -100, duration: 10, ease: "none" }, 0);
                     awardsTl.to(".awards-fade", { opacity: 1, y: 0, filter: "blur(0px)", duration: 1.5, stagger: 0.2, ease: "power3.out" }, 1.0);
                     awardsTl.to(".awards-logo", { opacity: 1, y: 0, filter: "blur(0px)", duration: 1.5, stagger: 0.1, ease: "power3.out" }, 2.0);
+                    
                     awardsTl.to("#awards-section", { opacity: 0, y: -90, duration: 1.5, ease: "power2.in" }, 8.5);
 
-                    return () => {
-                        if (trailContainer) trailContainer.innerHTML = "";
-                    };
+                    return () => { if (trailContainer) trailContainer.innerHTML = ""; };
                 });
 
-                const shakeTween = gsap.to("#rocket-svg-container", {
-                    x: () => Math.random() * 4 - 2,
-                    y: () => Math.random() * 4 - 2,
-                    rotation: () => Math.random() * 2 - 1,
-                    duration: 0.1,
-                    repeat: -1,
-                    yoyo: true,
-                    ease: "none",
-                    paused: true
-                });
-
-                ScrollTrigger.create({
-                    trigger: "body",
-                    start: "500px top",
-                    end: "9000px top",
-                    onEnter: () => shakeTween.play(),
-                    onLeave: () => shakeTween.pause(),
-                    onEnterBack: () => shakeTween.play(),
-                    onLeaveBack: () => shakeTween.pause()
-                });
+                const shakeTween = gsap.to("#rocket-svg-container", { x: () => Math.random() * 4 - 2, y: () => Math.random() * 4 - 2, rotation: () => Math.random() * 2 - 1, duration: 0.1, repeat: -1, yoyo: true, ease: "none", paused: true });
+                ScrollTrigger.create({ trigger: "body", start: "500px top", end: "9000px top", onEnter: () => shakeTween.play(), onLeave: () => shakeTween.pause(), onEnterBack: () => shakeTween.play(), onLeaveBack: () => shakeTween.pause() });
 
                 const aiTitle = document.getElementById("cta-title-container");
                 if (aiTitle) {
@@ -800,6 +749,7 @@
                 }
             }
 
+            // --- 3. Grid Toggle Hotkey ---
             document.addEventListener('keydown', (e) => {
                 if (e.key.toLowerCase() === 'g' && !e.ctrlKey && !e.metaKey) {
                     const grid = document.getElementById('bg-grid');
@@ -807,6 +757,7 @@
                 }
             });
 
+            // 啟直第一步：加載所有 SVG
             loadAllSVGs();
         });
     </script>
