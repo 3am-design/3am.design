@@ -24,7 +24,6 @@
             width: 100%;
             max-width: 100vw;
             min-height: 100%;
-            /* 📍 Karina Fix: 絕對唔可以用 overflow-x: hidden，會鎖死 iOS Safari 滾動。改用 clip 完美防橫向溢出又不干擾 Scroll */
             overflow-x: clip;
             background-color: #000;
         }
@@ -32,7 +31,6 @@
         body {
             color: #fff;
             font-family: "Inter", sans-serif;
-            /* 📍 Karina Fix: 移除 body 的 padding-bottom，將 safe-area 集中交由 CTA Section 控制，避免 scroll 高度出錯 */
         }
 
         html.lenis, html.lenis body {
@@ -155,12 +153,12 @@
             .awards-marquee-track { gap: 34px; }
         }
 
-        /* 📍 Karina Fix: 太空人向下移多啲，營造明顯的出血（被切斷）效果 */
+        /* 📍 Karina Fix: 太空人向下沉多啲，確保跌出版面界線，營造強烈出血感 */
         #astronaut-container {
             position: absolute;
             right: -4vw; 
             width: 55vw;
-            bottom: -80px; /* 將負值加大，確保會跌出 Page 嘅最底被硬切 */
+            bottom: -110px; /* 將負值加大至 110px，配合縮短嘅版面完美被 Cut */
         }
         @media (min-width: 768px) {
             #astronaut-container {
@@ -242,7 +240,6 @@
     </div>
 
     <!-- Scrollable Content Container -->
-    <!-- 📍 Karina Fix: 為求保險，我哋將防橫向滾動嘅責任交畀呢層主要 Container -->
     <div class="relative w-full overflow-x-clip">
         <div id="trail-container"></div>
 
@@ -355,13 +352,13 @@
                     <a href="#" class="text-white text-[16px] md:text-[20px] font-bold transition-colors hover-underline-link inline-block pb-[2px]">View all projects</a>
                 </div>
 
-                <!-- 📍 Karina Fix: 
-                     1. 將 padding bottom 再減 25px (即係清空，只保留 env() 作為安全區)
-                -->
-                <div class="col-span-full mt-[100px] md:mt-[200px] relative w-full pb-[env(safe-area-inset-bottom,0px)] md:pb-[calc(85px+env(safe-area-inset-bottom,0px))]">
+                <!-- 📍 Karina Fix: 分攤 Crop 走 60px -->
+                <!-- Section 1/3: 頂部 mt 由 100px 減至 80px (-20px) -->
+                <div class="col-span-full mt-[80px] md:mt-[200px] relative w-full pb-[env(safe-area-inset-bottom,0px)] md:pb-[calc(85px+env(safe-area-inset-bottom,0px))]">
                     
                     <div class="absolute inset-0 grid grid-cols-4 md:grid-cols-6 gap-[15px] md:gap-[2.08vw] pointer-events-none z-0">
                         <div class="col-span-2 col-start-3 md:col-start-5 md:col-span-2 relative w-full h-full">
+                            <!-- Astronaut 位置由 CSS `#astronaut-container` 絕對控制 -->
                             <div id="astronaut-container"></div>
                         </div>
                     </div>
@@ -380,7 +377,8 @@
                             </p>
                         </div>
 
-                        <div class="col-span-4 md:col-span-2 md:col-start-3 mt-[60px] md:mt-[168px] flex flex-col items-center text-center pointer-events-auto">
+                        <!-- 📍 Karina Fix: Section 2/3: Contact mt 由 60px 減至 40px (-20px) -->
+                        <div class="col-span-4 md:col-span-2 md:col-start-3 mt-[40px] md:mt-[168px] flex flex-col items-center text-center pointer-events-auto">
                             <p class="text-[9px] md:text-[10px] font-bold tracking-[0.08em] leading-[1.8] uppercase mb-[20px]">
                                 <span class="text-white">Want to collaborate?</span><br>
                                 <span class="text-[#999999]">Work with 3am.</span>
@@ -389,11 +387,8 @@
                             <a href="tel:+85263577861" class="text-white text-[16px] md:text-[18px] font-bold leading-[1.6] tracking-[0.02em] transition-colors hover-underline-link inline-block pb-[2px]">+852 6357 7861</a>
                         </div>
 
-                        <!-- 📍 Karina Fix: 
-                             2. 將 mt 由 80px 減到 55px (扣咗 25px)
-                             合共扣減 50px！版面會早啲完，太空人會沉得更深。
-                        -->
-                        <div class="col-span-full text-center mt-[55px] md:mt-[110px] pointer-events-auto">
+                        <!-- 📍 Karina Fix: Section 3/3: Copyright mt 由 55px 減至 35px (-20px)。總共完美 Cut 走 60px 頁底長度！ -->
+                        <div class="col-span-full text-center mt-[35px] md:mt-[110px] pointer-events-auto">
                             <p class="text-[#999999] text-[9px] md:text-[10px] font-medium tracking-[0.04em]">Copyright © 2026 3am Design Studio. All rights reserved.</p>
                         </div>
                     </div>
