@@ -4,8 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="color-scheme" content="dark">
-    <!-- 📍 Karina Enhancement: 配合 Safari Fullscreen 沉浸感 -->
-    <meta name="theme-color" content="#000000">
+    <!-- 📍 Karina Fix: 徹底刪除 theme-color，恢復 Safari 原生半透明磨砂 UI，解放 Fullscreen 沉浸感！ -->
     <title>3am Design Studio</title>
 
     <!-- 載入外部庫 -->
@@ -58,6 +57,7 @@
         #logo-wrapper svg { width: 100%; height: auto; display: block; }
         #rocket-svg-container svg { width: 100%; height: auto; display: block; }
         
+        /* 📍 Karina Enhancement: 收細 3am SVG 大小 30% (由 86px -> 60px) */
         #intro-3am-container svg { height: 60px; width: auto; display: block; }
         @media (min-width: 768px) { #intro-3am-container svg { height: 119px; } }
         
@@ -175,7 +175,7 @@
         </div>
     </div>
 
-    <!-- 0.5 月球 -->
+    <!-- 0.5 月球 📍 Karina Enhancement: 月球擺左邊 (left-[-20vw])，縮細30% (w-[90vw]) -->
     <img id="shared-moon" src="assets/home/moon.webp" alt="Moon" class="fixed top-[-80vh] md:top-[-150vh] left-[-20vw] md:left-[-20vw] w-[90vw] md:w-[70vw] max-w-none z-10 pointer-events-none mix-blend-screen opacity-80" onerror="this.style.display='none'">
 
     <!-- 1. Preloader -->
@@ -312,7 +312,7 @@
             </div>
         </div>
 
-        <!-- 📍 Karina Fix: portfolio-section 確保冇 overflow-hidden，令物件可完美出血到頁底 -->
+        <!-- 📍 Karina Fix: 解除 overflow-hidden，令絕對定位嘅太空人可以完美突破邊界「出血」 -->
         <!-- Portfolio Section -->
         <div id="portfolio-section" class="absolute w-full top-[7500px] md:top-[11000px] z-30 pb-0">
             <div class="w-full mx-auto px-[30px] md:px-[5.26vw] grid grid-cols-4 md:grid-cols-6 gap-[15px] md:gap-[2.08vw] items-start">
@@ -352,7 +352,7 @@
                     
                     <div class="absolute inset-0 grid grid-cols-4 md:grid-cols-6 gap-[15px] md:gap-[2.08vw] pointer-events-none z-0">
                         <div class="col-span-2 col-start-3 md:col-start-5 md:col-span-2 relative w-full h-full">
-                            <!-- 📍 Karina Fix: 移除 Mask 漸變，並精準設定 bottom-[-85px] 令太空人底部完美貼齊頁底 85px Spacer，真正觸底！ -->
+                            <!-- 📍 Karina Fix: 移除所有 Mask 漸變限制，太空人 100% 觸底 -->
                             <div id="astronaut-container" class="absolute bottom-[-85px] md:bottom-[-160px] right-0 w-[48vw] md:w-[80%]"></div>
                         </div>
                     </div>
@@ -589,8 +589,8 @@
                     const rocketMidBottomNum = isMobile ? 18 : 50;
                     const rocketAwardsOffset = isMobile ? 400 : 200;
                     
-                    // 📍 Karina Fix: 月球深度增加到 190vh，令佢真正沉底觸底
-                    const moonScrollDistance = isMobile ? "190vh" : "210vh";
+                    // 📍 Karina Fix: 將手機版月球 Scroll 距離設定為 135vh，令佢啱啱好停喺畫面左下角，唔會跌走
+                    const moonScrollDistance = isMobile ? "135vh" : "210vh";
 
                     if (isDesktop) {
                         gsap.set("#logo-wrapper", { top: "50dvh", left: "-5.52vw", width: "85vw", yPercent: -50, scale: 1, xPercent: 0 });
