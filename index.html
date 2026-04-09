@@ -24,7 +24,8 @@
             width: 100%;
             max-width: 100vw;
             min-height: 100%;
-            overflow-x: hidden;
+            /* 📍 Karina Fix: 絕對唔可以用 overflow-x: hidden，會鎖死 iOS Safari 滾動。改用 clip 完美防橫向溢出又不干擾 Scroll */
+            overflow-x: clip;
             background-color: #000;
         }
 
@@ -241,7 +242,8 @@
     </div>
 
     <!-- Scrollable Content Container -->
-    <div class="relative w-full">
+    <!-- 📍 Karina Fix: 為求保險，我哋將防橫向滾動嘅責任交畀呢層主要 Container -->
+    <div class="relative w-full overflow-x-clip">
         <div id="trail-container"></div>
 
         <!-- Intro Section -->
@@ -353,8 +355,7 @@
                     <a href="#" class="text-white text-[16px] md:text-[20px] font-bold transition-colors hover-underline-link inline-block pb-[2px]">View all projects</a>
                 </div>
 
-                <!-- 📍 Karina Fix: CTA Section 包攬晒安全區 (safe-area) 作為 bottom padding。
-                     Copyright 文字會停喺 padding 之上，但 Astronaut 因為係 bottom: -50px，會直插 padding 底部出血！ -->
+                <!-- CTA Section -->
                 <div class="col-span-full mt-[100px] md:mt-[200px] relative w-full pb-[calc(50px+env(safe-area-inset-bottom,0px))] md:pb-[calc(85px+env(safe-area-inset-bottom,0px))]">
                     
                     <div class="absolute inset-0 grid grid-cols-4 md:grid-cols-6 gap-[15px] md:gap-[2.08vw] pointer-events-none z-0">
@@ -438,7 +439,6 @@
             }
 
             async function loadAllSVGs() {
-                // 📍 Karina Fix: 修正 WebAward.svg 同 ComAward.svg 嘅大小寫，確保同伺服器檔案名完全對齊
                 await Promise.all([
                     fetchSVG('assets/home/3amDS.svg', 'preloader-logo-container'),
                     fetchSVG('assets/home/3amDS.svg', 'header-logo-container'),
