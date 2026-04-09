@@ -153,12 +153,12 @@
             .awards-marquee-track { gap: 34px; }
         }
 
-        /* 📍 Karina Fix: 大幅加大負值並稍微放大，確保就算頁面提早完結都能夠被完美切斷（出血） */
+        /* 📍 Karina Fix: 將太空人移低多 30px (原本 -160px -> -190px)，加強出血 */
         #astronaut-container {
             position: absolute;
             right: -6vw; 
             width: 65vw;
-            bottom: -160px; 
+            bottom: -190px; 
         }
         @media (min-width: 768px) {
             #astronaut-container {
@@ -352,10 +352,6 @@
                     <a href="#" class="text-white text-[16px] md:text-[20px] font-bold transition-colors hover-underline-link inline-block pb-[2px]">View all projects</a>
                 </div>
 
-                <!-- 📍 Karina Fix: 
-                     1. 移除 padding bottom (`pb-[10px]`) 減省空間。
-                     2. 頂部 margin 收細：`mt-[80px]` -> `mt-[50px]`
-                -->
                 <div class="col-span-full mt-[50px] md:mt-[200px] relative w-full pb-[10px] md:pb-[calc(85px+env(safe-area-inset-bottom,0px))]">
                     
                     <div class="absolute inset-0 grid grid-cols-4 md:grid-cols-6 gap-[15px] md:gap-[2.08vw] pointer-events-none z-0">
@@ -365,7 +361,8 @@
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-4 md:grid-cols-6 gap-[15px] md:gap-[2.08vw] items-start relative z-10 pointer-events-none">
+                    <!-- 📍 Karina Fix: 整體文字移低 50px (用 top-[50px] 視覺下移，確保唔增加 scroll 高度) -->
+                    <div class="grid grid-cols-4 md:grid-cols-6 gap-[15px] md:gap-[2.08vw] items-start relative z-10 pointer-events-none top-[50px] md:top-0">
                         
                         <div id="cta-title-container" class="col-span-2 col-start-2 md:col-span-2 md:col-start-2 flex justify-center md:justify-start items-center md:items-start pointer-events-auto scale-[1.5] md:scale-100 origin-center md:origin-left"></div>
                         
@@ -379,7 +376,6 @@
                             </p>
                         </div>
 
-                        <!-- 📍 Karina Fix: Contact margin 收細：`mt-[40px]` -> `mt-[25px]` -->
                         <div class="col-span-4 md:col-span-2 md:col-start-3 mt-[25px] md:mt-[168px] flex flex-col items-center text-center pointer-events-auto">
                             <p class="text-[9px] md:text-[10px] font-bold tracking-[0.08em] leading-[1.8] uppercase mb-[20px]">
                                 <span class="text-white">Want to collaborate?</span><br>
@@ -389,8 +385,8 @@
                             <a href="tel:+85263577861" class="text-white text-[16px] md:text-[18px] font-bold leading-[1.6] tracking-[0.02em] transition-colors hover-underline-link inline-block pb-[2px]">+852 6357 7861</a>
                         </div>
 
-                        <!-- 📍 Karina Fix: Copyright margin 收細：`mt-[35px]` -> `mt-[15px]` -->
-                        <div class="col-span-full text-center mt-[15px] md:mt-[110px] pointer-events-auto">
+                        <!-- 📍 Karina Fix: Copyright 額外移低多 30px (加埋 parent 的 50px = 移低 80px) -->
+                        <div class="col-span-full text-center mt-[15px] md:mt-[110px] pointer-events-auto relative top-[30px] md:top-0">
                             <p class="text-[#999999] text-[9px] md:text-[10px] font-medium tracking-[0.04em]">Copyright © 2026 3am Design Studio. All rights reserved.</p>
                         </div>
                     </div>
