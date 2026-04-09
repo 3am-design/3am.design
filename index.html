@@ -242,10 +242,9 @@
             <div id="intro-section" class="relative w-full h-[100dvh] flex justify-center items-center overflow-hidden pointer-events-none">
                 <div class="relative z-20 w-full mx-auto px-[30px] md:px-[5.26vw] -translate-y-[10vh] md:translate-y-0">
                     <div class="grid grid-cols-4 md:grid-cols-6 gap-[15px] md:gap-[2.08vw] items-end">
-                        <!-- 📍 Karina Enhancement: 手機版加入 mt-[65px] (增加咗50px) 移低 3am，mb-0 確保距離由 text 嘅 mt 控制 -->
                         <div id="intro-3am-container" class="col-span-4 md:col-span-2 md:col-start-1 flex justify-center md:justify-end mt-[65px] md:mt-0 mb-0 md:mb-[10px]"></div>
-                        <!-- 📍 Karina Enhancement: 手機版文字容器 mt 改為 42px，完美同下面保持一樣間距 -->
-                        <div class="col-span-4 md:col-span-3 md:col-start-3 text-center md:text-left mt-[42px] md:mt-0">
+                        <!-- 📍 Karina Enhancement: 手機版 mt 改為 20px，令段字同埋底下段字一齊向上移 -->
+                        <div class="col-span-4 md:col-span-3 md:col-start-3 text-center md:text-left mt-[20px] md:mt-0">
                             <p class="intro-fade text-[20px] md:text-[30px] font-normal leading-[36px] md:leading-[50px] tracking-[0] text-white m-0">is the vibe that clears my head.</p>
                             <p class="intro-fade text-[20px] md:text-[30px] font-normal leading-[36px] md:leading-[50px] tracking-[0] text-white m-0">A mindset, not a schedule.</p>
                             <p class="intro-fade text-[20px] md:text-[30px] font-normal leading-[36px] md:leading-[50px] tracking-[0] text-white m-0">For sharp, functional &amp; striking work.</p>
@@ -284,7 +283,6 @@
                     
                     <div class="col-span-4 md:col-span-4 md:col-start-3 pt-[40px] md:pt-[133px] text-center md:text-left">
                         <div class="awards-fade flex items-center justify-center md:justify-start gap-[12px]">
-                            <!-- 📍 Karina Enhancement: 圓點手機版縮細 30% 到 6px (原本 8px) -->
                             <div class="w-[6px] h-[6px] md:w-[10px] md:h-[10px] rounded-full bg-white shrink-0 -translate-y-[1px] md:-translate-y-[2px]"></div>
                             <p class="text-[20px] md:text-[30px] font-normal leading-[1.15] text-white text-left">15 years of experience</p>
                         </div>
@@ -315,9 +313,9 @@
             </div>
         </div>
 
-        <!-- 📍 Karina Fix: 手機版 top 由 7300px 加 100px 變為 7400px，推遲出場 -->
+        <!-- 📍 Karina Fix: 手機版 top 由 7400px 加 100px 變為 7500px，推遲出場 -->
         <!-- Portfolio Section -->
-        <div id="portfolio-section" class="absolute w-full top-[7400px] md:top-[11000px] z-30 pb-0 overflow-hidden">
+        <div id="portfolio-section" class="absolute w-full top-[7500px] md:top-[11000px] z-30 pb-0 overflow-hidden">
             <div class="w-full mx-auto px-[30px] md:px-[5.26vw] grid grid-cols-4 md:grid-cols-6 gap-[15px] md:gap-[2.08vw] items-start">
                 
                 <!-- Item 1 -->
@@ -361,21 +359,19 @@
 
                     <div class="grid grid-cols-4 md:grid-cols-6 gap-[15px] md:gap-[2.08vw] items-start relative z-10 pointer-events-none">
                         
-                        <!-- 📍 Karina Enhancement: scale-[1.5] 再次加大 SVG，比之前更加震撼 30% -->
                         <div id="cta-title-container" class="col-span-2 col-start-2 md:col-span-2 md:col-start-2 flex justify-center md:justify-start items-center md:items-start pointer-events-auto scale-[1.5] md:scale-100 origin-center md:origin-left"></div>
                         
-                        <div class="col-span-4 md:col-span-2 md:col-start-4 mt-[40px] md:mt-0 flex flex-col items-center text-center md:items-start md:text-left justify-start pointer-events-auto">
+                        <!-- 📍 Karina Fix: 手機版 mt 由 40px 減到 15px，將 2026 同底下所有字一齊移高少少 -->
+                        <div class="col-span-4 md:col-span-2 md:col-start-4 mt-[15px] md:mt-0 flex flex-col items-center text-center md:items-start md:text-left justify-start pointer-events-auto">
                             <p class="cta-fade-text text-[10px] md:text-[12px] font-medium tracking-[0.04em] leading-[20px] uppercase mb-[20px] md:mb-[30px]">
                                 <span class="text-white">2026: The year of launch.</span><br>
                                 <span class="text-[#999999]">While others fear the machine,<br>I synchronize with it.</span>
                             </p>
-                            <!-- 📍 Karina Enhancement: 手機版寬度再加闊到 w-[90%] -->
                             <p class="cta-fade-text text-white text-[20px] md:text-[30px] font-normal leading-[36px] md:leading-[50px] w-[90%] md:w-full mx-auto md:mx-0">
                                 By mastering the latest tech, I deliver smarter, faster &amp; more flexible design solutions that fit your budget, without compromising the soul of the craft.
                             </p>
                         </div>
 
-                        <!-- 📍 Karina Enhancement: 減少同上面段字嘅距離一半，mt 由 120px 減到 60px，底下元素自然順推前 -->
                         <div class="col-span-4 md:col-span-2 md:col-start-3 mt-[60px] md:mt-[168px] flex flex-col items-center text-center pointer-events-auto">
                             <p class="text-[9px] md:text-[10px] font-bold tracking-[0.08em] leading-[1.8] uppercase mb-[20px]">
                                 <span class="text-white">Want to collaborate?</span><br>
@@ -392,7 +388,6 @@
 
                 </div>
 
-                <!-- 📍 Karina Fix: 頁底 Spacer 減少 70px，變為 h-[15px] -->
                 <div class="col-span-full h-[15px] w-full pointer-events-none"></div>
 
             </div>
