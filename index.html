@@ -63,7 +63,8 @@
 
         .awards-logo svg { width: 100%; height: auto; display: block; }
         #cta-title-container svg { width: 100%; height: auto; display: block; }
-        #astronaut-container svg { width: 100%; height: auto; display: block; }
+        #astronaut-container svg,
+        #astronaut-container-mobile svg { width: 100%; height: auto; display: block; }
 
         #logo-wrapper svg path,
         #intro-3am-container svg path,
@@ -165,6 +166,31 @@
             z-index: 10;
         }
 
+        #footer-art-layer {
+            position: fixed;
+            inset-inline: 0;
+            bottom: 0;
+            height: 42svh;
+            pointer-events: none;
+            z-index: 16;
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        #astronaut-container-mobile {
+            position: absolute;
+            right: 0;
+            bottom: calc(env(safe-area-inset-bottom, 0px) - 8px);
+            width: 48vw;
+            max-width: 220px;
+        }
+
+        @media (min-width: 768px) {
+            #footer-art-layer {
+                display: none;
+            }
+        }
+
         .circle-particle {
             position: absolute;
             border-radius: 50%;
@@ -249,6 +275,10 @@
     </div>
 
     <div id="custom-cursor"><span>Discover</span></div>
+
+    <div id="footer-art-layer" class="md:hidden">
+        <div id="astronaut-container-mobile"></div>
+    </div>
 
     <header class="fixed top-0 left-0 w-full px-[30px] pt-[30px] md:px-[5.26vw] md:pt-[35px] z-[999] flex justify-between items-end pointer-events-none fouc-protect">
         <a href="index.html" id="header-logo-container" class="h-[20px] md:h-[26px] pointer-events-auto cursor-pointer flex items-end opacity-0"></a>
@@ -396,7 +426,7 @@
                 </div>
 
                 <div class="col-span-full mt-[100px] md:mt-[200px] relative w-full pb-0">
-                    <div class="absolute inset-0 grid grid-cols-4 md:grid-cols-6 gap-[15px] md:gap-[2.08vw] pointer-events-none z-0">
+                    <div class="absolute inset-0 hidden md:grid grid-cols-4 md:grid-cols-6 gap-[15px] md:gap-[2.08vw] pointer-events-none z-0">
                         <div class="col-span-2 col-start-3 md:col-start-5 md:col-span-2 relative w-full h-full">
                             <div id="astronaut-container" class="absolute bottom-[-85px] md:bottom-[-160px] right-0 w-[48vw] md:w-[80%]"></div>
                         </div>
@@ -425,12 +455,12 @@
                         </div>
 
                         <div class="col-span-full text-center mt-[80px] md:mt-[110px] pointer-events-auto">
-                            <p class="text-[#999999] text-[9px] md:text-[10px] font-medium tracking-[0.04em]">Copyright © 2026 3am Design Studio. All rights reserved.</p>
+                            <p class="text-[#999999] text-[9px] md:text-[10px] font-medium tracking-[0.04em]" style="margin-bottom: calc(env(safe-area-inset-bottom, 0px) + 20px);">Copyright © 2026 3am Design Studio. All rights reserved.</p>
                         </div>
                     </div>
                 </div>
 
-                <div class="col-span-full w-full pointer-events-none" style="height: calc(140px + env(safe-area-inset-bottom, 0px));"></div>
+                <div class="col-span-full w-full pointer-events-none" style="height: calc(env(safe-area-inset-bottom, 0px) + 12px);"></div>
             </div>
         </div>
     </div>
@@ -484,7 +514,8 @@
                     fetchSVG("assets/home/WebAward.svg", "award-webaward"),
                     fetchSVG("assets/home/ComAward.svg", "award-comaward"),
                     fetchSVG("assets/home/aixhuman.svg", "cta-title-container"),
-                    fetchSVG("assets/home/Astronaut.svg", "astronaut-container")
+                    fetchSVG("assets/home/Astronaut.svg", "astronaut-container"),
+                    fetchSVG("assets/home/Astronaut.svg", "astronaut-container-mobile")
                 ]);
                 initGSAPAnimations();
             }
@@ -511,7 +542,7 @@
                     if (!portfolio) return;
 
                     const portfolioBottom = portfolio.offsetTop + portfolio.offsetHeight;
-                    const bottomBleed = window.innerWidth < 768 ? 220 : 140;
+                    const bottomBleed = window.innerWidth < 768 ? 32 : 80;
                     document.body.style.height = `${portfolioBottom + bottomBleed}px`;
                     ScrollTrigger.refresh();
                 };
@@ -602,6 +633,8 @@
                     const cursor = document.getElementById("custom-cursor");
                     if (cursor) cursor.style.display = "none";
                 }
+
+                gsap.set("#footer-art-layer", { autoAlpha: 0, y: 40 });
 
                 const pulseTween = gsap.fromTo(
                     "#launch-circle",
@@ -872,6 +905,16 @@
                     if (fadeTexts.length > 0) {
                         tl.to(fadeTexts, { opacity: 1, y: 0, duration: 1.4, stagger: 0.18, ease: "power3.out" }, 0.4);
                     }
+                }
+
+                if (window.innerWidth < 768) {
+                    ScrollTrigger.create({
+                        trigger: "#portfolio-section",
+                        start: "top 78%",
+                        end: "bottom bottom",
+                        onEnter: () => gsap.to("#footer-art-layer", { autoAlpha: 1, y: 0, duration: 0.8, ease: "power2.out" }),
+                        onLeaveBack: () => gsap.to("#footer-art-layer", { autoAlpha: 0, y: 40, duration: 0.5, ease: "power2.in" })
+                    });
                 }
             }
 
