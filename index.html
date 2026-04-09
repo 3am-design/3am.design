@@ -245,7 +245,6 @@
                 <div class="relative z-20 w-full mx-auto px-[30px] md:px-[5.26vw] -translate-y-[10vh] md:translate-y-0">
                     <div class="grid grid-cols-4 md:grid-cols-6 gap-[15px] md:gap-[2.08vw] items-end">
                         <div id="intro-3am-container" class="col-span-4 md:col-span-2 md:col-start-1 flex justify-center md:justify-end mt-[65px] md:mt-0 mb-0 md:mb-[10px]"></div>
-                        <!-- 📍 Karina Enhancement: 手機版 mt 改為 20px，令段字同埋底下段字一齊向上移 -->
                         <div class="col-span-4 md:col-span-3 md:col-start-3 text-center md:text-left mt-[20px] md:mt-0">
                             <p class="intro-fade text-[20px] md:text-[30px] font-normal leading-[36px] md:leading-[50px] tracking-[0] text-white m-0">is the vibe that clears my head.</p>
                             <p class="intro-fade text-[20px] md:text-[30px] font-normal leading-[36px] md:leading-[50px] tracking-[0] text-white m-0">A mindset, not a schedule.</p>
@@ -315,7 +314,7 @@
             </div>
         </div>
 
-        <!-- 📍 Karina Fix: 解除 overflow-hidden 等內容自然延展，不再一刀平切 -->
+        <!-- 📍 Karina Fix: 解除 overflow-hidden，令絕對定位嘅太空人可以完美突破邊界「出血」 -->
         <!-- Portfolio Section -->
         <div id="portfolio-section" class="absolute w-full top-[7500px] md:top-[11000px] z-30 pb-0">
             <div class="w-full mx-auto px-[30px] md:px-[5.26vw] grid grid-cols-4 md:grid-cols-6 gap-[15px] md:gap-[2.08vw] items-start">
@@ -390,8 +389,8 @@
 
                 </div>
 
-                <!-- 📍 Karina Enhancement: 加入 env(safe-area-inset-bottom) 確保 iPhone 底部橫條唔會遮字，配合 Fullscreen 視覺 -->
-                <div class="col-span-full h-[calc(15px+env(safe-area-inset-bottom))] w-full pointer-events-none"></div>
+                <!-- 📍 Karina Rollback: 還原 85px 底距，唔加 overflow-hidden，令絕對定位嘅物件可以穿透向下出血 -->
+                <div class="col-span-full h-[85px] md:h-[85px] w-full pointer-events-none"></div>
 
             </div>
         </div>
@@ -592,7 +591,8 @@
                     const rocketMidBottomNum = isMobile ? 18 : 50;
                     const rocketAwardsOffset = isMobile ? 400 : 200;
                     
-                    const moonScrollDistance = isMobile ? "165vh" : "210vh";
+                    // 📍 Karina Rollback: 將月球再沉深少少到 185vh，確保喺「冇斬件」嘅狀態下仍然貼實頁底
+                    const moonScrollDistance = isMobile ? "185vh" : "210vh";
 
                     if (isDesktop) {
                         gsap.set("#logo-wrapper", { top: "50dvh", left: "-5.52vw", width: "85vw", yPercent: -50, scale: 1, xPercent: 0 });
