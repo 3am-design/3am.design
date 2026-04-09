@@ -221,8 +221,8 @@
     <div class="relative w-full">
         <div id="trail-container"></div>
 
-        <!-- Intro Section -->
-        <div id="intro-trigger" class="absolute w-full top-[1140px] md:top-[1400px] z-20">
+        <!-- Intro Section 📍 Karina Fix: 補加 pointer-events-none 確保手機 GSAP Pin Spacer 唔會阻住 Scroll -->
+        <div id="intro-trigger" class="absolute w-full top-[1140px] md:top-[1400px] z-20 pointer-events-none">
             <div id="intro-section" class="relative w-full h-[100dvh] flex justify-center items-center overflow-hidden pointer-events-none">
                 <div class="relative z-20 w-full mx-auto px-[30px] md:px-[5.26vw]">
                     <div class="grid grid-cols-4 md:grid-cols-6 gap-[15px] md:gap-[2.08vw] items-end">
@@ -242,8 +242,8 @@
             </div>
         </div>
 
-        <!-- Awards Section -->
-        <div id="awards-trigger" class="absolute w-full top-[3200px] md:top-[4800px] z-20">
+        <!-- Awards Section 📍 Karina Fix: 補加 pointer-events-none -->
+        <div id="awards-trigger" class="absolute w-full top-[3200px] md:top-[4800px] z-20 pointer-events-none">
             <div id="awards-section" class="relative w-full h-[100dvh] flex items-center overflow-hidden pointer-events-none">
                 <div class="relative z-20 w-full mx-auto px-[30px] md:px-[5.26vw] grid grid-cols-4 md:grid-cols-6 gap-[15px] md:gap-[2.08vw] items-start">
                     <div class="col-span-4 md:col-span-6 md:-mx-[8vw] pt-[7vh] md:pt-[8vh]">
@@ -462,7 +462,16 @@
                     setBodyHeight();
                     setTimeout(setBodyHeight, 500); 
                 });
-                window.addEventListener("resize", setBodyHeight);
+                
+                // 📍 Karina Fix: 改良 resize listener，只喺寬度（Width）改變時先觸發
+                // 防止手機上下 Scroll 收起 URL Bar 時觸發多餘嘅 Height Recalculation 同 Scroll 卡頓！
+                let currentWindowWidth = window.innerWidth;
+                window.addEventListener("resize", () => {
+                    if (window.innerWidth !== currentWindowWidth) {
+                        currentWindowWidth = window.innerWidth;
+                        setBodyHeight();
+                    }
+                });
 
                 const logoPaths = gsap.utils.toArray("#logo-wrapper svg path");
                 logoPaths.forEach((path) => {
