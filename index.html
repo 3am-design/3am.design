@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="color-scheme" content="dark">
-    <!-- 📍 Karina Fix: 徹底刪除 theme-color，恢復 Safari 原生半透明磨砂 UI，解放 Fullscreen 沉浸感！ -->
     <title>3am Design Studio</title>
 
     <!-- 載入外部庫 -->
@@ -21,10 +20,10 @@
     </script>
 
     <style>
-        /* 📍 Karina Fix: 移除咗 overflow-x: clip，徹底解決 iOS Safari 橡筋邊硬切 (Crop) 嘅問題！ */
         html, body {
             width: 100%;
             max-width: 100vw;
+            min-height: 100%;
             background-color: #000;
         }
 
@@ -33,7 +32,26 @@
             font-family: "Inter", sans-serif;
         }
 
-        /* 📍 Karina Fix: 補加 Lenis 官方基礎 CSS，保障 Scroll 引擎絕對穩定 */
+        /* Mobile Safari safe area fix */
+        :root {
+            --mobile-safe-bottom: env(safe-area-inset-bottom, 0px);
+        }
+
+        @media (max-width: 767px) {
+            body {
+                padding-bottom: var(--mobile-safe-bottom);
+            }
+
+            .mobile-safe-bottom {
+                padding-bottom: calc(var(--mobile-safe-bottom) + 24px);
+            }
+
+            .mobile-safe-bottom-spacer {
+                height: calc(var(--mobile-safe-bottom) + 24px);
+            }
+        }
+
+        /* Lenis */
         html.lenis, html.lenis body {
             height: auto;
         }
@@ -57,7 +75,6 @@
         #logo-wrapper svg { width: 100%; height: auto; display: block; }
         #rocket-svg-container svg { width: 100%; height: auto; display: block; }
         
-        /* 📍 Karina Enhancement: 收細 3am SVG 大小 30% (由 86px -> 60px) */
         #intro-3am-container svg { height: 60px; width: auto; display: block; }
         @media (min-width: 768px) { #intro-3am-container svg { height: 119px; } }
         
@@ -196,7 +213,7 @@
         </nav>
     </header>
 
-    <!-- 4. Logo SVG Container -->
+    <!-- 4. Logo SVG Container (Ayoh) -->
     <div id="logo-wrapper" class="fouc-protect"></div>
 
     <!-- 5. Launch UI -->
@@ -347,12 +364,15 @@
                 </div>
 
                 <!-- CTA / Footer Section -->
-                <div class="col-span-full mt-[100px] md:mt-[200px] relative w-full pb-0">
+                <div class="col-span-full mt-[100px] md:mt-[200px] relative w-full pb-0 mobile-safe-bottom">
                     
                     <div class="absolute inset-0 grid grid-cols-4 md:grid-cols-6 gap-[15px] md:gap-[2.08vw] pointer-events-none z-0">
                         <div class="col-span-2 col-start-3 md:col-start-5 md:col-span-2 relative w-full h-full">
-                            <!-- 📍 Karina Fix: 加入 iOS 安全距離！用 calc 將太空人推向下 (85px + 安全距離)。咁樣太空人就會 100% 貼住 iPhone 真正嘅物理邊緣，而唔會畀 UI Bar 斬平底！ -->
-                            <div id="astronaut-container" class="absolute right-0 w-[48vw] md:w-[80%]" style="bottom: calc(-85px - env(safe-area-inset-bottom, 0px));"></div>
+                            <div
+                                id="astronaut-container"
+                                class="absolute md:bottom-[-160px] right-0 w-[48vw] md:w-[80%]"
+                                style="bottom: calc(var(--mobile-safe-bottom) - 45px);">
+                            </div>
                         </div>
                     </div>
 
@@ -386,8 +406,9 @@
 
                 </div>
 
-                <!-- 📍 Karina Fix: 將底部 Spacer 改為動態高度。佢會喺原本嘅 85px 上面，加上 Safari 底部 UI Bar 嘅厚度。咁樣 JS 計 height 嗰陣就會預留充足空間，畀用家可以 Scroll 到底兼觸發 Safari Fullscreen 狀態！ -->
-                <div class="col-span-full w-full pointer-events-none" style="height: calc(85px + env(safe-area-inset-bottom, 0px));"></div>
+                <!-- Bottom spacer -->
+                <div class="col-span-full w-full pointer-events-none hidden md:block h-[85px]"></div>
+                <div class="col-span-full w-full pointer-events-none mobile-safe-bottom-spacer md:hidden"></div>
 
             </div>
         </div>
@@ -472,8 +493,6 @@
                 const setBodyHeight = () => {
                     const portfolio = document.getElementById("portfolio-section");
                     if (portfolio) {
-                        // 📍 Karina Note: 因為 CSS 加咗 env()，offsetHeight 會自動計埋安全距離，
-                        // 確保 totalHeight 有足夠「過界空間 (Overscroll)」，令 Safari UI Bar 順利縮細！
                         const totalHeight = portfolio.offsetTop + portfolio.offsetHeight;
                         document.body.style.height = totalHeight + "px";
                         ScrollTrigger.refresh();
@@ -519,9 +538,7 @@
                 gsap.set(".nav-link, .launch-text, #launch-circle, .summary-line", { opacity: 0 });
                 gsap.set(".intro-fade", { opacity: 0, y: 24 });
                 gsap.set(".awards-fade, .awards-logo", { opacity: 0, y: 34, filter: "blur(10px)" });
-                
                 gsap.set(".cta-fade-text", { opacity: 0, y: 24 });
-                
                 gsap.set(".awards-marquee-track", { x: "130vw", xPercent: 0 });
 
                 if (window.matchMedia("(pointer: fine)").matches) {
@@ -566,15 +583,20 @@
 
                 initTl.fromTo(".launch-text", { y: 15, filter: "blur(4px)" }, { y: 0, opacity: 1, filter: "blur(0px)", duration: 1.2, stagger: 0.2, ease: "power3.out" }, 1.5);
                 initTl.fromTo(".launch-line-bg", { scaleY: 0 }, { scaleY: 1, duration: 1.5, ease: "power3.inOut" }, 2.0);
-                
                 initTl.fromTo(".summary-line", { x: 15 }, { x: 0, opacity: 1, duration: 1.2, stagger: 0.15, ease: "power3.out" }, 2.2);
                 initTl.fromTo(".nav-link", { y: -10 }, { y: 0, opacity: 1, duration: 1.2, stagger: 0.15, ease: "power3.out" }, 2.2);
-                
                 initTl.fromTo("#launch-circle", { scale: 0 }, { scale: 1, opacity: 1, duration: 0.6, ease: "back.out(1.7)" }, 3.0);
 
-                const preloaderTl = gsap.timeline({ onComplete: () => { document.getElementById("preloader").style.display = "none"; lenis.start(); } });
-                preloaderTl.to("#preloader-logo-container", { opacity: 0, duration: 0.8, delay: 1.5, ease: "power2.inOut" })
-                           .to("#preloader", { opacity: 0, duration: 0.8, ease: "power2.inOut", onStart: () => initTl.play() }, "-=0.2");
+                const preloaderTl = gsap.timeline({
+                    onComplete: () => {
+                        document.getElementById("preloader").style.display = "none";
+                        lenis.start();
+                    }
+                });
+
+                preloaderTl
+                    .to("#preloader-logo-container", { opacity: 0, duration: 0.8, delay: 1.5, ease: "power2.inOut" })
+                    .to("#preloader", { opacity: 0, duration: 0.8, ease: "power2.inOut", onStart: () => initTl.play() }, "-=0.2");
 
                 const mm = gsap.matchMedia();
                 mm.add({
@@ -589,7 +611,6 @@
                     const rocketStartBottomNum = 0;
                     const rocketMidBottomNum = isMobile ? 18 : 50;
                     const rocketAwardsOffset = isMobile ? 400 : 200;
-                    
                     const moonScrollDistance = isMobile ? "135vh" : "210vh";
 
                     if (isDesktop) {
@@ -609,7 +630,14 @@
                         gsap.set("#rocket-wrapper, #summary-wrapper", { bottom: "0%" });
                     }
 
-                    const masterTl = gsap.timeline({ scrollTrigger: { trigger: "body", start: "top top", end: "bottom bottom", scrub: 1 } });
+                    const masterTl = gsap.timeline({
+                        scrollTrigger: {
+                            trigger: "body",
+                            start: "top top",
+                            end: "bottom bottom",
+                            scrub: 1
+                        }
+                    });
                     
                     masterTl.to({}, { duration: 120 });
 
@@ -624,7 +652,6 @@
                     const colors = ["#EF4444", "#10B981", "#3B82F6", "#F59E0B", "#FFFFFF"];
                     const numBubbles = 100;
                     let rocketCenterPos = isDesktop ? { left: "88.15%", xPercent: -50 } : isTablet ? { left: "88.15%", xPercent: -50 } : { left: "50%", xPercent: -50 };
-                    
                     const particleOffset = isMobile ? 35 : 60;
 
                     const getRocketBottomStr = (t) => {
@@ -675,9 +702,17 @@
                     masterTl.to("#rocket-drift", { keyframes: { "0%": { y: 0, ease: "sine.inOut" }, "50%": { y: 30, ease: "sine.inOut" }, "100%": { y: 0, ease: "sine.inOut" } }, duration: 32 }, 10);
                     masterTl.to("#rocket-drift", { keyframes: { "0%": { y: 0, ease: "sine.inOut" }, "50%": { y: 15, ease: "sine.inOut" }, "100%": { y: 0, ease: "sine.inOut" } }, duration: 26 }, 48);
 
-                    // --- Introduction Section Pinned Timeline ---
                     const introPinEnd = isMobile ? "+=2000" : "+=3400";
-                    const introTl = gsap.timeline({ scrollTrigger: { trigger: "#intro-trigger", start: "center center", end: introPinEnd, pin: true, pinSpacing: false, scrub: 1 } });
+                    const introTl = gsap.timeline({
+                        scrollTrigger: {
+                            trigger: "#intro-trigger",
+                            start: "center center",
+                            end: introPinEnd,
+                            pin: true,
+                            pinSpacing: false,
+                            scrub: 1
+                        }
+                    });
                     
                     if (intro3amPaths.length > 0) {
                         introTl.to(intro3amPaths, { strokeDashoffset: 0, duration: 2.3, ease: "none", stagger: 0.08 }, 0);
@@ -699,21 +734,48 @@
                     }
                     introTl.to("#intro-section", { opacity: 0, duration: 1.5, ease: "power2.in" }, exitLabel);
 
-                    // --- Awards Section Pinned Timeline ---
                     const awardsPinEnd = isMobile ? "+=3500" : "+=5000";
-                    const awardsTl = gsap.timeline({ scrollTrigger: { trigger: "#awards-trigger", start: "center center", end: awardsPinEnd, pin: true, pinSpacing: false, scrub: 1 } });
+                    const awardsTl = gsap.timeline({
+                        scrollTrigger: {
+                            trigger: "#awards-trigger",
+                            start: "center center",
+                            end: awardsPinEnd,
+                            pin: true,
+                            pinSpacing: false,
+                            scrub: 1
+                        }
+                    });
                     
                     awardsTl.to(".awards-marquee-track", { x: "-20vw", xPercent: -100, duration: 10, ease: "none" }, 0);
                     awardsTl.to(".awards-fade", { opacity: 1, y: 0, filter: "blur(0px)", duration: 1.5, stagger: 0.2, ease: "power3.out" }, 1.0);
                     awardsTl.to(".awards-logo", { opacity: 1, y: 0, filter: "blur(0px)", duration: 1.5, stagger: 0.1, ease: "power3.out" }, 2.0);
-                    
                     awardsTl.to("#awards-section", { opacity: 0, y: -90, duration: 1.5, ease: "power2.in" }, 8.5);
 
-                    return () => { if (trailContainer) trailContainer.innerHTML = ""; };
+                    return () => {
+                        if (trailContainer) trailContainer.innerHTML = "";
+                    };
                 });
 
-                const shakeTween = gsap.to("#rocket-svg-container", { x: () => Math.random() * 4 - 2, y: () => Math.random() * 4 - 2, rotation: () => Math.random() * 2 - 1, duration: 0.1, repeat: -1, yoyo: true, ease: "none", paused: true });
-                ScrollTrigger.create({ trigger: "body", start: "500px top", end: "9000px top", onEnter: () => shakeTween.play(), onLeave: () => shakeTween.pause(), onEnterBack: () => shakeTween.play(), onLeaveBack: () => shakeTween.pause() });
+                const shakeTween = gsap.to("#rocket-svg-container", {
+                    x: () => Math.random() * 4 - 2,
+                    y: () => Math.random() * 4 - 2,
+                    rotation: () => Math.random() * 2 - 1,
+                    duration: 0.1,
+                    repeat: -1,
+                    yoyo: true,
+                    ease: "none",
+                    paused: true
+                });
+
+                ScrollTrigger.create({
+                    trigger: "body",
+                    start: "500px top",
+                    end: "9000px top",
+                    onEnter: () => shakeTween.play(),
+                    onLeave: () => shakeTween.pause(),
+                    onEnterBack: () => shakeTween.play(),
+                    onLeaveBack: () => shakeTween.pause()
+                });
 
                 const aiTitle = document.getElementById("cta-title-container");
                 if (aiTitle) {
@@ -738,7 +800,6 @@
                 }
             }
 
-            // --- 3. Grid Toggle Hotkey ---
             document.addEventListener('keydown', (e) => {
                 if (e.key.toLowerCase() === 'g' && !e.ctrlKey && !e.metaKey) {
                     const grid = document.getElementById('bg-grid');
@@ -746,7 +807,6 @@
                 }
             });
 
-            // 啟直第一步：加載所有 SVG
             loadAllSVGs();
         });
     </script>
