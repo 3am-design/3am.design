@@ -154,17 +154,18 @@
             .awards-marquee-track { gap: 34px; }
         }
 
-        /* 📍 Karina Fix: 太空人改為 bottom: 0，確保佢黐實 Container 嘅絕對最底層，唔會再凸出去畀 Safari 硬切 */
+        /* 📍 Karina Fix: 太空人向下移多 50px */
         #astronaut-container {
             position: absolute;
             right: -4vw; /* 稍微推右，增加出血感 */
             width: 55vw;
-            bottom: 0; 
+            bottom: -50px; /* 向下移多 50px */
         }
         @media (min-width: 768px) {
             #astronaut-container {
                 width: 80%;
                 right: 0;
+                bottom: 0; /* Desktop 保持原位，或者你都可以加 -50px，視乎你需要 */
             }
         }
     </style>
@@ -353,7 +354,7 @@
                 </div>
 
                 <!-- 📍 Karina Fix: CTA Section 包攬晒安全區 (safe-area) 作為 bottom padding。
-                     Copyright 文字會停喺 padding 之上，但 Astronaut 因為係 bottom: 0，會直插 padding 底部出血！ -->
+                     Copyright 文字會停喺 padding 之上，但 Astronaut 因為係 bottom: -50px，會直插 padding 底部出血！ -->
                 <div class="col-span-full mt-[100px] md:mt-[200px] relative w-full pb-[calc(50px+env(safe-area-inset-bottom,0px))] md:pb-[calc(85px+env(safe-area-inset-bottom,0px))]">
                     
                     <div class="absolute inset-0 grid grid-cols-4 md:grid-cols-6 gap-[15px] md:gap-[2.08vw] pointer-events-none z-0">
@@ -437,6 +438,7 @@
             }
 
             async function loadAllSVGs() {
+                // 📍 Karina Fix: 修正 WebAward.svg 同 ComAward.svg 嘅大小寫，確保同伺服器檔案名完全對齊
                 await Promise.all([
                     fetchSVG('assets/home/3amDS.svg', 'preloader-logo-container'),
                     fetchSVG('assets/home/3amDS.svg', 'header-logo-container'),
@@ -447,8 +449,8 @@
                     fetchSVG('assets/home/Awwwards.svg', 'award-awwwards'),
                     fetchSVG('assets/home/W3.svg', 'award-w3'),
                     fetchSVG('assets/home/Horizon.svg', 'award-horizon'),
-                    fetchSVG('assets/home/WebAward.svg', 'award-webAward'),
-                    fetchSVG('assets/home/ComAward.svg', 'award-comAward'),
+                    fetchSVG('assets/home/WebAward.svg', 'award-webaward'),
+                    fetchSVG('assets/home/ComAward.svg', 'award-comaward'),
                     fetchSVG('assets/home/aixhuman.svg', 'cta-title-container'),
                     fetchSVG('assets/home/Astronaut.svg', 'astronaut-container')
                 ]);
@@ -475,7 +477,6 @@
                 const setBodyHeight = () => {
                     const portfolio = document.getElementById("portfolio-section");
                     if (portfolio) {
-                        // 📍 Karina Fix: 直接拎 offsetHeight 就足夠，因為 CSS 嘅 CTA pb-[...] 已經完美計算埋安全區，太空人亦完全被包容在內！
                         const totalHeight = portfolio.offsetTop + portfolio.offsetHeight;
                         document.body.style.height = totalHeight + "px";
                         ScrollTrigger.refresh();
