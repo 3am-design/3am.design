@@ -652,8 +652,9 @@
                     masterTl.to("#rocket-drift", { keyframes: { "0%": { y: 0, ease: "sine.inOut" }, "50%": { y: 15, ease: "sine.inOut" }, "100%": { y: 0, ease: "sine.inOut" } }, duration: 26 }, 48);
 
                     // --- Introduction Section Pinned Timeline ---
+                    // 📍 Karina Fix: 加上 pinSpacing: false 防止 GSAP 自動加 padding 撐爆個 layout 搞到 scroll hang 死
                     const introPinEnd = isMobile ? "+=2000" : "+=3400";
-                    const introTl = gsap.timeline({ scrollTrigger: { trigger: "#intro-trigger", start: "center center", end: introPinEnd, pin: true, scrub: 1 } });
+                    const introTl = gsap.timeline({ scrollTrigger: { trigger: "#intro-trigger", start: "center center", end: introPinEnd, pin: true, pinSpacing: false, scrub: 1 } });
                     
                     if (intro3amPaths.length > 0) {
                         introTl.to(intro3amPaths, { strokeDashoffset: 0, duration: 2.3, ease: "none", stagger: 0.08 }, 0);
@@ -676,8 +677,9 @@
                     introTl.to("#intro-section", { opacity: 0, duration: 1.5, ease: "power2.in" }, exitLabel);
 
                     // --- Awards Section Pinned Timeline ---
+                    // 📍 Karina Fix: 同樣加上 pinSpacing: false 防止 Padding 改變高度
                     const awardsPinEnd = isMobile ? "+=3500" : "+=5000";
-                    const awardsTl = gsap.timeline({ scrollTrigger: { trigger: "#awards-trigger", start: "center center", end: awardsPinEnd, pin: true, scrub: 1 } });
+                    const awardsTl = gsap.timeline({ scrollTrigger: { trigger: "#awards-trigger", start: "center center", end: awardsPinEnd, pin: true, pinSpacing: false, scrub: 1 } });
                     
                     awardsTl.to(".awards-marquee-track", { x: "-20vw", xPercent: -100, duration: 10, ease: "none" }, 0);
                     awardsTl.to(".awards-fade", { opacity: 1, y: 0, filter: "blur(0px)", duration: 1.5, stagger: 0.2, ease: "power3.out" }, 1.0);
