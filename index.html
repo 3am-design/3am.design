@@ -20,11 +20,12 @@
     </script>
 
     <style>
-        /* 📍 Karina Fix: 移除 body 嘅 overflow-x: hidden 同 overscroll-behavior: none，徹底解決 iOS Hang 機問題 */
+        /* 📍 Karina Fix: 改用 overflow-x: clip，安全防止橫向 scroll，同時唔會觸發 iOS overflow hang 機 */
         html, body {
             width: 100%;
             max-width: 100vw;
             background-color: #000;
+            overflow-x: clip;
         }
 
         body {
@@ -232,8 +233,8 @@
         </div>
     </div>
 
-    <!-- 8. Scrollable Content Container 📍 Karina Fix: 將 overflow-x-hidden 加喺度，完美防止橫向爆版同時拯救 iOS Safari 滾動！ -->
-    <div class="relative w-full overflow-x-hidden">
+    <!-- 8. Scrollable Content Container 📍 Karina Fix: 移除了會剪走內容嘅 overflow-x-hidden -->
+    <div class="relative w-full">
         <div id="trail-container"></div>
 
         <!-- Intro Section -->
@@ -665,7 +666,6 @@
                     masterTl.to("#rocket-drift", { keyframes: { "0%": { y: 0, ease: "sine.inOut" }, "50%": { y: 15, ease: "sine.inOut" }, "100%": { y: 0, ease: "sine.inOut" } }, duration: 26 }, 48);
 
                     // --- Introduction Section Pinned Timeline ---
-                    // 📍 Karina Fix: 移除咗惹禍嘅 pinType: "transform"
                     const introPinEnd = isMobile ? "+=2000" : "+=3400";
                     const introTl = gsap.timeline({ scrollTrigger: { trigger: "#intro-trigger", start: "center center", end: introPinEnd, pin: true, pinSpacing: false, scrub: 1 } });
                     
@@ -690,7 +690,6 @@
                     introTl.to("#intro-section", { opacity: 0, duration: 1.5, ease: "power2.in" }, exitLabel);
 
                     // --- Awards Section Pinned Timeline ---
-                    // 📍 Karina Fix: 移除咗惹禍嘅 pinType: "transform"
                     const awardsPinEnd = isMobile ? "+=3500" : "+=5000";
                     const awardsTl = gsap.timeline({ scrollTrigger: { trigger: "#awards-trigger", start: "center center", end: awardsPinEnd, pin: true, pinSpacing: false, scrub: 1 } });
                     
